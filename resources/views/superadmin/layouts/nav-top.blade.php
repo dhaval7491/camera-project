@@ -32,7 +32,7 @@
                         </a>
                     </li>
                     <li class="py-[5px]">
-                        <a href="#" class="flex text-[#344563] text-[16px] manrope-medium">
+                        <a href="{{ route('superadmin.logout') }}" class="flex text-[#344563] text-[16px] manrope-medium">
                             <img src="{{ asset('admin-theme/assets/images/delete.png')}}" class="w-[16px] mr-[11px] object-contain">
                             <p>Logout</p>
                         </a>
