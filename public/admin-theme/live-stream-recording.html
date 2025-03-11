@@ -1,0 +1,377 @@
+<html>
+
+<head>
+    <title>
+        Guava
+    </title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="assets/css/media.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+    integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.7.1/spectrum.min.css">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css">
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css'
+    rel='stylesheet'>
+    <link rel="stylesheet" href="assets/css/output.css">
+    <link rel="stylesheet" href="assets/css/custom-style.css">
+    <link href="assets/css/chart.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="w-full bg-white p-[25px] flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="#" class="flex items-center">
+                    <img src="assets/images/logo.png" alt="Logo" class="h-8">
+                </a>
+                <div class="relative ml-[110px]">
+                    <input type="text" placeholder="Search" class="w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[15px] px-[40px] py-[10px] border-[1px] border-solid border-[#D6D6D6]">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><img
+                            src="assets/images/search-icon.png" class="w-[20px]"></span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="window.location.href='help.html';" class="relative p-2">
+                    <img src="assets/images/help-que.png" alt="Help" class="h-6">
+                </button>
+                <button onclick="window.location.href='notification.html';" class="relative p-2">
+                    <img src="assets/images/notification.png" alt="Notifications" class="h-6">
+                    <span
+                        class="absolute -top-1 -right-1 bg-[#fd591a] text-white text-xs w-4 h-4 flex items-center justify-center rounded-[14px]">1</span>
+                </button>
+                <button class="w-[30px] h-[30px] bg-[#FD8C1A] text-white text-[13px] manrope-medium rounded-[20px] flex items-center justify-center">
+                    RS
+                </button>
+                <button class="p-2 relative" onclick="toggleProfileDropdown(event)">
+                    <img src="assets/images/topbar-arrow.png" alt="Dropdown" class="w-[25px] ">
+                    <div class="profile-drop absolute bg-white tab-shadow rounded-md hidden top-[40px] right-[0px] w-[170px] p-[10px] z-[8]"> 
+                        <ul>
+                            <li class="py-[5px]">
+                                <a href="settings.html" class="flex text-[#344563] text-[16px] manrope-medium">
+                                    <img src="assets/images/people-2.png" class="w-[16px] mr-[11px] object-contain">
+                                    <p>Settings</p>
+                                </a>
+                            </li>
+                            <li class="py-[5px]">
+                                <a href="#" class="flex text-[#344563] text-[16px] manrope-medium">
+                                    <img src="assets/images/delete.png" class="w-[16px] mr-[11px] object-contain">
+                                    <p>Logout</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </button>
+            </div>
+        </nav>
+            <div class="dashboard-body">
+                <div class="sidebar fixed h-full w-[100px] sidebar-shadow">
+                    <ul class="list-unstyled">
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="dashboard.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/dashboard.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Dashboard</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="company.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/company.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center"> Company</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="project.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/project.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center"> Project</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px]">
+                            <a href="live-stream.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/live.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Live Stream</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="equipment.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/equipment.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Equipment</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="alerts.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/alerts.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Alerts</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="users.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/users.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Users</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="analytics.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/analytics.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Analytics</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="mapping.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/mapping.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Mapping</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="contractor.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/contractor.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Trackable</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="ai-model.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/ai.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">AI Model</p>
+                            </a>
+                        </li>
+                        <li
+                            class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
+                            <a href="settings.html" class="border-l-[2px] border-l-solid border-l-transparent">
+                                <img src="assets/images/settings.png" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
+                                <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center">Settings</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ml-[110px] pt-[10px] w-[93%]">
+                    <div class="flex flex-wrap">
+                        <div class="lg:w-5/6 md:w-4/6 mt-[10px]">
+                            <p class="inline-block manrope-medium text-[15px]  px-[10px] mr-[15px] text-[#437651] underline">< Back</p>
+                            <div class="video-player px-[10px] relative">
+                                <img src="assets/images/live-stream.png" class="w-full object-contain mt-[5px]">
+                                <div class="video-controls">
+                                    <nav class="flex justify-between mt-[10px]">
+                                        <div class="">
+                                            <ul class="navbar-nav mr-auto video-volume ">
+                                                <li class="nav-item">
+                                                    <div class="volume-control flex">
+                                                        <img src="assets/images/max-vol.png" alt="Low Volume" class="volume-icon w-[15px] object-contain mr-[5px]">
+                                                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                                                        <img src="assets/images/min-vol.png" alt="High Volume" class="volume-icon w-[15px] object-contain ml-[5px]">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="">
+                                            <ul class="flex">
+                                                <li class="nav-item">
+                                                    <button id="play-pause"><img src="assets/images/play.png" class="w-[20px] object-contain mr-[10px]"></button>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <button id="microphone"><img src="assets/images/microphone.png" class="w-[20px] object-contain mr-[10px]"></button>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <button id="video-cut"><img src="assets/images/video-cut.png" class="w-[20px] object-contain mr-[10px]"></button>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <button id="video-record"><img src="assets/images/video-record.png" class="w-[20px] object-contain mr-[10px]"></button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="">
+                                            <ul class="navbar-nav ml-auto flex">
+                                                <li class="nav-item">
+                                                    <div class="size-control flex">
+                                                        <img src="assets/images/min-size.png" alt="min size" class="size-icon w-[15px] object-contain mr-[5px]">
+                                                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                                                        <img src="assets/images/max-size.png" alt="max size" class="size-icon w-[15px] object-contain ml-[5px]">
+                                                    </div>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#"><img src="assets/images/max-screen.png" class="w-[15px] object-contain ml-[15px]"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </nav>
+                                </div>
+                                <!-- <div id="popupvideo-menu" class="popup-video-speed hidden">
+                                    <h3>< Playback</h3>
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <label for="custom-speed">Custom Speed:</label>
+                                            <input id="custom-speed" type="range" min="0.5" max="2" step="0.1" value="1">
+                                        </li>
+                                        <li>0.25x</li>
+                                        <li>0.5x</li>
+                                        <li>0.75x</li>
+                                        <li>Normal</li>
+                                        <li>1.25x</li>
+                                    </ul>
+                                </div> -->
+                                <!-- <div id="popupsetting-video" class="popup-video-setting hidden">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <h4><img src="assets/images/sleep.png">Sleep Timer</h4>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="lg:w-1/6 md:w-1/6 w-full">
+                            <div class="h-full mt-[35px] p-[20px] alert-shadow">
+                                <p class="manrope-medium text-[15px]  mb-[20px]"><span class="title w-[100px] inline-block">File Name : </span><span class="livevideo-value">Crane 01</span></p>
+                                <p class="manrope-medium text-[15px]  mb-[20px]"><span class="title w-[100px] inline-block">File ID :</span><span class="livevideo-value">#5463214</span></p>
+                                <p class="manrope-medium text-[15px]  mb-[20px]"><span class="title w-[100px] inline-block">Date :</span><span class="livevideo-value">02/02/2024</span></p>
+                                <p class="manrope-medium text-[15px]  mb-[20px]"><span class="title w-[100px] inline-block">Time :</span><span class="livevideo-value">07:31:20 sec</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="assets/js/jquery-3.7.1.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.9.1/cdn.js"></script>
+<script src="assets/js/custom-script.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".sidebar li").each(function() {
+            const img = $(this).find("img");
+            const originalSrc = img.attr("src"); 
+            const hoverSrc = originalSrc.replace(".png", "-green.png");
+    
+            $(this).on("mouseenter", function() {
+                img.attr("src", hoverSrc);
+            });
+    
+            $(this).on("mouseleave", function() {
+                if (!$(this).hasClass("active")) {
+    
+                    img.attr("src", originalSrc);
+                }
+            });
+        });
+    
+        // Add active class dynamically
+        const currentPage = window.location.pathname.split("/").pop();
+
+        $(".sidebar li a").each(function() {
+            if ($(this).attr("href") === currentPage) {
+                const parentLi = $(this).parent();
+                
+                // Add active styles
+                parentLi.addClass("bg-[#f1f1f1]");
+        
+                // Change the image source to "-green.png"
+                const img = parentLi.find("img");
+                let imgSrc = img.attr("src");
+        
+                if (imgSrc && !imgSrc.includes("-green.png")) {
+                    img.attr("src", imgSrc.replace(".png", "-green.png"));
+                }
+            }
+        });
+    });
+</script>
+<script>
+        //---------------------------------tab bg-color ----------------------------------
+        let previousTab = null; // Variable to track the previously active tab
+
+function openTab(event, tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-prop').forEach(tab => tab.classList.add('hidden'));
+
+    // Remove the active background color class from all buttons
+    document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('bg-[#edf4fc]'));
+
+    // Show the selected tab
+    document.getElementById(tabId).classList.remove('hidden');
+
+    // Add the active background color to the clicked tab
+    event.currentTarget.classList.add('bg-[#edf4fc]');
+
+    // If there was a previously active tab, reset its background color
+    if (previousTab && previousTab !== event.currentTarget) {
+        previousTab.classList.remove('bg-[#edf4fc]');
+    }
+
+    // Update the previousTab to the newly clicked tab
+    previousTab = event.currentTarget;
+}
+
+// Function to activate the first tab on page load
+window.onload = function () {
+    let firstTabButton = document.querySelector('.tab-button'); // Select the first tab button
+    let firstTabContent = document.querySelector('.tab-prop'); // Select the first tab content
+
+    if (firstTabButton && firstTabContent) {
+        firstTabContent.classList.remove('hidden'); // Show the first tab content
+        firstTabButton.classList.add('bg-[#edf4fc]'); // Set the background color for the first tab
+        previousTab = firstTabButton; // Set the first tab as previously active
+    }
+};
+</script>
+<script>
+    const video = document.getElementById('video');
+    const playPauseBtn = document.getElementById('play-pause');
+    const progress = document.getElementById('progress');
+    const timeDisplay = document.getElementById('time');
+    const volumeBtn = document.getElementById('volume');
+    const volumeControl = document.getElementById('volume-control');
+    const volumeSlider = document.getElementById('volume-slider');
+    
+    volumeSlider.addEventListener('input', () => {
+      video.volume = volumeSlider.value;
+    });
+    playPauseBtn.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        playPauseBtn.innerHTML = '<img src="assets/images/pause.png" alt="Pause" class="w-[20px] object-contain mr-[10px]">';
+      } else {
+        video.pause();
+        playPauseBtn.innerHTML = '<img src="assets/images/play.png" alt="Play" class="w-[20px] object-contain mr-[10px]">';
+      }
+    });
+    
+    video.addEventListener('timeupdate', () => {
+      const currentTime = Math.floor(video.currentTime);
+      const duration = Math.floor(video.duration);
+      progress.value = (currentTime / duration) * 100;
+      timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+    });
+    
+    progress.addEventListener('input', () => {
+      const duration = video.duration;
+      video.currentTime = (progress.value / 100) * duration;
+    });
+    
+    volumeControl.addEventListener('input', () => {
+      video.volume = volumeControl.value;
+    });
+    
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    </script>
+</html>
