@@ -10,16 +10,18 @@ Route::get('/user', function (Request $request) {
 
 // Store WebRTC session
 Route::post('/webrtc-sessions', function (Request $request) {
-    // dd($request);
     $validated = $request->validate([
-        'room_id' => 'required|string|unique:web_rtc_sessions,room_id',
+        'room_id' => 'required|string',
         'offer' => 'nullable|string',
         'answer' => 'nullable|string',
     ]);
 
-    $session = WebRtcSession::create($validated);
+    $session = WebRtcSession::updateOrCreate(
+        ['room_id' => $validated['room_id']], // Find by room_id
+        ['offer' => $validated['offer'] ?? null, 'answer' => $validated['answer'] ?? null] // Update values
+    );
 
-    return response()->json(['message' => 'WebRTC session created', 'data' => $session], 201);
+    return response()->json(['message' => 'WebRTC session stored', 'data' => $session], 200);
 });
 
 // Get WebRTC session by room_id
