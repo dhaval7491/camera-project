@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('web_rtc_sessions', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
-            $table->string('logo')->nullable();
-            $table->string('location');
-            $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
+            $table->string('room_id')->unique();
+            $table->longText('offer')->nullable();  // Using longText for large JSON data
+            $table->longText('answer')->nullable(); // Using longText for large JSON data
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('web_r_t_c_sessions');
     }
 };

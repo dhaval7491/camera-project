@@ -9,14 +9,14 @@
         </li>
         <li
             class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
-            <a href="company.html" class="border-l-[2px] border-l-solid border-l-transparent">
+            <a href="{{ route('companies.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/company.png')}}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
                 <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center"> Company</p>
             </a>
         </li>
         <li
             class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">
-            <a href="project.html" class="border-l-[2px] border-l-solid border-l-transparent">
+            <a href="{{ route('projects.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/project.png')}}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
                 <p class="manrope-medium text-[12px] text-[#3D3D3D] text-center"> Project</p>
             </a>

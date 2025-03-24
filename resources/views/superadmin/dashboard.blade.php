@@ -1,4 +1,4 @@
-@extends('superadmin.layouts.app')
+@extends('layouts.app')
 @section('content')
 <div class="dashboard-graphs">
     <div class="container-fluid">

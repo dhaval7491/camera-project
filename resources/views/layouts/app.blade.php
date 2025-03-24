@@ -22,9 +22,9 @@
 
 <body>
     <div class="wrapper">
-        @include('superadmin.layouts.nav-top')
+        @include('layouts.nav-top')
         <div class="dashboard-body">
-            @include('superadmin.layouts.sidebar')
+            @include('layouts.sidebar')
             <div class="ml-[110px] pt-[10px] w-[93%]">
                 @yield('content')
                
