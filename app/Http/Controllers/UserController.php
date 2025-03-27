@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
 use Illuminate\Http\Request;
 
-class ProjectController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('projects.index');
+        return view('users.index');
     }
 
     /**
@@ -28,15 +27,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'company_id' => 'required|exists:companies,id',
-            'location' => 'required',
-            'plant_name' => 'required',
-        ]);
-
-        Project::create($request->all());
-        return response()->json(['success' => 'Project created successfully']);
+        //
     }
 
     /**
@@ -66,9 +57,8 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(string $id)
     {
-        $project->delete();
-        return response()->json(['success' => 'Project deleted successfully']);
+        //
     }
 }

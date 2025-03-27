@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/output.css')}}">
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
     <link href="{{ asset('admin-theme/assets/css/chart.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -35,6 +36,7 @@
 </body>
 <script src="{{ asset('admin-theme/assets/js/jquery-3.7.1.js')}}"></script>
 <script src="{{ asset('admin-theme/assets/js/bootstrap.min.js')}}"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('admin-theme/assets/js/custom-script.js')}}"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -165,5 +167,5 @@
         });
     });
 </script>
-
+@stack('scripts')
 </html>

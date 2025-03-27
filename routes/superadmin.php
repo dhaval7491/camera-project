@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\LoginController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('superadmin',function() {
@@ -17,4 +18,6 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::get('/superadmin/logout',[DashboardController::class,'logout'])->name('superadmin.logout');
     Route::resource('companies', CompanyController::class);
     Route::resource('projects', ProjectController::class);
+    Route::resource('users', UserController::class);
+    Route::get('/get-company-data', [CompanyController::class, 'data'])->name('companies.data');
 });
