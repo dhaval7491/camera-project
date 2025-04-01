@@ -55,7 +55,15 @@ wss.on('connection', (ws) => {
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            ws.send(JSON.stringify(response.data));
+            // Broadcast to all connected clients
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({
+                        event: data.event,
+                        data: response.data
+                    }));
+                }
+            });
         } catch (error) {
             console.error('Error processing event:', error);
             ws.send(JSON.stringify({ error: 'Internal server error' }));
