@@ -25,8 +25,9 @@ class WebRTCController extends Controller
     }
 
     public function addCandidate(Request $request) {
+        $roomId = Room::where('room_id', $request->room_id)->value('id');
         IceCandidate::create([
-            'room_id' => $request->room_id,
+            'room_id' => $roomId,
             'type' => $request->type,
             'candidate' => $request->candidate
         ]);
@@ -38,8 +39,9 @@ class WebRTCController extends Controller
         return response()->json($room);
     }
 
-    public function getCandidates($roomId) {
-        $candidates = IceCandidate::where('room_id', $roomId)->get();
+    public function getCandidates(Request $request) {
+        $roomId = Room::where('room_id', $request->room_id)->value('id');
+        $candidates = IceCandidate::where('room_id', $roomId)->where('type',$request->type)->get();
         return response()->json($candidates);
     }
 }

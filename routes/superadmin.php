@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Superadmin\DashboardController;
@@ -19,5 +20,6 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::resource('companies', CompanyController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('users', UserController::class);
+    Route::get('/alerts',[AlertController::class,'index'])->name('alerts.index');
     Route::get('/get-company-data', [CompanyController::class, 'data'])->name('companies.data');
 });

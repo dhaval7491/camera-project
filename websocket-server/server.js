@@ -30,17 +30,21 @@ wss.on('connection', (ws) => {
                     endpoint = 'create-room';
                     payload = { offer: data.offer };
                     break;
-                
+
                 case 'join-room':
                     endpoint = 'join-room';
                     payload = { room_id: data.room_id, answer: data.answer };
                     break;
-                
+
                 case 'add-candidate':
                     endpoint = 'add-candidate';
                     payload = { room_id: data.room_id, type: data.type, candidate: data.candidate };
                     break;
-                
+
+                case 'get-candidate':
+                    payload = { room_id: data.room_id, type: data.type };
+                    break;
+
                 default:
                     ws.send(JSON.stringify({ error: 'Unknown event' }));
                     return;
