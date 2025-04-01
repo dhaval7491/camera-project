@@ -42,6 +42,7 @@ wss.on('connection', (ws) => {
                     break;
 
                 case 'get-candidate':
+                    endpoint = 'get-candidates'
                     payload = { room_id: data.room_id, type: data.type };
                     break;
 
