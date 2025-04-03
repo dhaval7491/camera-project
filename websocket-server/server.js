@@ -42,7 +42,7 @@ wss.on('connection', (ws) => {
                         data.event = 'answer'; // broadcast as answer
                     } else {
                         endpoint = 'join-room'; // API endpoint to fetch the stored offer
-                        payload = { room_id: data.room_id , peer_id: data.peer_id || "joiner"}; 
+                        payload = { room_id: data.room_id , peer_id: data.peer_id || "creator"}; 
                         data.event = 'offer'; // broadcast as offer
                     }
                     break;
