@@ -72,7 +72,10 @@ wss.on('connection', (ws) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify({
                         event: data.event,
-                        data: response.data
+                        data: {
+                            ...response.data,
+                            peer_id: data.peer_id
+                        }
                     }));
                 }
             });
