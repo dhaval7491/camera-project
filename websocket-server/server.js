@@ -28,7 +28,7 @@ wss.on('connection', (ws) => {
             switch (data.event) {
                 case 'create-room':
                     endpoint = 'create-room';
-                    payload = { offer: data.offer };
+                    payload = { offer: data.offer, peer_id: data.peer_id || "creator" };
                     break;
 
                 case 'join-room':
@@ -38,23 +38,24 @@ wss.on('connection', (ws) => {
                     // to the room creator. Otherwise, the joiner is requesting the stored offer.
                     if (data.answer) {
                         endpoint = 'join-room'; // API endpoint to save the answer
-                        payload = { room_id: data.room_id, answer: data.answer };
+                        payload = { room_id: data.room_id, answer: data.answer, peer_id: data.peer_id || "joiner"  };
                         data.event = 'answer'; // broadcast as answer
                     } else {
                         endpoint = 'join-room'; // API endpoint to fetch the stored offer
-                        payload = { room_id: data.room_id };
+                        payload = { room_id: data.room_id , peer_id: data.peer_id || "joiner"}; 
                         data.event = 'offer'; // broadcast as offer
                     }
                     break;
 
                 case 'add-candidate':
                     endpoint = 'add-candidate';
-                    payload = { room_id: data.room_id, type: data.type, candidate: data.candidate };
+                    payload = { room_id: data.room_id, type: data.type, candidate: data.candidate , peer_id: data.peer_id || "unknown" };
                     break;
 
                 case 'get-candidate':
                     endpoint = 'get-candidates'
-                    payload = { room_id: data.room_id, type: data.type };
+                    payload = { room_id: data.room_id, type: data.type, peer_id: data.peer_id || "unknown" 
+                    };
                     break;
 
                 default:
