@@ -32,8 +32,19 @@ wss.on('connection', (ws) => {
                     break;
 
                 case 'join-room':
-                    endpoint = 'join-room';
-                    payload = { room_id: data.room_id, answer: data.answer };
+                    // endpoint = 'join-room';
+                    // payload = { room_id: data.room_id, answer: data.answer };
+                    // If the join-room message includes an answer, then the joiner is sending its answer
+                    // to the room creator. Otherwise, the joiner is requesting the stored offer.
+                    if (data.answer) {
+                        endpoint = 'join-room'; // API endpoint to save the answer
+                        payload = { room_id: data.room_id, answer: data.answer };
+                        data.event = 'answer'; // broadcast as answer
+                    } else {
+                        endpoint = 'join-room'; // API endpoint to fetch the stored offer
+                        payload = { room_id: data.room_id };
+                        data.event = 'offer'; // broadcast as offer
+                    }
                     break;
 
                 case 'add-candidate':

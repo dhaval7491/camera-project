@@ -19,9 +19,10 @@ class WebRTCController extends Controller
     public function joinRoom(Request $request) {
         $room = Room::where('room_id', $request->room_id)->first();
         if (!$room) return response()->json(['error' => 'Room not found'], 404);
-
-        $room->update(['answer' => $request->answer]);
-        return response()->json(['message' => 'Answer saved']);
+        if(!empty($request->answer)){
+            $room->update(['answer' => $request->answer]);
+        }
+        return response()->json($room);
     }
 
     public function addCandidate(Request $request) {
