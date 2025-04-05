@@ -5,14 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\IceCandidate;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WebRTCController extends Controller
 {
-    public function createRoom(Request $request) {
+    public function initRoom() {
         $room = Room::create([
             'room_id' => uniqid(),
-            'offer' => $request->offer
         ]);
+        return response()->json($room);
+    }
+
+    public function createRoom(Request $request) {
+        Log::info($request);
+        $room = Room::where('room_id', $request->room_id)->first();
+        if (!$room) return response()->json(['error' => 'Room not found'], 404);
+        if(!empty($request->offer)){
+            $room->update(['offer' => $request->offer]);
+        }
         return response()->json($room);
     }
 
@@ -35,8 +45,13 @@ class WebRTCController extends Controller
         return response()->json(['message' => 'Candidate added']);
     }
 
-    public function getRoom($roomId) {
-        $room = Room::where('room_id', $roomId)->first();
+    // public function getRoom($roomId) {
+    //     $room = Room::where('room_id', $roomId)->first();
+    //     return response()->json($room);
+    // }
+
+    public function getRoom() {
+        $room = Room::latest()->first();
         return response()->json($room);
     }
 

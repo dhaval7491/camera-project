@@ -12,5 +12,6 @@ Route::get('/user', function (Request $request) {
 Route::post('/create-room', [WebRTCController::class, 'createRoom']);
 Route::post('/join-room', [WebRTCController::class, 'joinRoom']);
 Route::post('/add-candidate', [WebRTCController::class, 'addCandidate']);
-Route::get('/room/{roomId}', [WebRTCController::class, 'getRoom']);
+Route::get('/room', [WebRTCController::class, 'getRoom']);
 Route::post('/get-candidates', [WebRTCController::class, 'getCandidates']);
+Route::post('/init-room', [WebRTCController::class, 'initRoom']);
