@@ -17,7 +17,6 @@ class WebRTCController extends Controller
     }
 
     public function createRoom(Request $request) {
-        Log::info($request);
         $room = Room::where('room_id', $request->room_id)->first();
         if (!$room) return response()->json(['error' => 'Room not found'], 404);
         if(!empty($request->offer)){
