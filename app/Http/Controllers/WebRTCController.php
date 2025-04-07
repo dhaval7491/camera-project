@@ -20,8 +20,8 @@ class WebRTCController extends Controller
         $room = Room::where('room_id', $request->room_id)->first();
         if (!$room) return response()->json(['error' => 'Room not found'], 404);
         if(!empty($request->offer)){
-            $offerWithoutNewlines = str_replace("\r\n", '', $request->offer);
-            $room->update(['offer' => $offerWithoutNewlines]);
+            // $offerWithoutNewlines = str_replace("\r\n", '', $request->offer);
+            $room->update(['offer' => $request->offer]);
         }
         return response()->json($room);
     }
@@ -30,8 +30,8 @@ class WebRTCController extends Controller
         $room = Room::where('room_id', $request->room_id)->first();
         if (!$room) return response()->json(['error' => 'Room not found'], 404);
         if(!empty($request->answer)){
-            $answerWithoutNewlines = str_replace("\r\n", '', $request->answer);
-            $room->update(['answer' => $answerWithoutNewlines]);
+            // $answerWithoutNewlines = str_replace("\r\n", '', $request->answer);
+            $room->update(['answer' => $request->answer]);
         }
         return response()->json($room);
     }
