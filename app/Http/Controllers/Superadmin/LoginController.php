@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -13,13 +13,8 @@ class LoginController extends Controller
         return view('superadmin.auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        // dd($request->all());
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
 
         if(Auth::attempt($request->only('email','password'))){
             return redirect()->route('superadmin.dashboard');

@@ -29,21 +29,30 @@
                         <h3 class="manrope-bold text-[28px] text-[#374557] mb-[20px]">
                             Welcome to Guava Smart Cam
                         </h3>
+                        @if ($errors->any())
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-[10px] mb-4" role="alert">
+                                <ul class="list-disc list-inside">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <label class="manrope-medium text-[15px] text-[#2C323E] block">
                             Email Address
                         </label>
                         <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
                         manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
-                        focus:border-[1px] focus:border-solid focus:outline-none" type="email" name="email"
-                        placeholder="Enter email address">
+                        focus:border-[1px] focus:border-solid focus:outline-none @error('email') border-red-500 @enderror" 
+                        type="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
                         
                         <label class="manrope-medium text-[15px] text-[#2C323E] block mt-[20px]">
                             Password
                         </label>
                         <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
                         manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
-                        focus:border-[1px] focus:border-solid focus:outline-none" type="password" name="password"
-                        placeholder="Enter Password">
+                        focus:border-[1px] focus:border-solid focus:outline-none @error('password') border-red-500 @enderror" 
+                        type="password" name="password" placeholder="Enter Password">
                         
                         <div class="grid grid-cols-2 gap-4 mt-[20px]">
                             <div class="flex items-center">

@@ -293,40 +293,110 @@
         </div>
     </form>
 </x-modal>
-
+<!-- Edit Company Modal -->
+<x-modal id="editCompanyModal" title="Edit Company" class="max-w-lg">
+    <form method="POST" action="" id="editCompanyForm" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="id" id="edit_company_id">
+        <x-form-input label="Company Name" type="text" name="company_name" id="edit_company_name" placeholder="Enter Company Name" class="text-[#7A86A1]" />
+        <x-form-input label="Upload Logo" type="file" name="logo" id="edit_company_logo" />
+        <x-form-input label="Location" type="text" name="location" id="edit_company_location" placeholder="Enter Company Location" class="text-[#7A86A1]" />
+        <div class="text-right mt-[10px]">
+            <button type="button" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer" onclick="toggleModal('editCompanyModal')">
+                Cancel
+            </button>
+            <button type="submit" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#3D3D3D] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
+                Update
+            </button>
+        </div>
+    </form>
+</x-modal>
 @endsection
 @push('scripts')
-    <script>
-        $(document).ready(function () {
-            $('#companies-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{{ route("companies.data") }}',
-                columns: [
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `
+<script>
+    $(document).ready(function() {
+        const table = $('#companies-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route("companies.data") }}',
+            columns: [{
+                    data: null,
+                    render: function(data, type, row) {
+                        return `
                                 <div class="flex">
                                     <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-[#fff] manrope-semibold rounded-[6px] py-[10px] px-[10px]">${row.initials}</span>
                                     <div class="text-[#344563] text-[15px] manrope-regular cursor-pointer mt-[10px]" onclick="document.location='project.html'">
                                         ${row.company_name}
                                     </div>
                                 </div>`;
-                        }
-                    },
-                    { data: 'created_at', name: 'created_at', className: 'text-center text-[#344563] text-[16px] manrope-medium' },
-                    { data: 'location', name: 'location', className: 'text-center text-[#344563] text-[16px] manrope-medium' },
-                    { data: 'status', name: 'status', className: 'text-center' },
-                    { data: 'people', name: 'people', className: 'text-center' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
-                ],
-                pageLength: 10, // Number of rows per page
-                language: {
-                    search: "", // Remove the "Search" label
-                    searchPlaceholder: "Search...", // Add placeholder to the search input
+                    }
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                    className: 'text-center text-[#344563] text-[16px] manrope-medium'
+                },
+                {
+                    data: 'location',
+                    name: 'location',
+                    className: 'text-center text-[#344563] text-[16px] manrope-medium'
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    className: 'text-center'
+                },
+                {
+                    data: 'people',
+                    name: 'people',
+                    className: 'text-center'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    className: 'text-center'
+                }
+            ],
+            pageLength: 10, // Number of rows per page
+            language: {
+                search: "", // Remove the "Search" label
+                searchPlaceholder: "Search...", // Add placeholder to the search input
+            }
+        });
+        window.toggleCompanyStatus = function(companyId) {
+            $.ajax({
+                url: '{{ url("companies") }}/' + companyId + '/toggle-active',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        table.ajax.reload(null, false); // Reload table data without resetting pagination
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
                 }
             });
-        });
-    </script>
+        };
+    });
+
+    function showEditModal(companyId) {
+        const companies = @json($companies);
+        const company = companies.find(c => c.id === companyId);
+
+        if (company) {
+            document.getElementById('edit_company_id').value = company.id;
+            document.getElementById('edit_company_name').value = company.company_name;
+            document.getElementById('edit_company_location').value = company.location;
+            document.getElementById('editCompanyForm').action = '{{ url("companies") }}/' + company.id;
+            toggleModal('editCompanyModal');
+        }
+    }
+</script>
 @endpush

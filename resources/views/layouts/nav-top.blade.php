@@ -26,7 +26,7 @@
             <div class="profile-drop absolute bg-white tab-shadow rounded-md hidden top-[40px] right-[0px] w-[170px] p-[10px] z-[8]">
                 <ul>
                     <li class="py-[5px]">
-                        <a href="settings.html" class="flex text-[#344563] text-[16px] manrope-medium">
+                        <a href="{{ route('settings.index') }}" class="flex text-[#344563] text-[16px] manrope-medium">
                             <img src="{{ asset('admin-theme/assets/images/people-2.png')}}" class="w-[16px] mr-[11px] object-contain">
                             <p>Settings</p>
                         </a>

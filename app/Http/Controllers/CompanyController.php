@@ -17,7 +17,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return view('companies.index');
+        $companies = Company::with('admin')->get();
+        return view('companies.index' , compact('companies'));
     }
 
     public function data(Request $request)
@@ -36,8 +37,9 @@ class CompanyController extends Controller
                 return $initials;
             })
             ->addColumn('status', function ($company) {
-                // For now, we'll assume all companies are active; you can modify this based on your logic
-                return '<button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer">Active</button>';
+                $status = $company->is_active ? 'Active' : 'Inactive';
+                $color = $company->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
             })
             ->addColumn('people', function ($company) {
                 // This is a placeholder; you can fetch actual people data if available
@@ -54,7 +56,7 @@ class CompanyController extends Controller
                 return '
                     <div class="flex justify-center relative">
                         <span>
-                            <a href="#"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]" onclick="toggleModal(\'createCompanyModal\')"></a>
+                            <a href="#" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
                         <span>
                             <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>
@@ -176,5 +178,20 @@ class CompanyController extends Controller
         Storage::delete('public/' . $company->logo);
         $company->delete();
         return redirect()->route('companies.index');
+    }
+
+    /**
+     * Toggle the active status of a company
+     */
+    public function toggleActive(Company $company)
+    {
+        $company->is_active = !$company->is_active;
+        $company->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Company status updated successfully',
+            'is_active' => $company->is_active
+        ]);
     }
 }

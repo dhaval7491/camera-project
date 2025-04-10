@@ -17,7 +17,7 @@
                                 <button
                                     class="flex manrope-medium bg-[#3D3D3D] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#3D3D3D] text-white"
                                     onclick="toggleModalu()">
-                                    <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Add New
+                                    <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]"></span> Add New
                                 </button>
                             </li>
                         </ul>
@@ -27,9 +27,9 @@
         </div>
         <div class="table-filter-block mt-[20px]">
             <div class="flex">
-                <p class="flex items-center w-[150px] manrope-medium font-medium text-[#6a6a75] text-[16px]"><img class="w-[20px] object-contain mr-[10px]" src="assets/images/filter-by.png"> Filter By:</p>
+                <p class="flex items-center w-[150px] manrope-medium font-medium text-[#6a6a75] text-[16px]"><img class="w-[20px] object-contain mr-[10px]" src="{{ asset('admin-theme/assets/images/filter-by.png') }}"> Filter By:</p>
                 <p class="flex items-center ">
-                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="assets/images/filter-user.png">
+                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/filter-user.png') }}">
                 <div x-data="{ open: false, search: '', selected: 'User', options: ['User 1', 'User 2', 'User 3', 'User 4'] , selectedOptions: []}" class="relative ">
                     <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
                         <span x-text="selected"></span>
@@ -53,7 +53,7 @@
                 </div>
                 </p>
                 <p class="flex items-center ">
-                    <img class="w-[40px] h-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[10px] rounded-[16px]" src="assets/images/fil-company.png">
+                    <img class="w-[40px] h-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[10px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/fil-company.png') }}">
                 <div x-data="{ open: false, search: '', selected: 'Company', options: ['Digital Horizon Systems', 'ByteCore Technologies', 'London Technova Solutions'] , selectedOptions: [] }" class="relative ">
                     <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
                         <span x-text="selected"></span>
@@ -77,7 +77,7 @@
                 </div>
                 </p>
                 <p class="flex items-center">
-                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="assets/images/project-filter.png">
+                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/project-filter.png') }}">
                 <div x-data="{ open: false, search: '', selected: 'Project', options: ['Project 1', 'Project 2', 'Project 3', 'Project 4'] , selectedOptions: []}" class="relative ">
                     <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
                         <span x-text="selected"></span>
@@ -101,7 +101,7 @@
                 </div>
                 </p>
                 <p class="flex items-center">
-                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="assets/images/member-filter.png">
+                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/member-filter.png') }}">
                 <div x-data="{ open: false, search: '', selected: 'User Id', options: ['#48964778', '#48964778', '#48964778', '#48964778'] , selectedOptions: []}" class="relative ">
                     <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
                         <span x-text="selected"></span>
@@ -125,7 +125,7 @@
                 </div>
                 </p>
                 <p class="flex items-center">
-                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="assets/images/status-filter.png">
+                    <img class="w-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/status-filter.png') }}">
                 <div x-data="{ open: false, search: '', selected: 'Status', options: ['Active', 'Inactive', 'Block'] , selectedOptions: [] }" class="relative ">
                     <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
                         <span x-text="selected"></span>
@@ -200,7 +200,7 @@
                                 <td class="px-6 py-4 text-center manrope-regular text-[#344563] font-normal text-[16px] ">
                                     <div class="flex">
                                         <div class="mr-[15px]">
-                                            <img class="w-[40px] object-contain" src="assets/images/user-img.png">
+                                            <img class="w-[40px] object-contain" src="{{ asset('admin-theme/assets/images/user-img.png') }}">
                                         </div>
                                         <div class="text-left">
                                             <h5 class="manrope-regular text-black text-[16px]">Mas Indro</h5>
@@ -232,16 +232,16 @@
                                 <td class="px-6 py-4 text-center relative">
                                     <ul class="flex justify-center">
                                         <li class="py-[5px]"><a href="user-view.html" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/view.png" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/view.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="toggleModalp()">
-                                                <img src="assets/images/project.png" class="w-[15px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/project.png') }}" class="w-[15px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/edit-opt.png" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/delete.png" class="w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                     </ul>
                                 </td>
@@ -255,7 +255,7 @@
                                 <td class="px-6 py-4 text-center manrope-regular text-[#344563] font-normal text-[16px] ">
                                     <div class="flex">
                                         <div class="mr-[15px]">
-                                            <img class="w-[40px] object-contain" src="assets/images/user-img.png">
+                                            <img class="w-[40px] object-contain" src="{{ asset('admin-theme/assets/images/user-img.png') }}">
                                         </div>
                                         <div class="text-left">
                                             <h5 class="manrope-regular text-black text-[16px]">Mas Indro</h5>
@@ -287,16 +287,16 @@
                                 <td class="px-6 py-4 text-center relative">
                                     <ul class="flex justify-center">
                                         <li class="py-[5px]"><a href="user-view.html" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/view.png" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/view.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="toggleModalp()">
-                                                <img src="assets/images/project.png" class="w-[15px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/project.png') }}" class="w-[15px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/edit-opt.png" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/delete.png" class="w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                     </ul>
                                 </td>
@@ -310,7 +310,7 @@
                                 <td class="px-6 py-4 text-center manrope-regular text-[#344563] font-normal text-[16px] ">
                                     <div class="flex">
                                         <div class="mr-[15px]">
-                                            <img class="w-[40px] object-contain" src="assets/images/user-img.png">
+                                            <img class="w-[40px] object-contain" src="{{ asset('admin-theme/assets/images/user-img.png') }}">
                                         </div>
                                         <div class="text-left">
                                             <h5 class="manrope-regular text-black text-[16px]">Mas Indro</h5>
@@ -342,16 +342,16 @@
                                 <td class="px-6 py-4 text-center relative">
                                     <ul class="flex justify-center">
                                         <li class="py-[5px]"><a href="user-view.html" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/view.png" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/view.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="toggleModalp()">
-                                                <img src="assets/images/project.png" class="w-[15px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/project.png') }}" class="w-[15px] mr-[11px] object-contain"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/edit-opt.png" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="mt-[4px] w-[20px] mr-[11px] object-contain" onclick="toggleModal()"></a>
                                         </li>
                                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                <img src="assets/images/delete.png" class="w-[20px] mr-[11px] object-contain"></a>
+                                                <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] mr-[11px] object-contain"></a>
                                         </li>
                                     </ul>
                                 </td>

@@ -5,6 +5,7 @@
     'name' => '',
     'class' => '',
     'id' => '',
+    'options' => [] // Array to handle select options
 ])
 
 <div class="flex flex-wrap mb-[30px]">
@@ -22,6 +23,21 @@
                 id="{{ $id }}"
                 class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#3D3D3D] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB] {{ $class }}"
             />
+        @elseif($type === 'select')
+            <select
+                name="{{ $name }}"
+                id="{{ $id }}"
+                class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px] {{ $class }}"
+            >
+            <option va;ue="">Select  {{$label}}</option>
+                @if(!empty($options))
+                    @foreach($options as $value => $text)
+                        <option value="{{ $value }}">{{ $text }}</option>
+                    @endforeach
+                @else
+                    <option value="">No options available</option>
+                @endif
+            </select>
         @else
             <input
                 type="{{ $type }}"
