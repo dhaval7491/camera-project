@@ -179,12 +179,17 @@
             name="name"
             placeholder="Enter project name"
             class="text-[#7A86A1]" />
-
+            @error('name')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
         <x-form-input
             label="Company Name"
             type="select"
             name="company_id"
             :options="$companies" />
+            @error('company_id')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Location"
@@ -192,6 +197,9 @@
             name="location"
             placeholder="Enter location"
             class="text-[#7A86A1]" />
+            @error('location')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Add Plant"
@@ -199,6 +207,9 @@
             name="plant_name"
             placeholder="Enter Plant Name"
             class="text-[#7A86A1]" />
+            @error('plant_name')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <div class="text-right mt-[100px]">
             <button type="button" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer" onclick="toggleModalp()">
@@ -264,6 +275,9 @@
                 searchPlaceholder: "Search...", // Add placeholder to the search input
             }
         });
+        @if($errors -> any())
+        toggleModal('createProjectModal');
+        @endif
         window.toggleProjectStatus = function(projectId) {
             $.ajax({
                 url: '{{ url("projects") }}/' + projectId + '/toggle-active',

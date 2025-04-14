@@ -111,7 +111,7 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
         Project::create($validated);
-        return response()->json(['success' => 'Project created successfully']);
+        return redirect()->route('projects.index');
     }
 
     /**

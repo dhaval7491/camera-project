@@ -17,7 +17,6 @@
         rel='stylesheet'>
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/output.css')}}">
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
-    <link href="{{ asset('admin-theme/assets/css/chart.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 
@@ -35,16 +34,19 @@
     </div>
 </body>
 <script src="{{ asset('admin-theme/assets/js/jquery-3.7.1.js')}}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script src="{{ asset('admin-theme/assets/js/bootstrap.min.js')}}"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.9.1/cdn.js"></script>
 <script src="{{ asset('admin-theme/assets/js/custom-script.js')}}"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn2.hubspot.net/hubfs/476360/Chart.js"></script>
 <script src="https://cdn2.hubspot.net/hubfs/476360/utils.js"></script>
-<script src="{{ asset('admin-theme/assets/js/graph-script.js')}}"></script>
-<script src="{{ asset('admin-theme/assets/js/chart-script.js')}}"></script>
+<!-- <script src="{{ asset('admin-theme/assets/js/graph-script.js')}}"></script>
+<script src="{{ asset('admin-theme/assets/js/chart-script.js')}}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!---------------------- responsive sidebar collapse ------------------->
 <script>

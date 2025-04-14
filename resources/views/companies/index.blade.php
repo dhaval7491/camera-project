@@ -245,20 +245,32 @@
             label="Company Name"
             type="text"
             name="company_name"
+            id="company_name"
             placeholder="Enter Company Name"
             class="text-[#7A86A1]" />
+        @error('company_name')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Upload Logo"
             type="file"
+            id="logo"
             name="logo" />
+        @error('logo')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Location"
             type="text"
             name="location"
+            id="location"
             placeholder="Enter Company Name"
             class="text-[#7A86A1]" />
+        @error('location')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <p class="block text-[15px] manrope-medium text-[#000000] mb-[35px]">Admin Details</p>
 
@@ -266,22 +278,34 @@
             label="Admin Name"
             type="text"
             name="admin_name"
+            id="admin_name"
             placeholder="Enter admin name"
             class="text-[#7A86A1]" />
+        @error('admin_name')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Admin Mail ID"
             type="email"
             name="admin_email"
+            id="admin_email"
             placeholder="Enter Admin Mail ID"
             class="text-[#7A86A1]" />
+        @error('admin_email')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <x-form-input
             label="Admin Password"
             type="password"
             name="admin_password"
+            id="admin_password"
             placeholder="Enter password"
             class="text-[#7A86A1]" />
+        @error('admin_password')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
         <div class="text-right mt-[10px]">
             <button type="button" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer" onclick="toggleModal('addcompany')">
@@ -366,6 +390,10 @@
                 searchPlaceholder: "Search...", // Add placeholder to the search input
             }
         });
+        // Reopen modal if there are validation errors
+        @if($errors -> any())
+        toggleModal('createCompanyModal');
+        @endif
         window.toggleCompanyStatus = function(companyId) {
             $.ajax({
                 url: '{{ url("companies") }}/' + companyId + '/toggle-active',
