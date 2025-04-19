@@ -363,4 +363,100 @@
         </div>
     </div>
 </div>
+<x-modal id="adduser" title="Create a New User" class="max-w-lg">
+    <form method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
+        @csrf
+
+        <x-form-input
+            label="User Name"
+            type="text"
+            name="user_name"
+            id="user_name"
+            placeholder="Enter name"
+            class="text-[#7A86A1]" />
+        @error('name')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Email"
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter Mail ID"
+            class="text-[#7A86A1]" />
+        @error('email')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Company Name"
+            type="select"
+            name="company_id"
+            :options="$companies" />
+            @error('company_id')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+
+        <x-form-input
+            label="Project Name"
+            type="text"
+            name="project_name"
+            id="project_name"
+            placeholder="Project Name"
+            class="text-[#7A86A1]" />
+        @error('project_id')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Location"
+            type="text"
+            name="location"
+            id="location"
+            placeholder="Enter location"
+            class="text-[#7A86A1]" />
+        @error('location')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Access Level"
+            type="text"
+            name="access_level"
+            id="access_level"
+            placeholder="Enter Access level"
+            class="text-[#7A86A1]" />
+        @error('access_level')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Upload Image"
+            type="file"
+            name="image"
+            id="image" />
+        @error('image')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
+        <div class="text-right">
+            <button type="button" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer" onclick="toggleModal('adduser')">
+                Cancel
+            </button>
+            <button type="submit" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#3D3D3D] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
+                Create
+            </button>
+        </div>
+    </form>
+</x-modal>
 @endsection
+@push('scripts')
+<script>
+        $(document).ready(function() {
+    @if($errors->any())
+        toggleModal('adduser');
+    @endif
+        });
+</script>
+@endpush

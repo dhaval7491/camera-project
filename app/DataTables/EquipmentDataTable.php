@@ -1,0 +1,152 @@
+<?php
+
+namespace App\DataTables;
+
+use App\Models\Equipment;
+use Yajra\DataTables\Html\Button;
+use Yajra\DataTables\Html\Column;
+use Yajra\DataTables\Services\DataTable;
+
+class EquipmentDataTable extends DataTable
+{
+    /**
+     * Build DataTable class.
+     *
+     * @param mixed $query Results from query() method.
+     * @return \Yajra\DataTables\DataTableAbstract
+     */
+    public function dataTable($query)
+    {
+        return datatables()
+            ->eloquent($query)
+            ->addColumn('name', function ($equipment) {
+                return $equipment->camera_name ?? 'N/A';
+            })
+            ->addColumn('company_name', function ($equipment) {
+                return $equipment->company ? $equipment->company->company_name : 'N/A';
+            })
+            ->addColumn('project_name', function ($equipment) {
+                return $equipment->project ? $equipment->project->name : 'N/A';
+            })
+            ->editColumn('plant_name', function ($equipment) {
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? 'N/A') . '</p>';
+            })
+            ->editColumn('equipment_type', function ($equipment) {
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ucfirst($equipment->type) . '</p>';
+            })
+            ->editColumn('mapped_to', function ($equipment) {
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->mapped_to ?? 'N/A') . '</p>';
+            })
+            ->editColumn('streaming_link', function ($equipment) {
+                if ($equipment->stream_link) {
+                    return '
+                        <div class="w-72 relative">
+                            <span class="truncate block w-full p-2 rounded">' . $equipment->stream_link . '</span>
+                            <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-streaming-link absolute right-0 top-[20px] w-[23px] cursor-pointer" data-link="' . $equipment->stream_link . '">
+                        </div>';
+                }
+                return 'N/A';
+            })
+            ->addColumn('status', function ($equipment) {
+                $status = $equipment->is_active ? 'Active' : 'Inactive';
+                $color = $equipment->is_active ? 'bg-green-600' : 'bg-red-700';
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
+            })
+            ->addColumn('action', function ($equipment) {
+                return '<span><a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
+                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
+                        <ul>
+                            <li class="py-[5px]">
+                                <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $equipment->id . ')">
+                                    <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                    <p>Edit</p>
+                                </a>
+                            </li>
+                            <li class="py-[5px]">
+                                <form action="' . route('equipments.destroy', $equipment->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this equipment?\');">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="$(this).closest(\'form\').submit();">
+                                        <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                        <p>Delete</p>
+                                    </a>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>';
+            })
+            ->rawColumns(['name', 'plant_name', 'equipment_type', 'mapped_to', 'streaming_link', 'status', 'action']);
+    }
+
+    /**
+     * Get query source of dataTable.
+     *
+     * @param \App\Models\Equipment $model
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query(Equipment $model)
+    {
+        return $model->newQuery();
+    }
+
+    /**
+     * Optional method if you want to use html builder.
+     *
+     * @return \Yajra\DataTables\Html\Builder
+     */
+    public function html()
+    {
+        return $this->builder()
+                    ->setTableId('equipments-table')
+                    ->columns($this->getColumns())
+                    ->minifiedAjax()
+                    ->dom('Bfrtip')
+                    ->orderBy(1)
+                    ->buttons(
+                        Button::make('create'),
+                        Button::make('export'),
+                        Button::make('print'),
+                        Button::make('reset'),
+                        Button::make('reload')
+                    );
+    }
+
+    /**
+     * Get columns.
+     *
+     * @return array
+     */
+    protected function getColumns()
+    {
+        return [
+                Column::make('id')
+                    ->title('')
+                    ->orderable(false)
+                    ->searchable(false)
+                    ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
+                Column::make('name')->title('Equipment Name'),
+                Column::make('company_name')->title('Company Name'),
+                Column::make('project_name')->title('Project Name'),
+                Column::make('plant_name')->title('Plant Name'),
+                Column::make('equipment_type')->title('Equipment Type'),
+                Column::make('mapped_to')->title('Mapped To'),
+                Column::make('streaming_link')->title('Streaming Links'),
+                Column::make('status')->title('Status'),
+                Column::computed('action')
+                      ->exportable(false)
+                      ->printable(false)
+                      ->width(200)
+                      ->addClass('text-center'),
+        ];
+    }
+
+    /**
+     * Get filename for export.
+     *
+     * @return string
+     */
+    protected function filename(): string
+    {
+        return 'Equipment_' . date('YmdHis');
+    }
+}

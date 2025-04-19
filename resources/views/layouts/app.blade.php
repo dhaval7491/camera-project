@@ -5,6 +5,7 @@
         Guava
     </title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/media.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
@@ -16,22 +17,23 @@
     <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css'
         rel='stylesheet'>
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/output.css')}}">
-    <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
+ 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
 </head>
 
-<body>
-    <div class="wrapper">
+<body class="min-h-screen">
+    <!-- <div class="wrapper"> -->
         @include('layouts.nav-top')
-        <div class="dashboard-body">
+        <!-- <div class="dashboard-body"> -->
             @include('layouts.sidebar')
-            <div class="ml-[110px] pt-[10px] w-[93%]">
+            <div class="content pt-20 px-8">
                 @yield('content')
                
             </div>
-        </div>
-    </div>
-    </div>
+        <!-- </div> -->
+    <!-- </div> -->
+    <!-- </div> -->
 </body>
 <script src="{{ asset('admin-theme/assets/js/jquery-3.7.1.js')}}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>

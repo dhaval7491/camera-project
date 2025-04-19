@@ -3,7 +3,7 @@
 @section('content') 
 <div class="company-table h-full">
     <div class="form-list">
-        <div class="">
+        <div class="p-6 lg:p-8">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                     <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">
@@ -17,7 +17,7 @@
                             <li class="list-inline-item mr-[15px]">
                                 <button
                                     class="flex manrope-medium bg-[#3D3D3D] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#3D3D3D] text-white"
-                                    onclick="toggleModalm()">
+                                    onclick="toggleModal('createMappingModal')">
                                     <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]"></span> Create Mapping
                                 </button>
                             </li>
@@ -377,4 +377,5 @@
         </div>
     </div>
 </div>
+@include('mappings.add')
 @endsection

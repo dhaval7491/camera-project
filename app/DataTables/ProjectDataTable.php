@@ -1,0 +1,142 @@
+<?php
+
+namespace App\DataTables;
+
+use App\Models\Project;
+use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Facades\Storage;
+
+class ProjectDataTable extends DataTable
+{
+    /**
+     * Build DataTable class.
+     *
+     * @param mixed $query Results from query() method.
+     * @return \Yajra\DataTables\DataTableAbstract
+     */
+    public function dataTable($query)
+    {
+        return datatables()
+            ->eloquent($query)
+            ->editColumn('name', function ($project) {
+                $words = explode(' ', $project->name);
+                $initials = '';
+                foreach ($words as $word) {
+                    $initials .= strtoupper(substr($word, 0, 1));
+                    if (strlen($initials) >= 2) break;
+                }
+            
+                return '
+                    <div class="flex items-center">
+                        <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
+                        <div class="text-[#344563] text-[15px] manrope-regular cursor-pointer">
+                            ' . $project->name . '
+                        </div>
+                    </div>';
+            })
+            ->addColumn('status', function ($project) {
+                $status = $project->is_active ? 'Active' : 'Inactive';
+                $color = $project->is_active ? 'bg-green-600' : 'bg-red-700';
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$project->id}\" onclick=\"toggleProjectStatus({$project->id})\">{$status}</button>";
+            })
+            ->addColumn('company_name', function ($project) {
+                // Fetch company name from the related company model
+                return $project->company ? $project->company->company_name : 'N/A';
+            })
+            ->addColumn('action', function ($project) {
+                return '
+                    <div class="flex justify-center relative">
+                        <span>
+                            <a href="javascript:void(0);" onclick="showEditModal(' . $project->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
+                        </span>
+                        <span>
+                            <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>
+                        </span>
+                        <span class="mt-[8px]">
+                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event)"></a>
+                        </span>
+                        <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
+                            <ul>
+                                <li class="py-[5px]">
+                                    <a href="#" class="flex manrope-medium text-[#344563] text-[15px]">
+                                        <img src="' . asset('admin-theme/assets/images/equipment.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                        <p onclick="toggleModale()">Add Equipment</p>
+                                    </a>
+                                </li>
+                                <li class="py-[5px]">
+                                    <a href="#" class="flex text-[#344563] text-[16px] manrope-medium">
+                                        <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                        <p>Add People</p>
+                                    </a>
+                                </li>
+                                <li class="py-[5px]">
+                                    <a href="#" class="flex manrope-medium text-[#344563] text-[15px]">
+                                        <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                        <p onclick="toggleModalcont()">Add Trackable</p>
+                                    </a>
+                                </li>
+                                <li class="py-[5px]">
+                                    <form action="' . route('projects.destroy', $project->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this project?\');">
+                                        ' . csrf_field() . '
+                                        ' . method_field('DELETE') . '
+                                        <button type="submit" class="flex items-center text-[#344563] text-[16px] manrope-medium">
+                                            <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                            <p>Delete</p>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>';
+            })
+            ->editColumn('created_at', function ($project) {
+                return $project->created_at->format('M d - Y');
+            })
+            ->rawColumns(['name','status', 'action']);
+    }
+
+    /**
+     * Get query source of dataTable.
+     *
+     * @param \App\Models\Project $model
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function query(Project $model)
+    {
+        return $model->newQuery()->with('company');
+    }
+
+    /**
+     * Optional method if you want to use html builder.
+     *
+     * @return \Yajra\DataTables\Html\Builder
+     */
+    public function html()
+    {
+        return $this->builder()
+                    ->setTableId('projects-table')
+                    ->columns($this->getColumns())
+                    ->minifiedAjax()
+                    ->orderBy(1)
+                    ->parameters([
+                        'dom' => 'Bfrtip',
+                        'buttons' => ['csv', 'excel', 'pdf', 'print'],
+                    ]);
+    }
+
+    /**
+     * Get columns.
+     *
+     * @return array
+     */
+    protected function getColumns()
+    {
+        return [
+            'name' => ['title' => 'Project Name'],
+            'company_name' => ['title' => 'Company'],
+            'status' => ['title' => 'Status'],
+            'created_at' => ['title' => 'Created At'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false],
+        ];
+    }
+}

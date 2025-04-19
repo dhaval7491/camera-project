@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\EquipmentDataTable;
+use App\Http\Requests\EquipmentRequest;
+use App\Models\Equipment;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
@@ -9,9 +12,9 @@ class EquipmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(EquipmentDataTable $dataTable)
     {
-        return view('equipments.index');
+        return $dataTable->render('equipments.index');
     }
 
     /**
@@ -25,9 +28,11 @@ class EquipmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EquipmentRequest $request)
     {
-        //
+        $data = $request->validated();
+        Equipment::create($data);
+        return redirect()->route('equipments.index');
     }
 
     /**
@@ -49,16 +54,34 @@ class EquipmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Equipment $request, Equipment $equipment)
     {
-        //
+        $data = $request->validated();
+        $equipment->update($data);
+        return redirect()->route('equipments.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Equipment $equipment)
     {
-        //
+        $equipment->delete();
+        return redirect()->route('equipments.index');
+    }
+
+    /**
+     * Toggle the active status of equipment
+     */
+    public function toggleActive(Equipment $equipment)
+    {
+        $equipment->is_active = !$equipment->is_active;
+        $equipment->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Equipment status updated successfully',
+            'is_active' => $equipment->is_active
+        ]);
     }
 }

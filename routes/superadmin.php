@@ -7,6 +7,7 @@ use App\Http\Controllers\Equipment;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\LiveStreamController;
 use App\Http\Controllers\MappingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Superadmin\DashboardController;
@@ -38,4 +39,6 @@ Route::middleware(['superadmin_auth'])->group(function(){
     // New routes for toggling active status
     Route::post('/companies/{company}/toggle-active', [CompanyController::class, 'toggleActive'])->name('companies.toggle-active');
     Route::post('/projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggle-active');
+    Route::post('/equipments/{equipment}/toggle-active', [EquipmentController::class, 'toggleActive'])->name('equipments.toggle-active');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 });

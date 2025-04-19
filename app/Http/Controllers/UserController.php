@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -11,7 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        $companies = Company::all()->pluck('company_name', 'id')->toArray();
+        return view('users.index', compact('companies'));
     }
 
     /**
@@ -25,9 +29,31 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        // Get validated data from UserRequest
+        $validated = $request->validated();
+
+        // Handle image upload if present
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('user_images', 'public');
+        }
+
+        // Create new user
+        User::create([
+            'user_name' => $validated['user_name'],
+            'user_id' => $validated['user_id'],
+            'company_id' => $validated['company_name'], // Assuming company_name is the company_id
+            'project_name' => $validated['project_name'],
+            'location' => $validated['location'],
+            'access_level' => $validated['access_level'],
+            'date' => $validated['date'],
+            'image' => $imagePath,
+        ]);
+
+        // Redirect back with success message
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     /**

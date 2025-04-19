@@ -1,4 +1,4 @@
-<div class="sidebar fixed h-full w-[100px] sidebar-shadow">
+<div class="sidebar fixed top-0 left-0 h-full text-white bg-white overflow-y-auto pt-16 sidebar-shadow">
     <ul class="list-unstyled">
         <li
             class="mx-[7px] my-[10px] p-[6px]  hover:bg-[#f1f1f1]  rounded-r-[5px] ">

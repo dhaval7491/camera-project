@@ -1,8 +1,9 @@
 @extends('layouts.app')
 @section('content')
+<h1 class="text-3xl font-bold text-gray-800 mb-6">Hello Welcome</h1>
 <div class="dashboard-graphs">
     <div class="container-fluid">
-        <h3 class="manrope-bold text-[40px] text-[#000] mb-[20px]">Hello Welcome</h3>
+        <!-- <h3 class="manrope-bold text-[40px] text-[#000] mb-[20px]">Hello Welcome</h3> -->
         <div class="flex flex-wrap">
             <div class="lg:w-3/6 md:w-3/6 w-full ">
                 <div class="semicircle-graph relative">
