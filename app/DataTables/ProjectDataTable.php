@@ -139,4 +139,9 @@ class ProjectDataTable extends DataTable
             'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false],
         ];
     }
+
+    protected function filename(): string
+    {
+        return 'Project_' . date('YmdHis');
+    }
 }
