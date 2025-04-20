@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
-use App\DataTables\CompanyDatatable;
+use App\DataTables\CompanyDataTable;
 use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller
@@ -16,7 +16,7 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(CompanyDatatable $dataTable)
+    public function index(CompanyDataTable $dataTable)
     {
         return $dataTable->render('companies.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray() // Pass companies for edit modal
