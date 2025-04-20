@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\LoginController;
+use App\Http\Controllers\TrackableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::resource('users', UserController::class);
     Route::resource('equipments', EquipmentController::class);
     Route::resource('mappings', MappingController::class);
+    Route::resource('trackables', TrackableController::class);
     Route::get('/alerts',[AlertController::class,'index'])->name('alerts.index');
     Route::get('/settings',[SettingController::class,'index'])->name('settings.index');
     Route::get('/live-stream',[LiveStreamController::class,'index'])->name('streams.index');

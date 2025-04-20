@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DataTables\EquipmentDataTable;
 use App\Http\Requests\EquipmentRequest;
+use App\Models\Company;
 use App\Models\Equipment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
@@ -46,15 +48,27 @@ class EquipmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Equipment $equipment)
     {
-        //
+        if (request()->ajax()) {
+            return response()->json([
+                'id' => $equipment->id,
+                'type' => $equipment->type,
+                'camera_name' => $equipment->camera_name,
+                'stream_link' => $equipment->stream_link,
+                'camera_code' => $equipment->camera_code,
+                'map_tablet' => $equipment->map_tablet,
+                'company_id' => $equipment->company_id,
+                'project_id' => $equipment->project_id,
+                'plant_name' => $equipment->plant_name,
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Equipment $request, Equipment $equipment)
+    public function update(EquipmentRequest $request, Equipment $equipment)
     {
         $data = $request->validated();
         $equipment->update($data);

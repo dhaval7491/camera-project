@@ -143,7 +143,8 @@
 
 <!-- Create Company Modal -->
 @include('projects.add')
-
+<!-- Create Equipment Modal -->
+@include('equipments.add')
 <!-- Edit Company Modal -->
 @include('projects.edit')
 @endsection

@@ -164,6 +164,7 @@
 @include('equipments.add')
 
 <!-- Edit Equipment Modal -->
+@include('equipments.edit')
 @endsection
 
 @push('scripts')
@@ -206,6 +207,44 @@
                 alert('Failed to copy link');
             });
         });
+
+        // Fetch equipment data and populate edit modal
+        window.showEditModal = function(equipmentId) {
+            $.ajax({
+                url: '{{ url("equipments") }}/' + equipmentId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    // Populate the edit modal fields
+                    $('#edit_equipment_id').val(response.id);
+                    $('#edit_camera_name').val(response.camera_name);
+                    $('#edit_stream_link').val(response.stream_link);
+                    $('#edit_camera_code').val(response.camera_code);
+                    $('#edit_map_tablet').val(response.map_tablet);
+                    $('#edit_company_id').val(response.company_id);
+                    $('#edit_project_id').val(response.project_id);
+                    $('#edit_plant_name').val(response.plant_name);
+                    $('#editEquipmentForm').attr('action', '{{ url("equipments") }}/' + response.id);
+
+                    // Set the correct radio button and show appropriate fields
+                    if (response.type === 'camera') {
+                        $('#edit_type_camera').prop('checked', true);
+                        $('#cameraFields').removeClass('hidden');
+                        $('#tabletFields').addClass('hidden');
+                    } else if (response.type === 'tablet') {
+                        $('#edit_type_tablet').prop('checked', true);
+                        $('#cameraFields').addClass('hidden');
+                        $('#tabletFields').removeClass('hidden');
+                    }
+
+                    // Open the edit modal
+                    toggleModal('editEquipmentModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching equipment data:', xhr);
+                    alert('Failed to load equipment data');
+                }
+            });
+        };
     });
 </script>
 @endpush

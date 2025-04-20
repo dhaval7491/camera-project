@@ -58,9 +58,9 @@ class ProjectDataTable extends DataTable
                         <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
                             <ul>
                                 <li class="py-[5px]">
-                                    <a href="#" class="flex manrope-medium text-[#344563] text-[15px]">
+                                    <a href="javascript:void(0);" class="flex manrope-medium text-[#344563] text-[15px]">
                                         <img src="' . asset('admin-theme/assets/images/equipment.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                        <p onclick="toggleModale()">Add Equipment</p>
+                                        <p onclick="toggleModal(\'createEquipmentModal\')">Add Equipment</p>
                                     </a>
                                 </li>
                                 <li class="py-[5px]">

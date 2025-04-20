@@ -53,11 +53,11 @@ class EquipmentDataTable extends DataTable
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($equipment) {
-                return '<span><a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
+                return '<span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
                     <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
                         <ul>
                             <li class="py-[5px]">
-                                <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $equipment->id . ')">
+                                <a href="javascript:void(0);"  onclick="showEditModal(' . $equipment->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $equipment->id . ')">
                                     <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
                                     <p>Edit</p>
                                 </a>
