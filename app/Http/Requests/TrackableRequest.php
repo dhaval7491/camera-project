@@ -25,6 +25,7 @@ class TrackableRequest extends FormRequest
             'trackable_name' => ['required', 'string', 'max:255'],
             'other_name' => ['required', 'string', 'max:255'],
             'linked_objects' => ['sometimes', 'array'],
+            'project_id' => ['nullable', 'exists:projects,id'],
             'linked_objects.*' => ['required', 'string', 'max:255'],
         ];
     }

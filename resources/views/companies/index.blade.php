@@ -204,5 +204,14 @@
             }
         });
     };
+
+    // New function to handle Add Project modal with pre-selected company
+    window.openCreateProjectModal = function(companyId) {
+            // Open the create project modal
+            toggleModal('createProjectModal');
+
+            // Set the company_id dropdown to the selected company
+            $('#company_id').val(companyId);
+        };
 </script>
 @endpush

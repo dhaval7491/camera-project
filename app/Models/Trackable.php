@@ -8,6 +8,7 @@ class Trackable extends Model
 {
     protected $fillable = [
         'trackable_name',
+        'project_id',
         'other_name',
         'status',
     ];

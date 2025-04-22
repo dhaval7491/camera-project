@@ -61,7 +61,7 @@ class CompanyDataTable extends DataTable
                                 <li class="py-[5px]">
                                     <a href="javascript:void(0);" class="flex text-[#344563] text-[16px] manrope-medium">
                                         <img src="' . asset('admin-theme/assets/images/project.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                        <p onclick="toggleModal(\'createProjectModal\')">Add Project</p>
+                                        <p onclick="openCreateProjectModal(' . $company->id . ')">Add Project</p>
                                     </a>
                                 </li>
                                 <li class="py-[5px]">

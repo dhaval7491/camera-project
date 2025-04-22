@@ -147,6 +147,7 @@
 @include('equipments.add')
 <!-- Edit Company Modal -->
 @include('projects.edit')
+@include('trackables.add')
 @endsection
 
 @push('scripts')
@@ -203,5 +204,28 @@
             }
         });
     };
+
+     // Modified toggleModal to handle projectId for createTrackableModal
+     window.toggleModal = function(modalId, projectId = null) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                // If opening createTrackableModal and projectId is provided, append hidden project_id input
+                if (modalId === 'createTrackableModal' && projectId) {
+                    const form = document.getElementById('createTrackableForm');
+                    // Remove existing project_id input to avoid duplicates
+                    const existingInput = form.querySelector('input[name="project_id"]');
+                    if (existingInput) {
+                        existingInput.remove();
+                    }
+                    // Append new hidden input for project_id
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'project_id';
+                    hiddenInput.value = projectId;
+                    form.appendChild(hiddenInput);
+                }
+            }
+        };
 </script>
 @endpush

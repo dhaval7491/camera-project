@@ -14,6 +14,7 @@
             label="Company Name"
             type="select"
             name="company_id"
+            id="company_id"
             :options="$companies" />
             @error('company_id')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
