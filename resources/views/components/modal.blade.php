@@ -21,7 +21,7 @@
         </div>
 
         <!-- Modal Body (Scrollable) -->
-        <div class="px-6 pb-6 max-h-[80vh] mt-[10px]">
+        <div class="px-6 pb-6 max-h-[80vh] mt-[10px] overflow-y-auto">
             {{ $slot }}
         </div>
     </div>

@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UserDataTable;
+use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Company;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(UserDataTable $dataTable)
     {
-        $companies = Company::all()->pluck('company_name', 'id')->toArray();
-        return view('users.index', compact('companies'));
+        $companies = Company::pluck('company_name', 'id')->toArray();
+        $projects = Project::pluck('name', 'id')->toArray();
+        return $dataTable->render('users.index', compact('companies', 'projects'));
     }
 
     /**
@@ -23,7 +31,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $companies = Company::pluck('company_name', 'id')->toArray();
+        $projects = Project::pluck('name', 'id')->toArray();
+        return view('users.add', compact('companies', 'projects'));
     }
 
     /**
@@ -31,60 +41,119 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        // Get validated data from UserRequest
-        $validated = $request->validated();
+        // dd($request);
+        Log::info("request",$request->all());
+        $data = $request->validated();
 
         // Handle image upload if present
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('user_images', 'public');
+            $imagePath = $request->file('image')->store('user_images', 's3');
         }
 
         // Create new user
-        User::create([
-            'user_name' => $validated['user_name'],
-            'user_id' => $validated['user_id'],
-            'company_id' => $validated['company_name'], // Assuming company_name is the company_id
-            'project_name' => $validated['project_name'],
-            'location' => $validated['location'],
-            'access_level' => $validated['access_level'],
-            'date' => $validated['date'],
-            'image' => $imagePath,
+        $user = User::create([
+            'name' => $data['user_name'],
+            'email' => $data['email'] ?? null,
+            'password' => bcrypt(Str::random(10)),
+            'company_id' => $data['company_id'],
+            'project_id' => $data['project_id'],
+            'location' => $data['location'],
+            'access_level' => $data['access_level'],
+            'profile_img' => $imagePath,
+            'is_active' => 1,
         ]);
 
-        // Redirect back with success message
+        // Assign default role
+        $userRole = Role::where('name', 'user')->first();
+        if ($userRole) {
+            $user->assignRole($userRole);
+        }
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        return view('users.show', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        if (request()->ajax()) {
+            return response()->json([
+                'id' => $user->id,
+                'user_name' => $user->name,
+                'email' => $user->email,
+                'company_id' => $user->company_id,
+                'project_id' => $user->project_id,
+                'location' => $user->location,
+                'access_level' => $user->access_level,
+                'profile_img' => $user->profile_img ? Storage::disk('s3')->url($user->image) : null,
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EditUserRequest $request, User $user)
     {
-        //
+        $data = $request->validated();
+
+        // Handle image upload if present
+        if ($request->hasFile('image')) {
+            if ($user->profile_img) {
+                Storage::disk('s3')->delete($user->profile_img);
+            }
+            $data['image'] = $request->file('image')->store('user_images', 's3');
+        } else {
+            $data['image'] = $user->profile_img;
+        }
+
+        // Update user
+        $user->update([
+            'name' => $data['user_name'],
+            'email' => $data['email'] ?? null,
+            'company_id' => $data['company_id'],
+            'project_id' => $data['project_id'],
+            'location' => $data['location'],
+            'access_level' => $data['access_level'],
+            'profile_img' => $data['image'],
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        if ($user->profile_img) {
+            Storage::disk('s3')->delete($user->profile_img);
+        }
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * Toggle the active status of a user.
+     */
+    public function toggleActive(User $user)
+    {
+        $user->is_active = !$user->is_active;
+        $user->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'User status updated successfully',
+            'is_active' => $user->is_active
+        ]);
     }
 }
