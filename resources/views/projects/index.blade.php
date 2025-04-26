@@ -141,13 +141,16 @@
     </div>
 </div>
 
-<!-- Create Company Modal -->
+<!-- Create Project Modal -->
 @include('projects.add')
 <!-- Create Equipment Modal -->
 @include('equipments.add')
-<!-- Edit Company Modal -->
+<!-- Edit Project Modal -->
 @include('projects.edit')
+<!-- Add Trackable Modal -->
 @include('trackables.add')
+<!-- Add User Modal -->
+@include('users.add')
 @endsection
 
 @push('scripts')
@@ -157,7 +160,7 @@
         let table = $('#projects-table').DataTable()
 
         // Reopen modal if there are validation errors
-        @if($errors->any())
+        @if($errors -> any())
         toggleModal('createProjectModal');
         @endif
 
@@ -205,27 +208,37 @@
         });
     };
 
-     // Modified toggleModal to handle projectId for createTrackableModal
-     window.toggleModal = function(modalId, projectId = null) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.toggle('hidden');
-                // If opening createTrackableModal and projectId is provided, append hidden project_id input
-                if (modalId === 'createTrackableModal' && projectId) {
-                    const form = document.getElementById('createTrackableForm');
-                    // Remove existing project_id input to avoid duplicates
-                    const existingInput = form.querySelector('input[name="project_id"]');
-                    if (existingInput) {
-                        existingInput.remove();
-                    }
-                    // Append new hidden input for project_id
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = 'project_id';
-                    hiddenInput.value = projectId;
-                    form.appendChild(hiddenInput);
+    // Modified toggleModal to handle projectId for createTrackableModal
+    window.toggleModal = function(modalId, projectId = null) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.toggle('hidden');
+            // If opening createTrackableModal and projectId is provided, append hidden project_id input
+            if (modalId === 'createTrackableModal' && projectId) {
+                const form = document.getElementById('createTrackableForm');
+                // Remove existing project_id input to avoid duplicates
+                const existingInput = form.querySelector('input[name="project_id"]');
+                if (existingInput) {
+                    existingInput.remove();
                 }
+                // Append new hidden input for project_id
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'project_id';
+                hiddenInput.value = projectId;
+                form.appendChild(hiddenInput);
             }
-        };
+        }
+    };
+
+    // New function to handle Add User modal with pre-selected project
+    window.openCreateUserModal = function(companyId, projectId) {
+        // Open the create user modal
+        toggleModal('createUserModal');
+
+        // Set the company_id and project_id in your modal
+        $('#u_company_id').val(companyId);
+        $('#u_project_id').val(projectId);
+    };
 </script>
 @endpush

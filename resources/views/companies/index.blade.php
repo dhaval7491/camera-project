@@ -147,7 +147,8 @@
 @include('companies.edit')
 <!-- Create Project Modal -->
 @include('projects.add')
-
+<!-- Create User Modal -->
+@include('users.add')
 @endsection
 @push('scripts')
 {!! $dataTable->scripts() !!}
@@ -212,6 +213,15 @@
 
             // Set the company_id dropdown to the selected company
             $('#company_id').val(companyId);
+        };
+    
+    // New function to handle Add User modal with pre-selected company
+    window.openCreateUserModal = function(companyId) {
+            // Open the create user modal
+            toggleModal('createUserModal');
+
+            // Set the company_id dropdown to the selected company
+            $('#u_company_id').val(companyId);
         };
 </script>
 @endpush

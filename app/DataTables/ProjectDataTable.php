@@ -53,7 +53,7 @@ class ProjectDataTable extends DataTable
                             <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>
                         </span>
                         <span class="mt-[8px]">
-                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event)"></a>
+                            <a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event)"></a>
                         </span>
                         <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
                             <ul>
@@ -64,9 +64,9 @@ class ProjectDataTable extends DataTable
                                     </a>
                                 </li>
                                 <li class="py-[5px]">
-                                    <a href="#" class="flex text-[#344563] text-[16px] manrope-medium">
+                                    <a href="javascript:void(0);" class="flex text-[#344563] text-[16px] manrope-medium">
                                         <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                        <p>Add People</p>
+                                        <p onclick="openCreateUserModal(' . $project->company->id . ','. $project->id .')">Add People</p>
                                     </a>
                                 </li>
                                 <li class="py-[5px]">

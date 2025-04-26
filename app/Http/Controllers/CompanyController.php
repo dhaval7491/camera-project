@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use App\DataTables\CompanyDataTable;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Models\Project;
 
 class CompanyController extends Controller
 {
@@ -19,7 +20,8 @@ class CompanyController extends Controller
     public function index(CompanyDataTable $dataTable)
     {
         return $dataTable->render('companies.index', [
-            'companies' => Company::pluck('company_name', 'id')->toArray() // Pass companies for edit modal
+            'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
+            'projects' => Project::pluck('name','id')->toArray()
         ]);
         // $companies = Company::with('admin')->get();
         // return view('companies.index' , compact('companies'));
