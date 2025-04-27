@@ -48,7 +48,7 @@ class CompanyDataTable extends DataTable
                 return '
                     <div class="flex justify-center relative">
                         <span>
-                            <a href="#" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
+                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
                         <span>
                             <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>

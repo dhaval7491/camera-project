@@ -6,6 +6,7 @@ use App\DataTables\MappingDataTable;
 use App\Http\Requests\MappingRequest;
 use App\Models\Company;
 use App\Models\Equipment;
+use App\Models\Mapping;
 use App\Models\Project;
 
 class MappingController extends Controller
@@ -17,8 +18,8 @@ class MappingController extends Controller
     {
         $companies = Company::pluck('company_name', 'id')->toArray();
         $projects = Project::pluck('name', 'id')->toArray();
-        $equipment = Equipment::pluck('camera_name', 'id')->toArray();
-        return $dataTable->render('mappings.index', compact('companies', 'projects', 'equipment'));
+        $equipments = Equipment::pluck('camera_name', 'id')->toArray();
+        return $dataTable->render('mappings.index', compact('companies', 'projects', 'equipments'));
     }
 
     /**
@@ -70,10 +71,7 @@ class MappingController extends Controller
     {
         $data = $request->validated();
         $mapping->update($data);
-        return response()->json([
-            'success' => true,
-            'message' => 'Mapping updated successfully'
-        ]);
+        return redirect()->route('mappings.index');
     }
 
     /**

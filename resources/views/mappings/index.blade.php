@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content') 
+@section('content')
 <div class="company-table h-full">
     <div class="form-list">
         <div class="p-6 lg:p-8">
@@ -154,228 +154,63 @@
         <div class="form-list-table">
             <div class="mt-[20px]">
                 <div class="relative overflow-x-scroll h-full">
-                    <table
-                        class="w-full text-sm text-left">
-                        <thead class=" bg-[#e6e6e6]">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 manrope-medium text-[#3D3D3D] font-medium text-[16px]"></th>
-                                <th scope="col" class="px-6 py-3 text-left manrope-medium text-[#3D3D3D] font-medium text-[15px]">Company Name</th>
-                                <th scope="col" class="px-6 py-3 text-left manrope-medium text-[#3D3D3D] font-medium text-[15px]">Project Name</th>
-                                <th scope="col" class="px-6 py-3 text-left manrope-medium text-[#3D3D3D] font-medium text-[15px]">Plant Name</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Camera Name </th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Tablet Name</th>
-                                <th scope="col" class="px-6 py-3 text-left manrope-medium text-[#3D3D3D] font-medium text-[15px]">Streaming Links</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Status </th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bg-white transition duration-300 ease-in-out hover:bg-[#ededed]">
-                                <th class="text-center">
-                                    <div class="">
-                                        <input id="default-checkbox" type="checkbox" value="" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    </div>
-                                </th>
-                                <td class="px-6 py-4 text-left ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Digital Horizon Systems</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">London Bridge</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Crane 01</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Camera 01</p>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">I Pad</p>
-                                </td>
-                                <td class="px-6 py-4 text-left manrope-regular text-black font-normal text-[16px] relative">
-                                    <div class=" w-72">
-                                        <span class="truncate block w-full p-2 rounded">
-                                            https://www.example.com/api/v1/resources/data/fetch?user_id=1234567890abcdef1234567890abcdef&
-                                        </span>
-                                        <img src="{{ asset('admin-theme/assets/images/copy.png') }}" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
-                                    </div>
-                                </td>
-                                <td class="px-[20px] py-[20px] text-center ">
-                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
-                                        Active
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 text-center relative">
-                                    <span><a href="#"><img src="{{ asset('admin-theme/assets/images/more.png') }}" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
-                                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
-                                        <ul>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="w-[16px] mr-[11px] object-contain" onclick="toggleModal()">
-                                                    <p>Edit</p>
-                                                </a></li>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[16px] mr-[11px] object-contain">
-                                                    <p>Delete</p>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="bg-[#f8f8f8] transition duration-300 ease-in-out hover:bg-[#ededed]">
-                                <th class="text-center">
-                                    <div class="">
-                                        <input id="default-checkbox" type="checkbox" value="" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    </div>
-                                </th>
-                                <td class="px-6 py-4 text-left manrope-medium text-[#344563] font-normal text-[16px] ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Digital Horizon Systems</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">London Bridge</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Crane 01</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Camera 01</p>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">I Pad</p>
-                                </td>
-                                <td class="px-6 py-4 text-left manrope-regular text-black font-normal text-[16px] relative">
-                                    <div class=" w-72">
-                                        <span class="truncate block w-full p-2 rounded">
-                                            https://www.example.com/api/v1/resources/data/fetch?user_id=1234567890abcdef1234567890abcdef&
-                                        </span>
-                                        <img src="{{ asset('admin-theme/assets/images/copy.png') }}" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
-                                    </div>
-                                </td>
-                                <td class="px-[20px] py-[20px] text-center ">
-                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
-                                        Active
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 text-center relative">
-                                    <span><a href="#"><img src="{{ asset('admin-theme/assets/images/more.png') }}" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
-                                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
-                                        <ul>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="w-[16px] mr-[11px] object-contain" onclick="toggleModal()">
-                                                    <p>Edit</p>
-                                                </a></li>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[16px] mr-[11px] object-contain">
-                                                    <p>Delete</p>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="bg-white transition duration-300 ease-in-out hover:bg-[#ededed]">
-                                <th class="text-center">
-                                    <div class="">
-                                        <input id="default-checkbox" type="checkbox" value="" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    </div>
-                                </th>
-                                <td class="px-6 py-4 text-left ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Digital Horizon Systems</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">London Bridge</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Crane 01</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Camera 01</p>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">I Pad</p>
-                                </td>
-                                <td class="px-6 py-4 text-left manrope-regular text-black font-normal text-[16px] relative">
-                                    <div class=" w-72">
-                                        <span class="truncate block w-full p-2 rounded">
-                                            https://www.example.com/api/v1/resources/data/fetch?user_id=1234567890abcdef1234567890abcdef&
-                                        </span>
-                                        <img src="{{ asset('admin-theme/assets/images/copy.png') }}" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
-                                    </div>
-                                </td>
-                                <td class="px-[20px] py-[20px] text-center ">
-                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
-                                        Active
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 text-center relative">
-                                    <span><a href="#"><img src="{{ asset('admin-theme/assets/images/more.png') }}" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
-                                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
-                                        <ul>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="w-[16px] mr-[11px] object-contain" onclick="toggleModal()">
-                                                    <p>Edit</p>
-                                                </a></li>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[16px] mr-[11px] object-contain">
-                                                    <p>Delete</p>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="bg-[#f8f8f8] transition duration-300 ease-in-out hover:bg-[#ededed]">
-                                <th class="text-center">
-                                    <div class="">
-                                        <input id="default-checkbox" type="checkbox" value="" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    </div>
-                                </th>
-                                <td class="px-6 py-4 text-left manrope-medium text-[#344563] font-normal text-[16px] ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Digital Horizon Systems</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">London Bridge</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Crane 01</p>
-                                </td>
-                                <td class="px-6 py-4 ">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">Camera 01</p>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">I Pad</p>
-                                </td>
-                                <td class="px-6 py-4 text-left manrope-regular text-black font-normal text-[16px] relative">
-                                    <div class=" w-72">
-                                        <span class="truncate block w-full p-2 rounded">
-                                            https://www.example.com/api/v1/resources/data/fetch?user_id=1234567890abcdef1234567890abcdef&
-                                        </span>
-                                        <img src="{{ asset('admin-theme/assets/images/copy.png') }}" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
-                                    </div>
-                                </td>
-                                <td class="px-[20px] py-[20px] text-center ">
-                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
-                                        Active
-                                    </button>
-                                </td>
-                                <td class="px-6 py-4 text-center relative">
-                                    <span><a href="#"><img src="{{ asset('admin-theme/assets/images/more.png') }}" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
-                                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
-                                        <ul>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/edit-opt.png') }}" class="w-[16px] mr-[11px] object-contain" onclick="toggleModal()">
-                                                    <p>Edit</p>
-                                                </a></li>
-                                            <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                                    <img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[16px] mr-[11px] object-contain">
-                                                    <p>Delete</p>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {!! $dataTable->table(['class' => 'w-full text-sm text-left'], true) !!}
                 </div>
             </div>
         </div>
     </div>
 </div>
 @include('mappings.add')
+@include('mappings.edit')
 @endsection
+@push('scripts')
+{!! $dataTable->scripts() !!}
+<script>
+    $(document).ready(function() {
+        let table = $('#mappings-table').DataTable();
+
+        // Reopen modal if there are validation errors
+        @if($errors->any())
+        toggleModal('createMappingModal');
+        @endif
+
+        window.toggleMappingStatus = function(mappingId) {
+            $.ajax({
+                url: '{{ url("mappings") }}/' + mappingId + '/toggle-active',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        table.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
+                }
+            });
+        };
+
+        window.showEditMappingModal = function(mappingId) {
+            $.ajax({
+                url: '{{ url("mappings") }}/' + mappingId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    $('#edit_mapping_id').val(response.id);
+                    $('#edit_company_id').val(response.company_id);
+                    $('#edit_project_id').val(response.project_id);
+                    $('#edit_equipment_id').val(response.equipment_id);
+                    $('#editMappingForm').attr('action', '{{ url("mappings") }}/' + response.id);
+                    toggleModal('editMappingModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching mapping data:', xhr);
+                    alert('Failed to load mapping data');
+                }
+            });
+        };
+    });
+</script>
+@endpush

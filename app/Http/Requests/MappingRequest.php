@@ -24,7 +24,7 @@ class MappingRequest extends FormRequest
         return [
             'company_id' => ['nullable', 'exists:companies,id'],
             'project_id' => ['nullable', 'exists:projects,id'],
-            'equipment_id' => ['nullable', 'exists:equipment,id'],
+            'equipment_id' => ['nullable', 'exists:equipments,id'],
         ];
     }
 }

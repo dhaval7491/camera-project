@@ -24,6 +24,7 @@ class StoreProjectRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'company_id' => 'required|exists:companies,id',
+            'user_id' => 'nullable|exists:users,id',
             'location' => 'required|string|max:255',
             'plant_name' => 'required|string|max:255',
         ];

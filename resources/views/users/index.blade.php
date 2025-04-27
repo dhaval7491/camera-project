@@ -47,60 +47,60 @@
                 </p>
                 <p class="flex items-center">
                     <img class="w-[40px] h-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[10px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/fil-company.png')}}">
-                    <div x-data="{ open: false, search: '', selected: 'Company', options: ['Digital Horizon Systems', 'ByteCore Technologies', 'London Technova Solutions'], selectedOptions: [] }" class="relative">
-                        <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[200px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
-                            <span x-text="selected"></span>
-                        </button>
-                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[300px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                            <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                            <ul class="max-h-40 overflow-y-auto">
-                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                        <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
-                                        <span x-text="option"></span>
-                                    </li>
-                                </template>
-                            </ul>
-                        </div>
+                <div x-data="{ open: false, search: '', selected: 'Company', options: ['Digital Horizon Systems', 'ByteCore Technologies', 'London Technova Solutions'], selectedOptions: [] }" class="relative">
+                    <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[200px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]">
+                        <span x-text="selected"></span>
+                    </button>
+                    <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[300px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
+                        <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
+                        <ul class="max-h-40 overflow-y-auto">
+                            <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
+                                <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
+                                    <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
+                                    <span x-text="option"></span>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
+                </div>
                 </p>
                 <p class="flex items-center">
                     <img class="w-[40px] h-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/project-filter.png')}}">
-                    <div x-data="{ open: false, search: '', selected: 'Project', options: ['Project 1', 'Project 2', 'Project 3', 'Project 4'], selectedOptions: [] }" class="relative">
-                        <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium text-[#6a6a75] text-[15px]">
-                            <span x-text="selected"></span>
-                        </button>
-                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                            <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                            <ul class="max-h-40 overflow-y-auto">
-                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                        <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
-                                        <span x-text="option"></span>
-                                    </li>
-                                </template>
-                            </ul>
-                        </div>
+                <div x-data="{ open: false, search: '', selected: 'Project', options: ['Project 1', 'Project 2', 'Project 3', 'Project 4'], selectedOptions: [] }" class="relative">
+                    <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium text-[#6a6a75] text-[15px]">
+                        <span x-text="selected"></span>
+                    </button>
+                    <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
+                        <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
+                        <ul class="max-h-40 overflow-y-auto">
+                            <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
+                                <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
+                                    <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
+                                    <span x-text="option"></span>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
+                </div>
                 </p>
                 <p class="flex items-center">
                     <img class="w-[40px] h-[40px] object-contain mr-[5px] border-[#EBEBEB] border-[1px] border-solid p-[7px] rounded-[16px]" src="{{ asset('admin-theme/assets/images/status-filter.png')}}">
-                    <div x-data="{ open: false, search: '', selected: 'Status', options: ['Active', 'Inactive', 'Blocked'], selectedOptions: [] }" class="relative">
-                        <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium text-[#6a6a75] text-[15px]">
-                            <span x-text="selected"></span>
-                        </button>
-                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                            <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                            <ul class="max-h-40 overflow-y-auto">
-                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                        <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
-                                        <span x-text="option"></span>
-                                    </li>
-                                </template>
-                            </ul>
-                        </div>
+                <div x-data="{ open: false, search: '', selected: 'Status', options: ['Active', 'Inactive', 'Blocked'], selectedOptions: [] }" class="relative">
+                    <button @click="open = !open" class="p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium text-[#6a6a75] text-[15px]">
+                        <span x-text="selected"></span>
+                    </button>
+                    <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
+                        <input type="text" x-model="search" placeholder="Search..." class="w-full p-2 border-b border-gray-300 focus:outline-none">
+                        <ul class="max-h-40 overflow-y-auto">
+                            <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
+                                <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
+                                    <input type="checkbox" :value="option" x-model="selectedOptions" class="cursor-pointer">
+                                    <span x-text="option"></span>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
+                </div>
                 </p>
             </div>
         </div>
@@ -120,6 +120,8 @@
 @include('users.add')
 <!-- Edit User Modal -->
 @include('users.edit')
+<!-- Create Project Modal -->
+@include('projects.add')
 
 @endsection
 
@@ -130,7 +132,7 @@
         let table = $('#user-table').DataTable();
 
         // Reopen modal if there are validation errors
-        @if($errors->any())
+        @if($errors -> any())
         toggleModal('createUserModal');
         @endif
 
@@ -180,6 +182,29 @@
                     alert('Failed to load user data');
                 }
             });
+        };
+
+        // Modified toggleModal to handle userId for createProjectModal
+        window.toggleModal = function(modalId, userId = null) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                // If opening createProjectModal and userId is provided, append hidden user_id input
+                if (modalId === 'createProjectModal' && userId) {
+                    const form = document.getElementById('createProjectForm');
+                    // Remove existing user_id input to avoid duplicates
+                    const existingInput = form.querySelector('input[name="user_id"]');
+                    if (existingInput) {
+                        existingInput.remove();
+                    }
+                    // Append new hidden input for user_id
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'user_id';
+                    hiddenInput.value = userId;
+                    form.appendChild(hiddenInput);
+                }
+            }
         };
     });
 </script>

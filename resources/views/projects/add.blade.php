@@ -1,5 +1,5 @@
 <x-modal id="createProjectModal" title="Create a New Project" class="max-w-lg">
-    <form method="POST" action="{{ route('projects.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('projects.store') }}" id="createProjectForm" enctype="multipart/form-data">
         @csrf
         <x-form-input
             label="Project Name"
