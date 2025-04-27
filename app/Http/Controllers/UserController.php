@@ -78,7 +78,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        $companies = Company::pluck('company_name', 'id')->toArray();
+        $projects = Project::pluck('name', 'id')->toArray();
+        return view('users.show', compact('user', 'companies', 'projects'));
     }
 
     /**
