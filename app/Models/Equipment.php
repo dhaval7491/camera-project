@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Equipment extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
     protected $table = "equipments";
     protected $fillable = [
         'type',
@@ -15,5 +16,6 @@ class Equipment extends Model
         'stream_link',
         'camera_code',
         'map_tablet',
+        'password'
     ];
 }

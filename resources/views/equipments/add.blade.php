@@ -51,6 +51,17 @@
                 @error('camera_code')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
                 @enderror
+
+                <x-form-input
+                    label="Password"
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter Password"
+                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                @error('password')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Tablet Fields -->

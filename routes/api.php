@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
 use App\Http\Controllers\WebRTCController;
 use Illuminate\Http\Request;
@@ -14,6 +15,13 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [LoginController::class, 'logout']);
         Route::post('/refresh', [LoginController::class, 'refresh']);
+    });
+
+    // Equipment routes
+    Route::post('/equipment/login', [EquipmentController::class, 'login']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/equipment/logout', [EquipmentController::class, 'logout']);
+        Route::post('/equipment/refresh', [EquipmentController::class, 'refresh']);
     });
 });
 

@@ -33,6 +33,10 @@ class EquipmentController extends Controller
     public function store(EquipmentRequest $request)
     {
         $data = $request->validated();
+        // Hash the password before storing
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
         Equipment::create($data);
         return redirect()->route('equipments.index');
     }

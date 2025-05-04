@@ -27,6 +27,8 @@ class EquipmentRequest extends FormRequest
         return [
             'type' => 'required|string|in:camera,tablet',
 
+            'password' => 'required',
+
             // Required if type is camera
             'camera_name' => [
                 Rule::requiredIf($type === 'camera'),
