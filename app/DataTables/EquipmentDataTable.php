@@ -22,6 +22,9 @@ class EquipmentDataTable extends DataTable
             ->addColumn('name', function ($equipment) {
                 return $equipment->camera_name ?? 'N/A';
             })
+            ->addColumn('code', function ($equipment) {
+                return $equipment->camera_code ?? 'N/A';
+            })
             ->addColumn('company_name', function ($equipment) {
                 return $equipment->company ? $equipment->company->company_name : 'N/A';
             })
@@ -125,6 +128,7 @@ class EquipmentDataTable extends DataTable
                     ->searchable(false)
                     ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
                 Column::make('name')->title('Equipment Name'),
+                Column::make('code')->title('Equipment Code'),
                 Column::make('company_name')->title('Company Name'),
                 Column::make('project_name')->title('Project Name'),
                 Column::make('plant_name')->title('Plant Name'),
