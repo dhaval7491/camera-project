@@ -44,6 +44,7 @@ class EquipmentController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Successfully logged in',
                 'data' => [
                     'equipment' => $equipment,
@@ -54,12 +55,14 @@ class EquipmentController extends Controller
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
+                'success' => false,
                 'message' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
-                'message' => 'An error occurred during login'
+                'success' => false,
+                'message' => $e->getMessage()
             ], 500);
         }
     }
