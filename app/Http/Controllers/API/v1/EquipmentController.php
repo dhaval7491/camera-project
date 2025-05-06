@@ -25,12 +25,14 @@ class EquipmentController extends Controller
 
             if (!$equipment || !Hash::check($request->password, $equipment->password)) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Invalid camera code or password'
                 ], 401);
             }
 
             if (!$equipment->is_active) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Equipment is inactive'
                 ], 403);
             }

@@ -26,12 +26,14 @@ class LoginController extends Controller
 
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Invalid email or password'
                 ], 401);
             }
 
             if (!$user->is_active) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Account is inactive'
                 ], 403);
             }
