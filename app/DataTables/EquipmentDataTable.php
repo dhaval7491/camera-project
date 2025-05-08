@@ -20,10 +20,10 @@ class EquipmentDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('name', function ($equipment) {
-                return $equipment->camera_name ?? 'N/A';
+                return $equipment->equipment_name ?? 'N/A';
             })
             ->addColumn('code', function ($equipment) {
-                return $equipment->camera_code ?? 'N/A';
+                return $equipment->equipment_code ?? 'N/A';
             })
             ->addColumn('company_name', function ($equipment) {
                 return $equipment->company ? $equipment->company->company_name : 'N/A';

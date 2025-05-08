@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('equipments', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->string('camera_name')->nullable();
+            $table->string('equipment_name')->nullable();
             $table->string('stream_link')->nullable();
-            $table->string('camera_code')->nullable();
-            $table->string('map_tablet')->nullable();
+            $table->string('equipment_code')->nullable();
+            $table->string('password')->nullable();
             $table->timestamps();
         });
     }

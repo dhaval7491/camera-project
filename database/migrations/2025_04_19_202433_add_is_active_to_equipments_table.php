@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('equipments', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true)->after('map_tablet');
+            $table->boolean('is_active')->default(true)->after('password');
         });
     }
 

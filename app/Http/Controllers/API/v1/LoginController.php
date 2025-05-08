@@ -33,7 +33,7 @@ class LoginController extends Controller
 
             if (!$user->is_active) {
                 return response()->json([
-                    'success' => false,
+                    'success' => false, 
                     'message' => 'Account is inactive'
                 ], 403);
             }

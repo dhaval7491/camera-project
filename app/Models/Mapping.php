@@ -16,7 +16,8 @@ class Mapping extends Model
     protected $fillable = [
         'company_id',
         'project_id',
-        'equipment_id',
+        'tablet_id',
+        'camera_id'
     ];
 
     // Define the relationship to the Company model (assuming you have a Company model)
@@ -32,8 +33,13 @@ class Mapping extends Model
     }
 
     // Define the relationship to the Equipment model (assuming you have an Equipment model)
-    public function equipment()
+    public function camera()
     {
-        return $this->belongsTo(Equipment::class);
+        return $this->belongsTo(Equipment::class, 'camera_id');
+    }
+
+    public function tablet()
+    {
+        return $this->belongsTo(Equipment::class, 'tablet_id');
     }
 }

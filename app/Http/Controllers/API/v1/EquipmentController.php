@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Equipment;
+use App\Models\Mapping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,13 +16,13 @@ class EquipmentController extends Controller
     {
         try {
             $request->validate([
-                'camera_code' => 'required|string',
+                'device_code' => 'required|string',
                 'password' => 'required|string',
             ]);
 
             DB::beginTransaction();
 
-            $equipment = Equipment::where('camera_code', $request->camera_code)->first();
+            $equipment = Equipment::where('equipment_code', $request->device_code)->first();
 
             if (!$equipment || !Hash::check($request->password, $equipment->password)) {
                 return response()->json([
@@ -103,5 +104,28 @@ class EquipmentController extends Controller
                 'message' => 'An error occurred during token refresh'
             ], 500);
         }
+    }
+
+    public function getCameraList(Request $request)
+    {
+        $getCameraList = Mapping::with('camera')
+            ->where('tablet_id', auth()->id())
+            ->get()
+            ->transform(function ($mapping) {
+                return [
+                    'id' => $mapping->camera->id, 
+                    'equipment_code' => $mapping->camera->equipment_code,
+                    'equipment_name' => $mapping->camera->equipment_name,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Camera list retrieved',
+            'data' => [
+                'camera_list' => $getCameraList
+            ]
+        ]);
+
     }
 }

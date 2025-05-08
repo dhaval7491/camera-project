@@ -22,9 +22,10 @@ class MappingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => ['nullable', 'exists:companies,id'],
-            'project_id' => ['nullable', 'exists:projects,id'],
-            'equipment_id' => ['nullable', 'exists:equipments,id'],
+            'company_id' => ['required', 'exists:companies,id'],
+            'project_id' => ['required', 'exists:projects,id'],
+            'camera_id' => ['required', 'exists:equipments,id'],
+            'tablet_id' => ['required', 'exists:equipments,id']
         ];
     }
 }

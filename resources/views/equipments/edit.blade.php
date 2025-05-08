@@ -19,54 +19,54 @@
                 </div>
             </div>
 
-            <!-- Camera Fields -->
-            <div id="cameraFields" class="space-y-4">
+            <!-- Common Fields -->
+            <div class="space-y-4">
                 <x-form-input
-                    label="Camera Name"
+                    label="Equipment Name"
                     type="text"
-                    name="camera_name"
-                    id="edit_camera_name"
-                    placeholder="Enter Camera Name"
+                    name="equipment_name"
+                    id="edit_equipment_name"
+                    placeholder="Enter Equipment Name"
                     class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                @error('camera_name')
+                @error('equipment_name')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
                 @enderror
 
                 <x-form-input
-                    label="Streaming Link"
-                    type="url"
-                    name="stream_link"
-                    id="edit_stream_link"
-                    placeholder="https://www.example.com/api/v1/resources/d"
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                @error('stream_link')
-                <p class="text-red-500 text-sm">{{ $message }}</p>
-                @enderror
-
-                <x-form-input
-                    label="Camera Code"
+                    label="Equipment Code"
                     type="text"
-                    name="camera_code"
-                    id="edit_camera_code"
+                    name="equipment_code"
+                    id="edit_equipment_code"
                     placeholder="#2356523"
                     class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                @error('camera_code')
+                @error('equipment_code')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
                 @enderror
-            </div>
 
-            <!-- Tablet Fields -->
-            <div id="tabletFields" class="space-y-4 hidden">
                 <x-form-input
-                    label="Map Tablet"
-                    type="text"
-                    name="map_tablet"
-                    id="edit_map_tablet"
-                    placeholder="Enter Tablet Name"
+                    label="Password"
+                    type="password"
+                    name="password"
+                    id="edit_password"
+                    placeholder="Enter Password"
                     class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-                @error('map_tablet')
+                @error('password')
                 <p class="text-red-500 text-sm">{{ $message }}</p>
                 @enderror
+
+                <!-- Camera Specific Field -->
+                <div id="cameraFields" class="space-y-4">
+                    <x-form-input
+                        label="Streaming Link"
+                        type="url"
+                        name="stream_link"
+                        id="edit_stream_link"
+                        placeholder="https://www.example.com/api/v1/resources/d"
+                        class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    @error('stream_link')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
             <div class="flex justify-end space-x-3">
@@ -87,16 +87,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         const radioButtons = document.querySelectorAll('#editEquipmentModal input[name="type"]');
         const cameraFields = document.getElementById('cameraFields');
-        const tabletFields = document.getElementById('tabletFields');
 
         radioButtons.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.value === 'camera') {
                     cameraFields.classList.remove('hidden');
-                    tabletFields.classList.add('hidden');
                 } else if (this.value === 'tablet') {
                     cameraFields.classList.add('hidden');
-                    tabletFields.classList.remove('hidden');
                 }
             });
         });

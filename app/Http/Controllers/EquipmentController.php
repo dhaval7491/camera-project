@@ -58,10 +58,9 @@ class EquipmentController extends Controller
             return response()->json([
                 'id' => $equipment->id,
                 'type' => $equipment->type,
-                'camera_name' => $equipment->camera_name,
+                'equipment_name' => $equipment->equipment_name,
                 'stream_link' => $equipment->stream_link,
-                'camera_code' => $equipment->camera_code,
-                'map_tablet' => $equipment->map_tablet,
+                'equipment_code' => $equipment->equipment_code,
                 'company_id' => $equipment->company_id,
                 'project_id' => $equipment->project_id,
                 'plant_name' => $equipment->plant_name,
@@ -75,6 +74,10 @@ class EquipmentController extends Controller
     public function update(EquipmentRequest $request, Equipment $equipment)
     {
         $data = $request->validated();
+        // Hash the password before storing
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
         $equipment->update($data);
         return redirect()->route('equipments.index');
     }

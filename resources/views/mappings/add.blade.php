@@ -23,12 +23,22 @@
             @enderror
 
             <x-form-input
-                label="Equipment Name"
+                label="Camera Name"
                 type="select"
-                name="equipment_id"
-                id="equipment_id"
-                :options="$equipments" />
-            @error('company_id')
+                name="camera_id"
+                id="camera_id"
+                :options="$cameras" />
+            @error('camera_id')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+
+            <x-form-input
+                label="Tablet Name"
+                type="select"
+                name="tablet_id"
+                id="tablet_id"
+                :options="$tablets" />
+            @error('camera_id')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
 

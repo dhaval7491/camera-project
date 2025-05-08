@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/equipment/logout', [EquipmentController::class, 'logout']);
         Route::post('/equipment/refresh', [EquipmentController::class, 'refresh']);
+        Route::get('get-camera-list', [EquipmentController::class, 'getCameraList']);
     });
 });
 

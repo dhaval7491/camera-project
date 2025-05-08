@@ -31,10 +31,10 @@ class MappingDatatable extends DataTable
                 return $mapping->project->plant_name ?? 'N/A';
             })
             ->editColumn('camera_name', function ($mapping) {
-                return $mapping->equipment->camera_name ?? 'N/A';
+                return $mapping->camera->equipment_name ?? 'N/A';
             })
             ->editColumn('tablet_name', function ($mapping) {
-                return $mapping->equipment->map_tablet ?? 'N/A';
+                return $mapping->tablet->equipment_name ?? 'N/A';
             })
             ->editColumn('streaming_links', function ($mapping) {
                 return '

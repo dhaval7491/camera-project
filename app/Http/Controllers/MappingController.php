@@ -18,8 +18,9 @@ class MappingController extends Controller
     {
         $companies = Company::pluck('company_name', 'id')->toArray();
         $projects = Project::pluck('name', 'id')->toArray();
-        $equipments = Equipment::pluck('camera_name', 'id')->toArray();
-        return $dataTable->render('mappings.index', compact('companies', 'projects', 'equipments'));
+        $tablets = Equipment::where('type', 'tablet')->pluck('equipment_name', 'id')->toArray();
+        $cameras = Equipment::where('type', 'camera')->pluck('equipment_name', 'id')->toArray();
+        return $dataTable->render('mappings.index', compact('companies', 'projects', 'cameras', 'tablets'));
     }
 
     /**
@@ -58,7 +59,8 @@ class MappingController extends Controller
                 'id' => $mapping->id,
                 'company_id' => $mapping->company_id,
                 'project_id' => $mapping->project_id,
-                'equipment_id' => $mapping->equipment_id,
+                'camera_id' => $mapping->camera_id,
+                'tablet_id' => $mapping->tablet_id,
                 'status' => $mapping->status,
             ]);
         }

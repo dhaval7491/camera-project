@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('equipment_id');
+            $table->unsignedBigInteger('tablet_id');
+            $table->unsignedBigInteger('camera_id');
             $table->boolean('is_active')->default(true);
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->foreign('equipment_id')->references('id')->on('equipments')->onDelete('cascade');
+            $table->foreign('tablet_id')->references('id')->on('equipments')->onDelete('cascade');
+            $table->foreign('camera_id')->references('id')->on('equipments')->onDelete('cascade');
             $table->timestamps();
         });
     }
