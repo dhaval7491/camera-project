@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
 </head>
 
-<body class="min-h-screen">
+<body class="min-h-screen bg-white">
     <!-- <div class="wrapper"> -->
         @include('layouts.nav-top')
         <!-- <div class="dashboard-body"> -->

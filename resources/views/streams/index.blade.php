@@ -10,21 +10,6 @@
                 </div>
             </button>
             @endforeach
-            <button class="w-full  tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openTab(event, 'stream2')">
-                <div class="flex">
-                    <p class="w-[100%] text-left manrope-medium text-[13px] font-medium">Horizon Point</p>
-                </div>
-            </button>
-            <button class="w-full  tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openTab(event, 'stream3')">
-                <div class="flex">
-                    <p class="w-[100%] text-left manrope-medium text-[13px] font-medium">Park Towers</p>
-                </div>
-            </button>
-            <button class="w-full  tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openTab(event, 'stream4')">
-                <div class="flex">
-                    <p class="w-[100%] text-left manrope-medium text-[13px] font-medium">Evergreen Terraces</p>
-                </div>
-            </button>
         </div>
     </div>
     <div class="lg:w-5/6 md:w-5/6 mt-[10px] h-full">
