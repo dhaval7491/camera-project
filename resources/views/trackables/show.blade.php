@@ -1,0 +1,63 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="flex flex-wrap justify-between">
+    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
+        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">
+            <p class="inline-block manrope-medium text-[15px]  px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
+                < Back</p> Trackable
+        </h3>
+    </div>
+    <!-- <a href="#"><img src="assets/images/edit-1.png" class="w-[20px] mt-[7px] ml-[20px]"> Edit</a> -->
+</div>
+<div class="profile-detail alert-shadow pt-[20px] pr-[25px] pb-[1px] pl-[20px] mt-[10px]">
+    <div class="flex justify-between pl-[5px] pr-[5px]">
+        <h4 class="manrope-medium text-[18px] mb-[20px]">Trackable Detail</h4>
+    </div>
+    <div class="flex flex-wrap mb-[30px]">
+        <div class="lg:w-1/9 w-full pl-[5px] pr-[15px] border-r-[#e4e4e4] border-r-[1px] border-r-solid flex items-center justify-center">
+            <div class="text-center inline-block w-[140px] h-[140px] mr-[10px] text-[50px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-[#fff] manrope-semibold rounded-[6px] py-[10px] px-[10px] items-center justify-center pt-[30px]">
+                MI
+            </div>
+        </div>
+        <div class="lg:w-8/9 w-full pl-[15px] pr-[10px]">
+            <h3 class="manrope-regular text-[16px] ml-[5px] font-semibold">Mas Indro</h3>
+            <div class="flex flex-wrap mb-[30px]">
+                <div class="lg:w-2/6 w-full pl-[5px] pr-[5px] pt-[10px]">
+                    <div class="profile-detail">
+                        <p class="pt-[0px]"><span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Trackable Name:</span><span class="manrope-regular text-[16px] text-[#969696]">
+                                Mas Indro</span></p>
+                        <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Other name: </span><span class="manrope-regular text-[16px] text-[#969696] ">Abc</span></p>
+
+                    </div>
+                </div>
+                <div class="lg:w-2/6 w-full pl-[5px] pr-[5px]">
+                    <div class="profile-detail">
+                        <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Linked Objects: </span><span class="manrope-regular text-[16px] text-[#969696]">Linked object 1 , Linked Object 2</span></p>
+                        <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular text-[16px]">Status:</span><span class="manrope-regular text-[16px] text-[#047413]">Active</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="profile-detail pt-[20px] pb-[1px] mt-[10px]">
+    <div class="profile-project pt-[10px] pl-[3px] pr-[3px]">
+        <h3 class="manrope-semibold text-[15px] text-[#3D3D3D] mb-[20px]">Associated Projects</h3>
+        <div class="grid grid-cols-6 gap-4">
+            <div class="flex alert-shadow items-center p-[20px]">
+                <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA]  text-[18px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">LB</p>
+                <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">London Bridge</p>
+            </div>
+            <div class="flex alert-shadow items-center p-[20px]">
+                <p class="bg-gradient-to-b from-[#F99C43] to-[#F97C59]  text-[18px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">TS</p>
+                <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">Triton Square</p>
+            </div>
+            <div class="flex alert-shadow items-center p-[20px]">
+                <p class="bg-gradient-to-b from-[#FFB6DE] to-[#f880c2]  text-[18px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">PP</p>
+                <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">Powergate Phase 2</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

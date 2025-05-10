@@ -76,6 +76,12 @@ class ProjectDataTable extends DataTable
                                     </a>
                                 </li>
                                 <li class="py-[5px]">
+                                    <a href="' . route('projects.show', $project->id) . '" class="flex manrope-medium text-[#344563] text-[15px]">
+                                        <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
+                                        <p>Trackables</p>
+                                    </a>
+                                </li>
+                                <li class="py-[5px]">
                                     <form action="' . route('projects.destroy', $project->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this project?\');">
                                         ' . csrf_field() . '
                                         ' . method_field('DELETE') . '

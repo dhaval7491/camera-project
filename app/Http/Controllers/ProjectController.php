@@ -44,7 +44,8 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $trackables = Company::pluck('company_name', 'id')->toArray();
+        return view('projects.show', compact('trackables'));
     }
 
     /**

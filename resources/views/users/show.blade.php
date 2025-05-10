@@ -14,12 +14,12 @@
                 <div class="flex">
                     <button class="bg-[#f1f3f5] manrope-medium text-[14px] text-[#3D3D3D] py-[10px] px-[25px] rounded-[10px]" onclick="showEditModal('{{$user->id}}')">Edit Profile</button>
                     <form action="{{route('users.destroy', $user->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                @csrf()
-                                @method('DELETE')
-                                <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]  ml-[20px]">
-                                    <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[20px] mr-[11px] object-contain">
-                                </button>
-                            </form>
+                        @csrf()
+                        @method('DELETE')
+                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]  ml-[20px]">
+                            <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[20px] mr-[11px] object-contain">
+                        </button>
+                    </form>
                     <!-- <a href="#" onclick="return confirm('Are you sure you want to delete this user?');">
                         <img src="{{ asset('admin-theme/assets/images/profile-delete.png') }}" class="w-[20px] mt-[7px] ml-[20px]">
                     </a> -->
@@ -105,7 +105,12 @@
         <div class="profile-project mt-[40px] pl-[3px] pr-[3px]">
             <h3 class="manrope-semibold text-[18px] text-[#3D3D3D] mb-[20px]">Projects List</h3>
             <div class="grid grid-cols-6 gap-4">
-               
+            @foreach($projects as $project)
+                <div class="flex alert-shadow items-center p-[20px]">
+                    <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA]  text-[24px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">LB</p>
+                    <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">{{ $project->name }}</p>
+                </div>
+            @endforeach    
             </div>
         </div>
     </div>
@@ -171,8 +176,8 @@
             }
         });
 
-         // Fetch user data and populate edit modal
-         window.showEditModal = function(userId) {
+        // Fetch user data and populate edit modal
+        window.showEditModal = function(userId) {
             $.ajax({
                 url: '{{ url("users") }}/' + userId + '/edit',
                 method: 'GET',

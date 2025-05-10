@@ -24,7 +24,7 @@ class TrackableDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->editColumn('trackable_name', function ($trackable) {
-                return '<p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p>';
+                return '<a href="' .route('trackables.show', $trackable->id). '"><p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p></a>';
             })
             ->editColumn('other_name', function ($trackable) {
                 return '<p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->other_name . '</p>';

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\TrackableDataTable;
 use App\Http\Requests\TrackableRequest;
+use App\Models\Project;
 use App\Models\Trackable;
 use Illuminate\Http\Request;
 
@@ -49,9 +50,10 @@ class TrackableController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Trackable $trackable)
     {
-        //
+        $projects = Project::select('name', 'id')->get();
+        return view('trackables.show', compact('trackable', 'projects'));
     }
 
     /**
