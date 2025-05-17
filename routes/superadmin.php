@@ -10,15 +10,15 @@ use App\Http\Controllers\MappingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SignalingController;
 use App\Http\Controllers\Superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\LoginController;
 use App\Http\Controllers\TrackableController;
 use App\Http\Controllers\UserController;
-use App\Models\Trackable;
 use Illuminate\Support\Facades\Route;
 
 Route::get('superadmin',function() {
-    return view('superadmin.dashboard');
+    return view('superadmin.webrtc');
 });
 
 Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
@@ -48,4 +48,11 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+});
+
+Route::prefix('signaling')->group(function () {
+    Route::get('room/{roomId}', [SignalingController::class, 'getRoom']);
+    Route::post('room/{roomId}/answer', [SignalingController::class, 'setAnswer']);
+    Route::post('room/{roomId}/callee-candidate', [SignalingController::class, 'addCalleeCandidate']);
+    Route::get('room/{roomId}/caller-candidates', [SignalingController::class, 'getCallerCandidates']);
 });

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
+use App\Http\Controllers\SignalingController;
 use App\Http\Controllers\WebRTCController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,3 +33,10 @@ Route::post('/add-candidate', [WebRTCController::class, 'addCandidate']);
 Route::get('/room', [WebRTCController::class, 'getRoom']);
 Route::post('/get-candidates', [WebRTCController::class, 'getCandidates']);
 Route::post('/init-room', [WebRTCController::class, 'initRoom']);
+
+Route::prefix('signaling')->group(function () {
+    Route::get('room/{roomId}', [SignalingController::class, 'getRoom']);
+    Route::post('room/{roomId}/answer', [SignalingController::class, 'setAnswer']);
+    Route::post('room/{roomId}/callee-candidate', [SignalingController::class, 'addCalleeCandidate']);
+    Route::get('room/{roomId}/caller-candidates', [SignalingController::class, 'getCallerCandidates']);
+});

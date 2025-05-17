@@ -36,7 +36,7 @@ class ProjectDataTable extends DataTable
             })
             ->addColumn('status', function ($project) {
                 $status = $project->is_active ? 'Active' : 'Inactive';
-                $color = $project->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $project->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$project->id}\" onclick=\"toggleProjectStatus({$project->id})\">{$status}</button>";
             })
             ->addColumn('company_name', function ($project) {

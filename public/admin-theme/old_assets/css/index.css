@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@tailwind utilities;
+
+.sidebar li.active {
+    @apply bg-[#73b3ff47] border-l-3 border-l-[#0060d1];
+  }
+  /* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f8f8f8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ededed;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b8b7b7;
+}
+/* .crane-list::-webkit-scrollbar {
+  display: none;
+} */

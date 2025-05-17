@@ -31,7 +31,7 @@ class CompanyDataTable extends DataTable
             })
             ->addColumn('status', function ($company) {
                 $status = $company->is_active ? 'Active' : 'Inactive';
-                $color = $company->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $company->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
             })
             ->addColumn('people', function ($company) {

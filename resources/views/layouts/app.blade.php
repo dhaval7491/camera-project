@@ -5,13 +5,13 @@
         Guava
     </title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css')
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/media.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.7.1/spectrum.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css">
     <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css'
@@ -22,18 +22,18 @@
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
 </head>
 
-<body class="min-h-screen bg-white">
-    <!-- <div class="wrapper"> -->
+<body>
+    <div class="wrapper">
         @include('layouts.nav-top')
-        <!-- <div class="dashboard-body"> -->
+        <div class="dashboard-body  pt-[100px]">
             @include('layouts.sidebar')
-            <div class="content pt-20 px-8">
+            <div class="ml-[130px] pt-[20px] mr-[15px]">
                 @yield('content')
                
             </div>
-        <!-- </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
+        </div>
+    </div>
+    </div>
 </body>
 <script src="{{ asset('admin-theme/assets/js/jquery-3.7.1.js')}}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
@@ -90,6 +90,32 @@
 <!--------------------- Sidebar Hover effect --------------------------->
 <script>
     $(document).ready(function() {
+        $(function() {
+            var start = moment().format('DD-MM-YYYY'); // Get current date
+            var end = moment().format('DD-MM-YYYY'); // You can modify this to set a range
+        
+            // Set the input field to display the current date initially
+            $('input[name="daterange"]').val(start + ' to ' + end);
+        
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                autoUpdateInput: false, // Prevents automatic filling on date selection
+                locale: {
+                    format: 'DD-MM-YYYY',
+                    cancelLabel: 'Clear'
+                }
+            });
+        
+            // Handle date selection
+            $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' to ' + picker.endDate.format('DD-MM-YYYY'));
+            });
+        
+            // Handle clearing input when cancel is clicked
+            $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val(start + ' to ' + end); // Resets to the current date instead of clearing
+            });
+        });
         $(".sidebar li").each(function() {
             const img = $(this).find("img");
             const originalSrc = img.attr("src");

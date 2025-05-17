@@ -35,12 +35,9 @@ class UserDataTable extends DataTable
             ->addColumn('company_name', function ($user) {
                 return $user->company ? $user->company->company_name : 'N/A';
             })
-            ->addColumn('project_name', function ($user) {
-                return $user->project ? $user->project->name : 'N/A';
-            })
             ->addColumn('status', function ($user) {
                 $status = $user->is_active ? 'Active' : 'Inactive';
-                $color = $user->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $user->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($user) {
@@ -106,7 +103,6 @@ class UserDataTable extends DataTable
         return [
             Column::make('user_name')->title('User Name'),
             Column::make('company_name')->title('Company Name'),
-            Column::make('project_name')->title('Project Name'),
             Column::make('access_level')->title('Access Level'),
             Column::make('status')->title('Status'),
             Column::make('created_at')->title('Member Since'),

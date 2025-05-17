@@ -1,38 +1,52 @@
 <x-modal id="editCompanyModal" title="Edit Company" class="max-w-lg">
-    <form method="POST" action="" id="editCompanyForm" enctype="multipart/form-data">
+    <form method="POST" action="" id="editCompanyForm" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         @method('PUT')
-        <div class="space-y-4">
-            <input type="hidden" name="id" id="edit_company_id">
-            <x-form-input
-                label="Company Name"
-                type="text"
-                name="company_name"
-                id="edit_company_name"
-                placeholder="Enter Company Name"
-                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Upload Logo</label>
-                <input type="file" name="logo" id="edit_company_logo"
-                    class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-            </div>
-            <x-form-input
-                label="Location"
-                type="text"
-                name="location"
-                id="edit_company_location"
-                placeholder="Enter Company Location"
-                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-            <div class="flex justify-end space-x-3">
-                <button type="button" onclick="toggleModal('editCompanyModal')"
-                    class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                    Update
-                </button>
-            </div>
+        <input type="hidden" name="id" id="edit_company_id">
+        <x-form-input
+            label="Company Name"
+            type="text"
+            name="company_name"
+            id="edit_company_name"
+            placeholder="Enter Company Name"
+            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+            label-class="block text-[15px] manrope-regular text-[#000000]" />
+        @error('company_name')
+        <p class="text-red-500 text-sm">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Upload Logo"
+            type="file"
+            name="logo"
+            id="edit_company_logo"
+            class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]"
+            label-class="block text-[15px] manrope-regular text-[#000000]" />
+        @error('logo')
+        <p class="text-red-500 text-sm">{{ $message }}</p>
+        @enderror
+
+        <x-form-input
+            label="Location"
+            type="text"
+            name="location"
+            id="edit_company_location"
+            placeholder="Enter Company Location"
+            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+            label-class="block text-[15px] manrope-regular text-[#000000]" />
+        @error('location')
+        <p class="text-red-500 text-sm">{{ $message }}</p>
+        @enderror
+
+        <div class="text-right mt-[100px]">
+            <button type="button" onclick="toggleModal('editCompanyModal')"
+                class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
+                Cancel
+            </button>
+            <button type="submit"
+                class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#437651] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
+                Update
+            </button>
         </div>
     </form>
 </x-modal>

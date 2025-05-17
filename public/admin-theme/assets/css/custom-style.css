@@ -21,95 +21,6 @@
     font-family: ariel_rounded_mt;
     src: url(../fonts/ariel_rounded_mt.ttf);
 }
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f5f5f5;
-}
-.sidebar {
-  width: 100px;
-  /* background: #1a202c; */
-  transition: all 0.3s ease;
-}
-.sidebar.collapsed {
-  width: 80px;
-}
-.sidebar.collapsed .sidebar-text {
-  display: none;
-}
-.sidebar.collapsed .sidebar-icon {
-  margin-right: 0;
-}
-.content {
-  margin-left: 100px;
-  transition: all 0.3s ease;
-  background: #fff;
-}
-.content.collapsed {
-  margin-left: 80px;
-}
-.navbar {
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-}
-.card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.action-dropdown-container {
-  position: relative;
-  z-index: 1000; /* Ensure it stays above other content */
-}
-
-.dot-drop {
-  position: absolute !important; /* Override any inline styles if needed */
-  z-index: 1000;
-}
-.bg-red-700{
-  background-color: #b91c1c;
-}
-.dataTable tbody tr {
-  background-color: white;
-  transition: all 0.3s ease-in-out;
-}
-
-.dataTable tbody tr:hover {
-  background-color: #ededed;
-}
-table.dataTable > thead > tr > th{
-  border: none !important;
-}
-
-.dataTable  thead {
-  background-color:#e6e6e6
-}
-
-table.dataTable > thead > tr > th {
-  padding-left: 1.5rem;  /* px-6 */
-  padding-right: 1.5rem;
-  padding-top: 0.75rem;  /* py-3 */
-  padding-bottom: 0.75rem;
-  font-family: 'Manrope', sans-serif;  /* manrope-regular */
-  color: #3D3D3D;
-  font-size: 16px;
-  font-weight: 400; /* assuming 'regular' is 400 */
-}
-@media (max-width: 768px) {
-  .sidebar {
-      width: 0;
-      position: fixed;
-      z-index: 1000;
-  }
-  .sidebar.active {
-      width: 250px;
-  }
-  .content {
-      margin-left: 0;
-  }
-  .content.collapsed {
-      margin-left: 0;
-  }
-}
 
   .select-shadow 
   {
@@ -225,6 +136,20 @@ table.dataTable > thead > tr > th {
   transition: 0.2s ease-in;
   transform-origin: 0 50% 0;
   opacity: 0;
+}
+
+table.dataTable>thead>tr>th, table.dataTable>thead>tr>td {
+    border-bottom: none;
+}
+
+table.dataTable>tfoot>tr>th, table.dataTable>tfoot>tr>td{
+  border-top: none;
+}
+thead{
+  background-color: #CCE7D4;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+  padding: 20px;
 }
 @-webkit-keyframes fillAnimation {
   0% {
@@ -606,3 +531,24 @@ table.dataTable > thead > tr > th {
   }
 
   /*------------------------------ Dashboard Graph end -----------------------------------*/
+  .filter-buttons
+  {
+    background-image:url('../images/select-down.png');
+    background-size:8px;
+    background-position: 95% 50%;
+    background-repeat:no-repeat;
+  }
+  .autocomplete-suggestions 
+  {
+    background-color: #fff;
+    margin-top: 22px;
+    box-shadow: 0px 0px 10px #cfcccc;
+    padding: 9px;
+    border-radius: 8px;
+    font-family: manrope-medium;
+    font-size:13px;
+  }
+  .autocomplete-suggestions .autocomplete-suggestion
+  {
+    padding: 3px 1px;
+  }

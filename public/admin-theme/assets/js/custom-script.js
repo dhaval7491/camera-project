@@ -11,36 +11,6 @@ document.getElementById("search-toggle").addEventListener("click", function () {
     }
 });
 //-------------------- Sidebar Hover effect --------------------------->
-
-    // $(document).ready(function() {
-    //     $(".sidebar li").each(function() {
-    //         const img = $(this).find("img");
-    //         const originalSrc = img.attr("src"); // Original image source
-    //         const hoverSrc = originalSrc.replace(".png", "-green.png"); // Hover image (assuming '-green' is the hover version)
-
-    //         $(this).on("mouseenter", function() {
-    //             img.attr("src", hoverSrc); // Change to hover version
-    //         });
-
-    //         $(this).on("mouseleave", function() {
-    //             if (!$(this).hasClass("active")) {
-    //                 img.attr("src", originalSrc); // Revert back only if not active
-    //             }
-    //         });
-    //     });
-
-    //     // Add active class to current page
-    //     const currentPage = window.location.pathname.split("/").pop(); // Get current page name
-    //     $(".sidebar li a").each(function() {
-    //         if ($(this).attr("href") === currentPage) {
-    //             $(this).parent().addClass("active");
-    //             parentLi.addClass("bg-[#f1f1f1]");
-    //             const img = $(this).find("img");
-    //             img.attr("src", img.attr("src").replace(".png", "-green.png")); // Change icon on active
-    //         }
-    //     });
-    // });
-
     $(document).ready(function() {
         $(".sidebar li").each(function() {
             const img = $(this).find("img");
@@ -82,22 +52,6 @@ document.getElementById("search-toggle").addEventListener("click", function () {
 
    //--------------------------- Sidebar Hover effect end ----------------------->
 
-        $(document).ready(function () {
-            $('.table-status').click(function () {
-                let isActive = $(this).text().trim() === 'Active';
-
-                if (isActive) {
-                    $(this).text('Inactive')
-                        .removeClass('bg-[#047413]')
-                        .addClass('bg-[#F96767]');
-                } else {
-                    $(this).text('Active')
-                        .removeClass('bg-[#F96767]')
-                        .addClass('bg-[#047413]');
-                }
-            });
-        });
-
         function toggleModalp() {
             document.getElementById('addproject').classList.toggle('hidden')
         }
@@ -122,6 +76,9 @@ document.getElementById("search-toggle").addEventListener("click", function () {
         function toggleModalcont() {
             document.getElementById('addcontractor').classList.toggle('hidden')
         }
+        function toggleModalassigntrackable() {
+            document.getElementById('assigntrackable').classList.toggle('hidden')
+        }
         function toggleModalphone() {
             document.getElementById('editphone').classList.toggle('hidden')
         }
@@ -131,32 +88,9 @@ document.getElementById("search-toggle").addEventListener("click", function () {
         function toggleModalevent() {
             document.getElementById('addevent').classList.toggle('hidden')
         }
-        $(function() {
-            var start = moment().format('DD-MM-YYYY'); // Get current date
-            var end = moment().format('DD-MM-YYYY'); // You can modify this to set a range
-        
-            // Set the input field to display the current date initially
-            $('input[name="daterange"]').val(start + ' to ' + end);
-        
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left',
-                autoUpdateInput: false, // Prevents automatic filling on date selection
-                locale: {
-                    format: 'DD-MM-YYYY',
-                    cancelLabel: 'Clear'
-                }
-            });
-        
-            // Handle date selection
-            $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' to ' + picker.endDate.format('DD-MM-YYYY'));
-            });
-        
-            // Handle clearing input when cancel is clicked
-            $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
-                $(this).val(start + ' to ' + end); // Resets to the current date instead of clearing
-            });
-        });
+        function toggleModaladdai() {
+            document.getElementById('addai').classList.toggle('hidden')
+        }
         
     function toggleDotDropdown(event) {
         event.preventDefault();
