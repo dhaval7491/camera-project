@@ -20,7 +20,7 @@ class UserDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('user_name', function ($user) {
+            ->editColumn('name', function ($user) {
                 return '
                     <div class="flex">
                         <div class="mr-[15px]">
@@ -34,6 +34,9 @@ class UserDataTable extends DataTable
             })
             ->addColumn('company_name', function ($user) {
                 return $user->company ? $user->company->company_name : 'N/A';
+            })
+            ->editColumn('access_level', function ($user) {
+                return $user->access_level ?? 'N/A';
             })
             ->addColumn('status', function ($user) {
                 $status = $user->is_active ? 'Active' : 'Inactive';
@@ -66,7 +69,7 @@ class UserDataTable extends DataTable
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->format('F d, Y');
             })
-            ->rawColumns(['user_name', 'status', 'action'])
+            ->rawColumns(['name', 'status', 'action'])
             ->setRowId('id');
     }
 
@@ -75,7 +78,31 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()->with(['company', 'project']);
+        $query = $model->newQuery()->with(['company', 'project'])->select('users.*');
+
+        // Apply user filter
+        if (request()->has('user_ids') && !empty(request()->input('user_ids'))) {
+            $query->whereIn('id', request()->input('user_ids'));
+        }
+
+        // Apply company filter
+        if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
+            $query->whereIn('company_id', request()->input('company_ids'));
+        }
+
+        // Apply project filter
+        if (request()->has('project_ids') && !empty(request()->input('project_ids'))) {
+            $query->whereIn('project_id', request()->input('project_ids'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('is_active', array_map(function($status) {
+                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Block' ? 2 : $status));
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     /**
@@ -84,15 +111,24 @@ class UserDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('user-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->parameters([
-                        'dom' => 'Bfrtip',
-                        'buttons' => ['excel', 'csv', 'pdf', 'print', 'reset', 'reload'],
-                    ]);
+        ->setTableId('user-table')
+        ->columns($this->getColumns())
+        ->ajax([
+            'url' => route('users.index'), // or any route using this DataTable
+            'type' => 'GET',
+            'data' => 'function(d) {
+                d.user_ids = $("#user-filter").val();
+                d.company_ids = $("#company-filter").val();
+                d.project_ids = $("#project-filter").val();
+                d.statuses = $("#status-filter").val();
+            }',
+        ])
+        ->orderBy(1)
+        ->selectStyleSingle()
+        ->parameters([
+            'dom' => 'Bfrtip',
+            'buttons' => ['excel', 'csv', 'pdf', 'print', 'reset', 'reload'],
+        ]);
     }
 
     /**
@@ -101,7 +137,7 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('user_name')->title('User Name'),
+            Column::make('name')->title('User Name'),
             Column::make('company_name')->title('Company Name'),
             Column::make('access_level')->title('Access Level'),
             Column::make('status')->title('Status'),

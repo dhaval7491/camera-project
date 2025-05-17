@@ -21,9 +21,20 @@ class CompanyController extends Controller
     {
         
         return $dataTable->render('companies.index', [
-            'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
-            'projects' => Project::pluck('name','id')->toArray()
+            'companies' => Company::pluck('company_name', 'id')->toArray(),
+            'projects' => Project::pluck('name', 'id')->toArray(),
+            'locations' => Company::distinct()->pluck('location')->toArray(),
+            'people' => User::pluck('name', 'id')->toArray(),
+            'statuses' => [
+                1 => 'Active',
+                0 => 'Inactive'
+            ]
         ]);
+    }
+
+    public function data(CompanyDataTable $dataTable)
+    {
+        return $dataTable->ajax();
     }
 
     /**

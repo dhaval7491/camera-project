@@ -13,4 +13,9 @@ class SettingController extends Controller
     {
         return view('settings.index');
     }
+
+    public function accountSettings()
+    {
+        return view('settings.account-settings');
+    }
 }

@@ -21,9 +21,20 @@ class UserController extends Controller
      */
     public function index(UserDataTable $dataTable)
     {
-        $companies = Company::pluck('company_name', 'id')->toArray();
-        $projects = Project::pluck('name', 'id')->toArray();
-        return $dataTable->render('users.index', compact('companies', 'projects'));
+        return $dataTable->render('users.index', [
+            'companies' => Company::pluck('company_name', 'id')->toArray(),
+            'projects' => Project::pluck('name', 'id')->toArray(),
+            'users' => User::pluck('name', 'id')->toArray(),
+            'statuses' => [
+                1 => 'Active',
+                0 => 'Inactive'
+            ]
+        ]);
+    }
+
+    public function data(UserDataTable $dataTable)
+    {
+        return $dataTable->ajax();
     }
 
     /**

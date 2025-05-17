@@ -92,7 +92,33 @@ class CompanyDataTable extends DataTable
 
     public function query(Company $model)
     {
-        return $model->newQuery();
+        $query = $model->newQuery();
+
+        // Apply company filter
+        if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
+            $query->whereIn('id', request()->input('company_ids'));
+        }
+
+        // Apply people filter (assuming a relationship exists between Company and User)
+        if (request()->has('people_ids') && !empty(request()->input('people_ids'))) {
+            $query->whereHas('admin', function ($q) {
+                $q->whereIn('users.id', request()->input('people_ids'));
+            });
+        }
+
+        // Apply location filter
+        if (request()->has('locations') && !empty(request()->input('locations'))) {
+            $query->whereIn('location', request()->input('locations'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('is_active', array_map(function($status) {
+                return $status == 'Active' ? 1 : 0;
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     public function html()

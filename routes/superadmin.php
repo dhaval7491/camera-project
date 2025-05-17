@@ -34,11 +34,13 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::resource('trackables', TrackableController::class);
     Route::get('/alerts',[AlertController::class,'index'])->name('alerts.index');
     Route::get('/settings',[SettingController::class,'index'])->name('settings.index');
+    Route::get('/account-settings',[SettingController::class,'accountSettings'])->name('account-settings');
     Route::get('/live-stream',[LiveStreamController::class,'index'])->name('streams.index');
     Route::get('/analytics',[AnalyticController::class,'index'])->name('analytics.index');
     Route::get('/alerts/load-more', [AlertController::class, 'loadMore'])->name('alerts.load-more');
     Route::get('/get-company-data', [CompanyController::class, 'data'])->name('companies.data');
     Route::get('/get-project-data', [ProjectController::class, 'data'])->name('projects.data');
+    Route::get('/get-user-data', [ProjectController::class, 'data'])->name('users.data');
     // New routes for toggling active status
     Route::post('/companies/{company}/toggle-active', [CompanyController::class, 'toggleActive'])->name('companies.toggle-active');
     Route::post('/projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggle-active');

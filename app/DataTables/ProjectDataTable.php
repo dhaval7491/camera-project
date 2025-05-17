@@ -109,7 +109,26 @@ class ProjectDataTable extends DataTable
      */
     public function query(Project $model)
     {
-        return $model->newQuery()->with('company');
+        $query = $model->newQuery()->with('company');
+
+        // Apply company filter
+        if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
+            $query->whereIn('company_id', request()->input('company_ids'));
+        }
+
+        // Apply location filter
+        if (request()->has('plants') && !empty(request()->input('plants'))) {
+            $query->whereIn('plant_name', request()->input('plants'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('is_active', array_map(function($status) {
+                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Blocked' ? 2 : $status));
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     /**
