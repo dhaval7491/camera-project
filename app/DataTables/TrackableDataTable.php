@@ -23,6 +23,12 @@ class TrackableDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
+            ->addColumn('checkbox', function ($mapping) {
+                return '
+                    <div class="text-center">
+                        <input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    </div>';
+            })
             ->editColumn('trackable_name', function ($trackable) {
                 return '<a href="' .route('trackables.show', $trackable->id). '"><p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p></a>';
             })
@@ -62,7 +68,7 @@ class TrackableDataTable extends DataTable
                         </ul>
                     </div>';
             })
-            ->rawColumns(['trackable_name', 'other_name', 'linked_objects', 'status', 'action']);
+            ->rawColumns(['checkbox','trackable_name', 'other_name', 'linked_objects', 'status', 'action']);
     }
 
     /**
