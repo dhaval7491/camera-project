@@ -48,119 +48,39 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Company Name', options: ['Digital Horizon Systems', 'ByteCore Technologies', 'London Technova Solutions'],selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[280px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                            @foreach($companies as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Project', options: ['Project 1', 'Project 2', 'Project 3', 'Project 4'],selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                            @foreach($projects as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Equipment', options: ['Crane 01', 'Lift 01', 'Hook lift', 'Crane 02' , 'Lift 03'] ,selectedOptions: []}" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
+                                            @foreach($equipments as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Plant Name', options: ['TC01' , 'TC01' , 'TC01'] ,selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[120px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="equipment-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
+                                            @foreach($plants as $plant)
+                                                <option value="{{ $plant }}">{{ $plant }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Status', options: ['Inactive', 'Active', 'Blocked'] ,selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                            @foreach($statuses as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                 </div>
                             </div>
@@ -335,119 +255,37 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Company Name', options: ['Digital Horizon Systems', 'ByteCore Technologies', 'London Technova Solutions'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[150px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[300px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#444] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                            @foreach($companies as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Project', options: ['Project 1', 'Project 2', 'Project 3', 'Project 4'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                            @foreach($projects as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Plant Name', options: ['Crane 01', 'Lift 01', 'Hook lift', 'Crane 02' , 'Lift 03'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[120px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    </p>
-                                    <p class="flex items-center mr-[8px] ">
-                                    <div x-data="{ open: false, search: '', selected: 'Tablet', options: ['IPad'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[100px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="mapping-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
+                                            @foreach($plants as $plant)
+                                                <option value="{{ $plant }}">{{ $plant }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Status', options: ['Status 1', 'Status 2', 'Status 3', 'Status 4'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
+                                            <option value="IPad">IPad</option>
+                                        </select>
+                                    </p>
+                                    <p class="flex items-center mr-[8px]">
+                                        <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                            @foreach($statuses as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                 </div>
                             </div>
@@ -708,73 +546,23 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Name', options: ['Jon Snow'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#6a6a75] text-[14px]  border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[200px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    </p>
-                                    <p class="flex items-center  mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Other name', options: ['Type'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[120px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[200px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
+                                            @foreach($trackables as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
-                                    <div x-data="{ open: false, search: '', selected: 'Status', options: ['Status 1', 'Status 2', 'Status 3', 'Status 4'] , selectedOptions: [] }" class="relative ">
-                                        <button @click="open = !open" class=" p-2 bg-white focus:outline-none w-[100px] text-left manrope-medium font-medium text-[#444] text-[14px] border-[1px] border-solid border-[#ebebeb] rounded-[10px] filter-buttons">
-                                            <span x-text="selected"></span>
-                                        </button>
-
-                                        <div x-show="open" @click.away="open = false" class="absolute mt-1 w-[150px] bg-white border border-gray-300 rounded-lg shadow-md manrope-medium font-medium text-[#6a6a75] text-[16px] z-[9]">
-                                            <input type="text" x-model="search" placeholder="Search..."
-                                                class="w-full p-2 border-b border-gray-300 focus:outline-none">
-                                            <ul class="max-h-40 overflow-y-auto">
-                                                <template x-for="option in options.filter(o => o.toLowerCase().includes(search.toLowerCase()))" :key="option">
-                                                    <li class="p-2 flex items-center space-x-2 hover:bg-gray-100 cursor-pointer">
-                                                        <input type="checkbox"
-                                                            :value="option"
-                                                            x-model="selectedOptions"
-                                                            class="cursor-pointer">
-                                                        <span x-text="option"></span>
-                                                    </li>
-                                                </template>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                        <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
+                                            <option value="Type">Type</option>
+                                        </select>
+                                    </p>
+                                    <p class="flex items-center mr-[8px]">
+                                        <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                            @foreach($statuses as $id => $name)
+                                                <option value="{{ $id }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
                                     </p>
                                 </div>
                             </div>
@@ -1332,8 +1120,56 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid #ebebeb;
+    border-radius: 10px;
+    padding: 2px;
+    min-height: 34px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding: 0 4px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #f5f5f5;
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 2px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #444;
+    margin-right: 4px;
+}
+.select2-container .select2-search--inline .select2-search__field {
+    margin-top: 4px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: #444;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: #444;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+}
+</style>
+@endpush
 @push('scripts')
 <script>
+    $(document).ready(function() {
+    // Initialize Select2 for all filter selects
+    $('.filter-select').select2({
+        placeholder: function() {
+            return $(this).data('placeholder');
+        },
+        allowClear: true,
+        closeOnSelect: false,
+        width: '100%'
+    });
+});
     let previousTab = null;
 
     function openTab(event, tabId) {

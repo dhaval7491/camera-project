@@ -50,6 +50,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::get('/streams/{camera_id}', [LiveStreamController::class, 'show'])->name('streams.show');
 });
 
 Route::prefix('signaling')->group(function () {

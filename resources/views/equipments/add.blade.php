@@ -91,7 +91,6 @@
             radioButtons.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'camera') {
-                        alert()
                         cameraFields.classList.remove('hidden');
                     } else if (this.value === 'tablet') {
                         cameraFields.classList.add('hidden');

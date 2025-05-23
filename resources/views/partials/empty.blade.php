@@ -1,0 +1,1 @@
+{{-- empty file to allow Yajra to return only JSON --}}
