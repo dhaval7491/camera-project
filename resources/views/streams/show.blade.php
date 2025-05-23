@@ -53,6 +53,15 @@
                             <li class="nav-item">
                                 <button id="video-setting-menu"><img src="{{ asset('assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
+                            <li class="nav-item">
+                                <button id="listen-streams"><img src="{{ asset('assets/images/listen.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="hang-up"><img src="{{ asset('assets/images/hangup.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="reconnect"><img src="{{ asset('assets/images/reconnect.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                            </li>
                         </ul>
                     </div>
                     <div>
@@ -164,19 +173,34 @@
     border-radius: 8px;
     background-color: #000;
 }
+#activeRoomsList li {
+    padding: 5px 10px;
+    background: #f0f0f0;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
 </style>
 @endpush
 @push('scripts')
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
+// JavaScript adapted from index.html
 document.addEventListener('DOMContentLoaded', function() {
-    const roomId = $cameraId ; // Use streaming_link or cameraId as roomId
+    const roomId = @json($cameraId); // Use streaming_link or cameraId
     const remoteVideo = document.getElementById('remoteVideo');
     const connectionStatus = document.getElementById('connectionStatus');
     const onlineStatus = document.getElementById('onlineStatus');
+    const listenButton = document.getElementById('listen-streams');
+    const hangUpButton = document.getElementById('hang-up');
+    const reconnectButton = document.getElementById('reconnect');
+    const activeRoomsList = document.createElement('ul'); // For active rooms (optional)
+    activeRoomsList.id = 'activeRoomsList';
+    document.querySelector('.video-player').appendChild(activeRoomsList);
 
     let peer = null;
     let conn = null;
+    let ws = null;
+    const wsAddress = 'wss://your-websocket-server'; // Replace with your WebSocket server address
 
     function initializePeer() {
         peer = new Peer({
@@ -187,41 +211,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         peer.on('open', (id) => {
-            console.log('PeerJS ID:', id);
+            console.log('My peer ID is: ' + id);
             connectionStatus.textContent = 'Connected to PeerJS server';
-            joinRoom(roomId);
-        });
-
-        peer.on('error', (err) => {
-            console.error('PeerJS Error:', err);
-            connectionStatus.textContent = 'PeerJS Error: ' + err.type;
-            onlineStatus.textContent = 'Offline';
-        });
-
-        peer.on('disconnected', () => {
-            console.log('PeerJS Disconnected');
-            connectionStatus.textContent = 'Disconnected from PeerJS server';
-            onlineStatus.textContent = 'Offline';
-        });
-    }
-
-    function joinRoom(roomId) {
-        if (!peer) {
-            console.error('Peer not initialized');
-            return;
-        }
-
-        conn = peer.connect(roomId);
-        conn.on('open', () => {
-            console.log('Connected to room:', roomId);
-            connectionStatus.textContent = 'Connected to room';
-            onlineStatus.textContent = 'Online';
-        });
-
-        conn.on('error', (err) => {
-            console.error('Connection Error:', err);
-            connectionStatus.textContent = 'Connection Error';
-            onlineStatus.textContent = 'Offline';
+            join(roomId); // Automatically join the room
         });
 
         peer.on('call', (call) => {
@@ -248,6 +240,65 @@ document.addEventListener('DOMContentLoaded', function() {
                 onlineStatus.textContent = 'Offline';
             });
         });
+
+        peer.on('error', (err) => {
+            console.error('PeerJS Error:', err);
+            connectionStatus.textContent = 'PeerJS Error: ' + err.type;
+            onlineStatus.textContent = 'Offline';
+        });
+
+        peer.on('disconnected', () => {
+            console.log('PeerJS Disconnected');
+            connectionStatus.textContent = 'Disconnected from PeerJS server';
+            onlineStatus.textContent = 'Offline';
+        });
+    }
+
+    function join(roomId) {
+        if (!peer) {
+            console.error('Peer not initialized');
+            return;
+        }
+
+        conn = peer.connect(roomId);
+        conn.on('open', () => {
+            console.log('Connected to room:', roomId);
+            connectionStatus.textContent = 'Connected to room';
+            onlineStatus.textContent = 'Online';
+        });
+
+        conn.on('error', (err) => {
+            console.error('Connection Error:', err);
+            connectionStatus.textContent = 'Connection Error';
+            onlineStatus.textContent = 'Offline';
+        });
+    }
+
+    function listenForNewStreams() {
+        ws = new WebSocket(wsAddress);
+        ws.onopen = () => {
+            console.log('Connected to WebSocket server');
+            ws.send(JSON.stringify({ type: 'listen' }));
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'new-stream') {
+                const roomId = data.roomId;
+                console.log('New stream available:', roomId);
+                const li = document.createElement('li');
+                li.textContent = `Room: ${roomId}`;
+                activeRoomsList.appendChild(li);
+            }
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        ws.onerror = (err) => {
+            console.error('WebSocket error:', err);
+        };
     }
 
     function hangUp() {
@@ -259,15 +310,25 @@ document.addEventListener('DOMContentLoaded', function() {
             peer.destroy();
             peer = null;
         }
+        if (ws) {
+            ws.close();
+            ws = null;
+        }
         remoteVideo.srcObject = null;
         connectionStatus.textContent = 'Not connected';
         onlineStatus.textContent = 'Offline';
+        activeRoomsList.innerHTML = '';
     }
 
     function reconnect() {
         hangUp();
         initializePeer();
     }
+
+    // Event listeners for buttons
+    listenButton.addEventListener('click', listenForNewStreams);
+    hangUpButton.addEventListener('click', hangUp);
+    reconnectButton.addEventListener('click', reconnect);
 
     // Initialize PeerJS and join room on page load
     initializePeer();
@@ -295,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previousTab = firstTabButton;
     }
 
-    // Video controls (basic implementation)
+    // Video controls
     const playPauseButton = document.getElementById('play-pause');
     playPauseButton.addEventListener('click', () => {
         if (remoteVideo.paused) {
@@ -310,6 +371,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const volumeSlider = document.getElementById('volume-slider');
     volumeSlider.addEventListener('input', () => {
         remoteVideo.volume = volumeSlider.value;
+    });
+
+    const speedSlider = document.getElementById('custom-speed');
+    speedSlider.addEventListener('input', () => {
+        remoteVideo.playbackRate = speedSlider.value;
     });
 
     // Cleanup on page unload
