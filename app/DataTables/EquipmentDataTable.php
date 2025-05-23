@@ -100,18 +100,18 @@ class EquipmentDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('equipments-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('create'),
-                        Button::make('export'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    );
+            ->setTableId('equipments-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons(
+                Button::make('create'),
+                Button::make('export'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            );
     }
 
     /**
@@ -122,25 +122,25 @@ class EquipmentDataTable extends DataTable
     protected function getColumns()
     {
         return [
-                Column::make('id')
-                    ->title('')
-                    ->orderable(false)
-                    ->searchable(false)
-                    ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
-                Column::make('name')->title('Equipment Name'),
-                Column::make('code')->title('Equipment Code'),
-                Column::make('company_name')->title('Company Name'),
-                Column::make('project_name')->title('Project Name'),
-                Column::make('plant_name')->title('Plant Name'),
-                Column::make('equipment_type')->title('Equipment Type'),
-                Column::make('mapped_to')->title('Mapped To'),
-                Column::make('streaming_link')->title('Streaming Links'),
-                Column::make('status')->title('Status'),
-                Column::computed('action')
-                      ->exportable(false)
-                      ->printable(false)
-                      ->width(200)
-                      ->addClass('text-center'),
+            Column::make('id')
+                ->title('')
+                ->orderable(false)
+                ->searchable(false)
+                ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
+            Column::make('name')->title('Equipment Name'),
+            Column::make('code')->title('Equipment Code'),
+            Column::make('company_name')->title('Company Name'),
+            Column::make('project_name')->title('Project Name'),
+            Column::make('plant_name')->title('Plant Name'),
+            Column::make('equipment_type')->title('Equipment Type'),
+            Column::make('mapped_to')->title('Mapped To'),
+            Column::make('streaming_link')->title('Streaming Links'),
+            Column::make('status')->title('Status'),
+            Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
+                ->width(200)
+                ->addClass('text-center'),
         ];
     }
 
@@ -152,5 +152,29 @@ class EquipmentDataTable extends DataTable
     protected function filename(): string
     {
         return 'Equipment_' . date('YmdHis');
+    }
+
+    /**
+     * Render the HTML table structure.
+     *
+     * @param array $attributes
+     * @param bool $escape
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function table(array $attributes = [], bool $escape = true)
+    {
+        return $this->html()->table($attributes, $escape);
+    }
+
+    /**
+     * Render the DataTable initialization script.
+     *
+     * @param array $attributes
+     * @param bool $escape
+     * @return \Illuminate\Support\HtmlString
+     */
+    public function scripts(?string $script = null, array $attributes = [])
+    {
+        return $this->html()->scripts($script, $attributes);
     }
 }
