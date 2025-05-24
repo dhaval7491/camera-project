@@ -18,9 +18,8 @@
         </p>
         @foreach($projects as $index => $project)
         <div class="video-player px-[10px] relative w-[90%] {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
-            <input type="hidden" id="roomIdInput" value="{{ $cameraId }}">
-            <video class="w-full mt-[5px]" id="remoteVideo" autoplay playsinline></video>
-            <p id="statusText" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
+            <video class="w-full mt-[5px]" id="mainVideo{{ $project['project_id'] }}" autoplay playsinline></video>
+            <p id="statusText{{ $project['project_id'] }}" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
             <div class="video-controls">
                 <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[18px] pb-[10px] pl-[40px]">
                     <div>
@@ -28,7 +27,7 @@
                             <li class="nav-item">
                                 <div class="volume-control flex">
                                     <img src="{{ asset('admin-theme/assets/images/max-vol.png') }}" alt="Low Volume" class="volume-icon w-[15px] object-contain mr-[5px]">
-                                    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                                    <input type="range" id="volume-slider{{ $project['project_id'] }}" min="0" max="1" step="0.1" value="0.5">
                                     <img src="{{ asset('admin-theme/assets/images/min-vol.png') }}" alt="High Volume" class="volume-icon w-[15px] object-contain ml-[5px]">
                                 </div>
                             </li>
@@ -37,31 +36,31 @@
                     <div>
                         <ul class="flex">
                             <li class="nav-item">
-                                <button id="play-pause"><img src="{{ asset('admin-theme/assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="play-pause{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="microphone"><img src="{{ asset('admin-theme/assets/images/microphone.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="microphone{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/microphone.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="video-speed"><img src="{{ asset('admin-theme/assets/images/video-vid.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="video-speed{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/video-vid.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="video-cut"><img src="{{ asset('admin-theme/assets/images/video-cut.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="video-cut{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/video-cut.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="video-record"><img src="{{ asset('admin-theme/assets/images/video-record.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="video-record{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/video-record.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="video-setting-menu"><img src="{{ asset('admin-theme/assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="video-setting-menu{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="listen-streams"><img src="{{ asset('admin-theme/assets/images/listen.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="listen-streams{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/listen.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="hang-up"><img src="{{ asset('admin-theme/assets/images/hangup.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="hang-up{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/hangup.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
-                                <button id="reconnect"><img src="{{ asset('admin-theme/assets/images/reconnect.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
+                                <button id="reconnect{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/reconnect.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                         </ul>
                     </div>
@@ -70,7 +69,7 @@
                             <li class="nav-item">
                                 <div class="size-control flex">
                                     <img src="{{ asset('admin-theme/assets/images/min-size.png') }}" alt="min size" class="size-icon w-[15px] object-contain mr-[5px]">
-                                    <input type="range" id="size-slider" min="0" max="1" step="0.1" value="0.5">
+                                    <input type="range" id="size-slider{{ $project['project_id'] }}" min="0" max="1" step="0.1" value="0.5">
                                     <img src="{{ asset('admin-theme/assets/images/max-size.png') }}" alt="max size" class="size-icon w-[15px] object-contain ml-[5px]">
                                 </div>
                             </li>
@@ -93,10 +92,16 @@
                     class="absolute top-0 bg-[#0000007a] mr-[10px] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]">
                     @foreach($project['camera'] as $camera)
                     <li class="flex flex-col items-center w-[15%]">
-                        <a href="{{ route('streams.show', $camera['id']) }}">
-                            <img src="{{ asset('admin-theme/assets/images/live-stream.png') }}" class="w-full">
+                        <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
+                            <!-- <img src="{{ asset('admin-theme/assets/images/live-stream.png') }}" class="w-full"> -->
+                            <div class="video-box" id="video-box-{{ $camera['id']}}">
+                                <video width="140px" height="80px" id="video-{{ $camera['id']}}" autoplay playsinline></video>
+                                <div class="video-info">
+                                    <div class="video-status status-connecting"></div>
+                                </div>
+                            </div>
                             <p class="manrope-medium bg-[white] text-[15px] inline-block w-full py-[1px] mb-0 text-center">{{ $camera['camera_name'] }}</p>
-                        </a>
+                        </div>
                     </li>
                     @endforeach
                 </ul>
@@ -128,15 +133,15 @@
             <div x-show="!open" class="online absolute top-[20px] right-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
                 <p class="flex text-white">
                     <img src="{{ asset('admin-theme/assets/images/online.png') }}" class="w-[20px] object-contain mr-[5px]">
-                    <span id="onlineStatus">Online</span>
+                    <span id="onlineStatus{{ $project['project_id'] }}">Online</span>
                 </p>
             </div>
-            <div id="popupvideo-menu" class="popup-video-speed hidden">
+            <div id="popupvideo-menu{{ $project['project_id'] }}" class="popup-video-speed hidden">
                 <h3>Playback</h3>
                 <ul class="list-unstyled">
                     <li>
-                        <label for="custom-speed">Custom Speed:</label>
-                        <input id="custom-speed" type="range" min="0.5" max="2" step="0.1" value="1">
+                        <label for="custom-speed{{ $project['project_id'] }}">Custom Speed:</label>
+                        <input id="custom-speed{{ $project['project_id'] }}" type="range" min="0.5" max="2" step="0.1" value="1">
                     </li>
                     <li>0.25x</li>
                     <li>0.5x</li>
@@ -145,12 +150,12 @@
                     <li>1.25x</li>
                 </ul>
             </div>
-            <div id="popupsetting-video" class="popup-video-setting hidden">
+            <div id="popupsetting-video{{ $project['project_id'] }}" class="popup-video-setting hidden">
                 <ul class="list-unstyled">
                     <li>
                         <h4><img src="{{ asset('admin-theme/assets/images/sleep.png') }}">Sleep Timer</h4>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked{{ $project['project_id'] }}" checked>
                         </div>
                     </li>
                 </ul>
@@ -159,6 +164,12 @@
         @endforeach
     </div>
 </div>
+
+<!-- Hidden data for JavaScript -->
+<script type="application/json" id="projectsData">
+@json($projects)
+</script>
+
 @endsection
 @push('styles')
 <style>
@@ -170,7 +181,7 @@
         background-color: #ededed !important;
     }
 
-    #remoteVideo {
+    video {
         width: 100%;
         height: auto;
         border-radius: 8px;
@@ -183,13 +194,48 @@
         margin-bottom: 5px;
         border-radius: 4px;
     }
+
+    /* Video box styling */
+    .video-box {
+        position: relative;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 5px 0;
+    }
+
+    .video-box video {
+        display: block;
+    }
+
+    .video-info {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .video-status {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-connecting { background-color: orange; }
+    .status-connected { background-color: green; }
+    .status-disconnected { background-color: red; }
 </style>
 @endpush
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-firestore-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-firestore-compat.min.js"></script>
 <script>
-    // Firebase configuration - replace with your Firebase project config
+    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAYsYL3EVaxE_WQb2ngfozZ8Vy-z8mCFKU",
         authDomain: "cctv-646c8.firebaseapp.com",
@@ -204,21 +250,12 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // WebRTC variables
-    let peerConnection = null;
-    let remoteStream = null;
-    let currentRoomId = null;
-    let roomsListener = null;
-
-    // HTML elements
-    const remoteVideo = document.getElementById('remoteVideo');
-    // const joinButton = document.getElementById('joinButton');
-    // const listenButton = document.getElementById('listenButton');
-    // const hangupButton = document.getElementById('hangupButton');
-    // const reconnectButton = document.getElementById('reconnectButton');
-    const roomIdInput = document.getElementById('roomIdInput');
-    const statusText = document.getElementById('statusText');
-    // const roomItems = document.getElementById('roomItems');
+    // Global variables
+    const projectsData = JSON.parse(document.getElementById('projectsData').textContent);
+    const peerConnections = new Map(); // Store all peer connections
+    const remoteStreams = new Map(); // Store all remote streams
+    let currentActiveProject = null;
+    let currentActiveCamera = null;
 
     // WebRTC configuration
     const configuration = {
@@ -227,383 +264,488 @@
                 'stun:stun1.l.google.com:19302',
                 'stun:stun2.l.google.com:19302'
             ]
-        }, ],
+        }],
         iceCandidatePoolSize: 10
     };
 
-    // Join a specific room using its ID
-    async function joinRoom(roomId) {
-        try {
-            // Close any existing connection first
-            if (peerConnection) {
-                peerConnection.close();
-                peerConnection = null;
+    // Initialize all cameras for all projects
+    async function initializeAllCameras() {
+        console.log('Initializing all cameras...', projectsData);
+        
+        for (const project of projectsData) {
+            const projectId = String(project.project_id);
+            console.log(`Processing project ${projectId} with ${project.camera.length} cameras`);
+            
+            for (const camera of project.camera) {
+                const cameraId = String(camera.id);
+                console.log(`Initializing camera ${cameraId} for project ${projectId}`);
+                
+                // Add a small delay between connections to avoid overwhelming
+                setTimeout(() => {
+                    joinRoom(cameraId, projectId);
+                }, Math.random() * 2000); // Random delay up to 2 seconds
             }
 
-            currentRoomId = roomId;
-            statusText.textContent = `Attempting to join room: ${roomId}`;
+            // Set first camera as active for first project
+            if (project.camera.length > 0 && !currentActiveProject) {
+                currentActiveProject = projectId;
+                currentActiveCamera = String(project.camera[0].id);
+                console.log(`Set active project: ${currentActiveProject}, active camera: ${currentActiveCamera}`);
+                
+                // Delay setting main video to allow connection to establish
+                setTimeout(() => {
+                    switchMainVideo(currentActiveCamera, projectId);
+                }, 3000);
+            }
+        }
+    }
+
+    // Join a specific room using camera ID
+    async function joinRoom(cameraId, projectId) {
+        try {
+            // Ensure cameraId is a string
+            const roomId = String(cameraId);
+            const connectionKey = `${projectId}-${roomId}`;
+            
+            console.log(`Attempting to join room: ${roomId} for project: ${projectId}`);
+            
+            // Close existing connection if any
+            if (peerConnections.has(connectionKey)) {
+                console.log(`Closing existing connection for ${connectionKey}`);
+                peerConnections.get(connectionKey).close();
+                peerConnections.delete(connectionKey);
+                
+                // Also clean up the stream
+                if (remoteStreams.has(connectionKey)) {
+                    const stream = remoteStreams.get(connectionKey);
+                    stream.getTracks().forEach(track => track.stop());
+                    remoteStreams.delete(connectionKey);
+                }
+            }
+
+            const statusElement = document.getElementById(`statusText${projectId}`);
+            if (statusElement && currentActiveProject == projectId) {
+                statusElement.textContent = `Connecting to camera ${roomId}...`;
+            }
 
             // Reference to the room in Firestore
             const roomRef = db.collection('rooms').doc(roomId);
-            const roomSnapshot = await roomRef.get();
-
-            if (!roomSnapshot.exists) {
-                statusText.textContent = `Room ${roomId} does not exist!`;
-                return;
-            }
+            
+            // Wait for room to exist with timeout
+            let roomSnapshot;
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            do {
+                roomSnapshot = await roomRef.get();
+                if (!roomSnapshot.exists) {
+                    console.log(`Room ${roomId} does not exist yet, attempt ${attempts + 1}/${maxAttempts}`);
+                    if (attempts >= maxAttempts - 1) {
+                        console.log(`Room ${roomId} does not exist after ${maxAttempts} attempts`);
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+                }
+                attempts++;
+            } while (!roomSnapshot.exists && attempts < maxAttempts);
 
             const roomData = roomSnapshot.data();
-            if (!roomData.offer) {
-                statusText.textContent = `Room ${roomId} exists but has no offer!`;
+            if (!roomData || !roomData.offer) {
+                console.log(`Room ${roomId} exists but has no offer yet`);
                 return;
             }
 
-            statusText.textContent = `Joining room: ${roomId}`;
-            console.log(`Joining room ${roomId} with data:`, roomData);
+            // Validate offer structure
+            if (!roomData.offer.type || !roomData.offer.sdp) {
+                console.error(`Invalid offer structure for room ${roomId}:`, roomData.offer);
+                return;
+            }
 
-            // Create a new RTCPeerConnection
-            peerConnection = new RTCPeerConnection(configuration);
+            console.log(`Joining room ${roomId} for project ${projectId} with valid offer`);
+
+            // Create a new RTCPeerConnection with error handling
+            let peerConnection;
+            try {
+                peerConnection = new RTCPeerConnection(configuration);
+            } catch (error) {
+                console.error(`Failed to create RTCPeerConnection for ${roomId}:`, error);
+                return;
+            }
+            
+            peerConnections.set(connectionKey, peerConnection);
 
             // Set up remote stream
-            remoteStream = new MediaStream();
-            remoteVideo.srcObject = remoteStream;
+            const remoteStream = new MediaStream();
+            remoteStreams.set(connectionKey, remoteStream);
 
-            // Register peer connection listeners
-            registerPeerConnectionListeners();
+            // Get video elements
+            const thumbnailVideo = document.getElementById(`video-${roomId}`);
+            const mainVideo = document.getElementById(`mainVideo${projectId}`);
 
-            // Collect ICE candidates
+            // Set thumbnail video source
+            if (thumbnailVideo) {
+                thumbnailVideo.srcObject = remoteStream;
+            }
+
+            // Set main video source if this is the active camera
+            if (currentActiveProject == projectId && currentActiveCamera == roomId && mainVideo) {
+                mainVideo.srcObject = remoteStream;
+            }
+
+            // Register peer connection listeners BEFORE setting up candidates
+            registerPeerConnectionListeners(peerConnection, roomId, projectId);
+
+            // Set up ICE candidate handling
             const calleeCandidatesCollection = roomRef.collection('calleeCandidates');
 
             // When we find an ICE candidate
             peerConnection.onicecandidate = event => {
                 if (event.candidate) {
-                    console.log('Got new ICE candidate:', event.candidate.candidate);
-                    calleeCandidatesCollection.add(event.candidate.toJSON());
+                    console.log(`Got new ICE candidate for ${roomId}`);
+                    try {
+                        const candidateData = event.candidate.toJSON();
+                        calleeCandidatesCollection.add(candidateData).catch(error => {
+                            console.error(`Error adding ICE candidate for ${roomId}:`, error);
+                        });
+                    } catch (error) {
+                        console.error(`Error processing ICE candidate for ${roomId}:`, error);
+                    }
                 }
             };
 
             // When we get a track from the remote peer
             peerConnection.ontrack = event => {
-                console.log('Got remote track:', event.streams[0]);
-                event.streams[0].getTracks().forEach(track => {
-                    console.log('Adding track to remote stream:', track);
-                    remoteStream.addTrack(track);
-                });
+                console.log(`Got remote track for ${roomId}`);
+                if (event.streams && event.streams[0]) {
+                    event.streams[0].getTracks().forEach(track => {
+                        console.log(`Adding track to remote stream for ${roomId}`);
+                        remoteStream.addTrack(track);
+                    });
+                }
             };
 
-            // Get the offer from the room
-            const offer = roomData.offer;
-            console.log('Setting remote description with offer:', offer);
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            // Set remote description with the offer
+            try {
+                const offer = roomData.offer;
+                console.log(`Setting remote description for ${roomId}`);
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            } catch (error) {
+                console.error(`Error setting remote description for ${roomId}:`, error);
+                peerConnection.close();
+                peerConnections.delete(connectionKey);
+                remoteStreams.delete(connectionKey);
+                return;
+            }
 
-            // Create answer
-            console.log('Creating answer');
-            const answer = await peerConnection.createAnswer();
-            console.log('Setting local description with answer:', answer);
-            await peerConnection.setLocalDescription(answer);
+            // Create and set local description (answer)
+            try {
+                console.log(`Creating answer for ${roomId}`);
+                const answer = await peerConnection.createAnswer();
+                console.log(`Setting local description for ${roomId}`);
+                await peerConnection.setLocalDescription(answer);
 
-            // Update the room with the answer
-            console.log('Updating room with answer');
-            await roomRef.update({
-                answer: {
-                    type: answer.type,
-                    sdp: answer.sdp
-                }
-            });
+                // Update the room with the answer
+                console.log(`Updating room ${roomId} with answer`);
+                await roomRef.update({
+                    answer: {
+                        type: answer.type,
+                        sdp: answer.sdp
+                    }
+                });
+            } catch (error) {
+                console.error(`Error creating/setting answer for ${roomId}:`, error);
+                peerConnection.close();
+                peerConnections.delete(connectionKey);
+                remoteStreams.delete(connectionKey);
+                return;
+            }
 
             // Listen for remote ICE candidates
-            console.log('Setting up listener for caller candidates');
+            console.log(`Setting up listener for caller candidates for ${roomId}`);
             roomRef.collection('callerCandidates').onSnapshot(snapshot => {
                 snapshot.docChanges().forEach(change => {
-                    if (change.type === 'added') {
+                    if (change.type === 'added' && peerConnection.signalingState !== 'closed') {
                         const data = change.doc.data();
-                        console.log('Adding remote ICE candidate:', data);
-                        peerConnection.addIceCandidate(new RTCIceCandidate(data))
-                            .catch(error => console.error('Error adding ICE candidate:', error));
+                        console.log(`Adding remote ICE candidate for ${roomId}`);
+                        
+                        try {
+                            peerConnection.addIceCandidate(new RTCIceCandidate(data))
+                                .catch(error => console.error(`Error adding ICE candidate for ${roomId}:`, error));
+                        } catch (error) {
+                            console.error(`Error processing remote ICE candidate for ${roomId}:`, error);
+                        }
                     }
                 });
+            }, error => {
+                console.error(`Error listening to caller candidates for ${roomId}:`, error);
             });
 
-            // Enable/disable buttons
-            // joinButton.disabled = true;
-            // hangupButton.disabled = false;
+            if (statusElement && currentActiveProject == projectId) {
+                statusElement.textContent = `Connecting to camera ${roomId}...`;
+            }
 
-            statusText.textContent = `Connecting to room: ${roomId}`;
-
-            // Set a timeout to detect connection failures
-            setTimeout(() => {
-                if (peerConnection && peerConnection.connectionState !== 'connected') {
-                    statusText.textContent = `Connection timeout. Verify that the mobile device is still streaming.`;
-                }
-            }, 30000);
         } catch (error) {
-            console.error('Error joining room:', error);
-            statusText.textContent = `Error joining room: ${error.message}`;
-            hangUp();
-        }
-    }
-
-    // Hang up the call
-    async function hangUp() {
-        try {
-            if (peerConnection) {
-                console.log('Closing peer connection');
-                peerConnection.close();
-                peerConnection = null;
-            }
-
-            // Clear the remote video
-            if (remoteVideo.srcObject) {
-                const tracks = remoteVideo.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-                remoteVideo.srcObject = null;
-            }
-            remoteStream = null;
-
-            // Reset room ID
-            if (currentRoomId) {
-                // Optionally: Remove our answer from the room to signal we're no longer connected
-                try {
-                    await db.collection('rooms').doc(currentRoomId).update({
-                        answer: firebase.firestore.FieldValue.delete()
-                    });
-                    console.log(`Removed answer from room ${currentRoomId}`);
-                } catch (e) {
-                    console.log('Could not update room, it may have been deleted:', e);
-                }
-                currentRoomId = null;
-            }
-
-            // Enable/disable buttons
-            // joinButton.disabled = false;
-            // hangupButton.disabled = true;
-
-            statusText.textContent = 'Disconnected';
-        } catch (error) {
-            console.error('Error during hangup:', error);
-            statusText.textContent = 'Error during disconnect';
-
-            // Make sure UI is reset even if there was an error
-            currentRoomId = null;
-            // joinButton.disabled = false;
-            // hangupButton.disabled = true;
-        }
-    }
-
-    // Listen for active rooms
-    function listenForRooms() {
-        if (roomsListener) {
-            // Already listening
-            return;
-        }
-
-        roomsListener = db.collection('rooms')
-            .onSnapshot(snapshot => {
-                snapshot.docChanges().forEach(change => {
-                    const roomId = change.doc.id;
-                    const data = change.doc.data();
-
-                    if (change.type === 'added') {
-                        // A new room was created
-                        addRoomToList(roomId, data);
-                    } else if (change.type === 'modified') {
-                        // Room was updated (e.g., someone joined)
-                        updateRoomInList(roomId, data);
-                    } else if (change.type === 'removed') {
-                        // Room was removed
-                        removeRoomFromList(roomId);
-                    }
-                });
-            });
-
-        // listenButton.textContent = 'Listening for Streams...';
-        // listenButton.disabled = true;
-        statusText.textContent = 'Listening for new streaming rooms...';
-    }
-
-    // Add a room to the list
-    function addRoomToList(roomId, data) {
-        const roomDiv = document.createElement('div');
-        roomDiv.className = 'room-item';
-        roomDiv.id = `room-${roomId}`;
-
-        const statusDot = document.createElement('span');
-        statusDot.className = 'room-status ' + (data.answer ? 'active' : 'inactive');
-
-        const roomIdSpan = document.createElement('span');
-        roomIdSpan.textContent = `Room: ${roomId}`;
-
-        const timestampSpan = document.createElement('span');
-        timestampSpan.textContent = new Date().toLocaleTimeString();
-
-        roomDiv.appendChild(statusDot);
-        roomDiv.appendChild(roomIdSpan);
-        roomDiv.appendChild(timestampSpan);
-
-        roomDiv.addEventListener('click', () => {
-            roomIdInput.value = roomId;
-            joinRoom(roomId);
-        });
-
-        // roomItems.appendChild(roomDiv);
-    }
-
-    // Update a room in the list
-    function updateRoomInList(roomId, data) {
-        const roomDiv = document.getElementById(`room-${roomId}`);
-        if (roomDiv) {
-            const statusDot = roomDiv.querySelector('.room-status');
-            if (statusDot) {
-                statusDot.className = 'room-status ' + (data.answer ? 'active' : 'inactive');
+            console.error(`Error joining room ${cameraId}:`, error);
+            const statusElement = document.getElementById(`statusText${projectId}`);
+            if (statusElement && currentActiveProject == projectId) {
+                statusElement.textContent = `Error connecting to camera ${cameraId}: ${error.message}`;
             }
         }
     }
 
-    // Remove a room from the list
-    function removeRoomFromList(roomId) {
-        const roomDiv = document.getElementById(`room-${roomId}`);
-        if (roomDiv) {
-            roomDiv.remove();
+    // Switch camera stream in main video
+    function switchCamera(cameraId, projectId) {
+        const roomId = String(cameraId);
+        const connectionKey = `${projectId}-${roomId}`;
+        const remoteStream = remoteStreams.get(connectionKey);
+        const mainVideo = document.getElementById(`mainVideo${projectId}`);
+
+        if (remoteStream && mainVideo) {
+            mainVideo.srcObject = remoteStream;
+            currentActiveCamera = roomId;
+            console.log(`Switched main video to camera ${roomId}`);
+            
+            const statusElement = document.getElementById(`statusText${projectId}`);
+            if (statusElement) {
+                statusElement.textContent = `Now viewing camera ${roomId}`;
+            }
+        } else {
+            console.log(`Cannot switch to camera ${roomId} - stream or video element not found`);
+        }
+    }
+
+    // Switch main video when changing projects
+    function switchMainVideo(cameraId, projectId) {
+        const roomId = String(cameraId);
+        const connectionKey = `${projectId}-${roomId}`;
+        const remoteStream = remoteStreams.get(connectionKey);
+        const mainVideo = document.getElementById(`mainVideo${projectId}`);
+
+        if (remoteStream && mainVideo) {
+            mainVideo.srcObject = remoteStream;
+            console.log(`Set main video for project ${projectId} to camera ${roomId}`);
         }
     }
 
     // Register peer connection listeners
-    function registerPeerConnectionListeners() {
+    function registerPeerConnectionListeners(peerConnection, cameraId, projectId) {
+        const roomId = String(cameraId);
+        const statusElement = document.getElementById(`video-box-${roomId}`)?.querySelector('.video-status');
+        
         peerConnection.onconnectionstatechange = () => {
-            console.log(`Connection state change: ${peerConnection.connectionState}`);
-            statusText.textContent = `Connection state: ${peerConnection.connectionState}`;
+            console.log(`Connection state change for ${roomId}: ${peerConnection.connectionState}`);
+            
+            if (statusElement) {
+                statusElement.className = `video-status status-${peerConnection.connectionState === 'connected' ? 'connected' : 
+                    peerConnection.connectionState === 'connecting' ? 'connecting' : 'disconnected'}`;
+            }
+
+            const projectStatusElement = document.getElementById(`statusText${projectId}`);
+            if (projectStatusElement && currentActiveProject == projectId && currentActiveCamera == roomId) {
+                projectStatusElement.textContent = `Camera ${roomId}: ${peerConnection.connectionState}`;
+            }
 
             if (peerConnection.connectionState === 'connected') {
-                statusText.textContent = 'Connection established - Streaming';
-                // reconnectButton.disabled = true;
-            } else if (peerConnection.connectionState === 'disconnected') {
-                statusText.textContent = 'Connection lost - Attempting to reconnect...';
-                // reconnectButton.disabled = false;
+                console.log(`Successfully connected to camera ${roomId}`);
             } else if (peerConnection.connectionState === 'failed') {
-                statusText.textContent = 'Connection failed - Could not establish connection';
-                console.error('Connection failed - See console for details');
-                // reconnectButton.disabled = false;
+                console.error(`Connection failed for camera ${roomId}`);
+                // Attempt to reconnect after a delay
+                setTimeout(() => {
+                    console.log(`Attempting to reconnect camera ${roomId}`);
+                    joinRoom(roomId, projectId);
+                }, 5000);
             }
         };
 
         peerConnection.oniceconnectionstatechange = () => {
-            console.log(`ICE connection state change: ${peerConnection.iceConnectionState}`);
-
+            console.log(`ICE connection state change for ${roomId}: ${peerConnection.iceConnectionState}`);
+            
             if (peerConnection.iceConnectionState === 'failed') {
-                console.error('ICE connection failed - No suitable connection path found');
-                statusText.textContent = 'ICE connection failed - Check firewall/network settings';
+                console.error(`ICE connection failed for camera ${roomId}`);
             }
         };
 
         peerConnection.onsignalingstatechange = () => {
-            console.log(`Signaling state change: ${peerConnection.signalingState}`);
+            console.log(`Signaling state change for ${roomId}: ${peerConnection.signalingState}`);
         };
 
         peerConnection.onicegatheringstatechange = () => {
-            console.log(`ICE gathering state change: ${peerConnection.iceGatheringState}`);
-
-            if (peerConnection.iceGatheringState === 'complete') {
-                console.log('ICE gathering completed - All candidates gathered');
-            }
+            console.log(`ICE gathering state change for ${roomId}: ${peerConnection.iceGatheringState}`);
         };
 
-        // Log ice candidates for debugging
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                console.log('New ICE candidate:', event.candidate.candidate);
-                // Still add to collection
-                if (currentRoomId) {
-                    const calleeCandidatesCollection = db.collection('rooms').doc(currentRoomId).collection('calleeCandidates');
-                    calleeCandidatesCollection.add(event.candidate.toJSON());
-                }
-            }
+        // Handle errors
+        peerConnection.onerror = (error) => {
+            console.error(`Peer connection error for ${roomId}:`, error);
         };
     }
 
-    // Event listeners
-    // joinButton.addEventListener('click', () => {
-    //     const roomId = roomIdInput.value.trim();
-    //     if (roomId) {
-    //         joinRoom(roomId);
-    //     } else {
-    //         alert('Please enter a Room ID');
-    //     }
-    // });
+    // Hang up all connections
+    async function hangUpAllConnections() {
+        try {
+            for (const [connectionKey, peerConnection] of peerConnections) {
+                console.log(`Closing connection: ${connectionKey}`);
+                peerConnection.close();
+            }
+            
+            peerConnections.clear();
+            remoteStreams.clear();
 
-    // listenButton.addEventListener('click', listenForRooms);
+            // Clear all video sources
+            document.querySelectorAll('video').forEach(video => {
+                if (video.srcObject) {
+                    const tracks = video.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+            });
 
-    // hangupButton.addEventListener('click', hangUp);
-
-    // reconnectButton.addEventListener('click', () => {
-    //     const roomId = currentRoomId || roomIdInput.value.trim();
-    //     if (roomId) {
-    //         statusText.textContent = 'Attempting to reconnect...';
-    //         hangUp().then(() => {
-    //             // Small delay to ensure clean hangup before reconnect
-    //             setTimeout(() => joinRoom(roomId), 1000);
-    //         });
-    //     } else {
-    //         alert('No room ID to reconnect to');
-    //     }
-    // });
-</script>
-<script>
-    // JavaScript adapted from index.html
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const roomId = roomIdInput?.value.trim();
-        if (roomId) {
-            joinRoom(roomId);
-        } else {
-            statusText.textContent = 'No Room ID provided';
+            console.log('All connections closed');
+        } catch (error) {
+            console.error('Error during hangup:', error);
         }
-        // Tab switching logic
-        let previousTab = null;
+    }
 
-        function openTab(event, tabId) {
-            document.querySelectorAll('.tab-prop').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('bg-[#ededed]'));
-            const selectedTab = document.getElementById(tabId);
-            if (selectedTab) selectedTab.classList.remove('hidden');
-            event.currentTarget.classList.add('bg-[#ededed]');
-            previousTab = event.currentTarget;
-        }
+    // Listen for new rooms
+    function listenForNewRooms() {
+        db.collection('rooms').onSnapshot(snapshot => {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === 'added') {
+                    const roomId = change.doc.id;
+                    const data = change.doc.data();
+                    
+                    // Check if this room corresponds to any of our cameras
+                    for (const project of projectsData) {
+                        const camera = project.camera.find(cam => cam.id === roomId);
+                        if (camera && data.offer) {
+                            console.log(`New room detected for camera ${roomId}, connecting...`);
+                            joinRoom(roomId, project.project_id);
+                        }
+                    }
+                }
+            });
+        });
+    }
 
-        // Activate first tab on page load
-        const firstTabButton = document.querySelector('.tab-button');
-        const firstTabId = firstTabButton?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-        const firstTabContent = firstTabId ? document.getElementById(firstTabId) : null;
-
-        if (firstTabButton && firstTabContent) {
-            firstTabContent.classList.remove('hidden');
-            firstTabButton.classList.add('bg-[#ededed]');
-            previousTab = firstTabButton;
-        }
-
-        // Video controls
-        const playPauseButton = document.getElementById('play-pause');
-        playPauseButton.addEventListener('click', () => {
-            if (remoteVideo.paused) {
-                remoteVideo.play();
-                playPauseButton.innerHTML = `<img src="{{ asset('assets/images/pause.png') }}" class="w-[20px] object-contain mr-[10px]">`;
-            } else {
-                remoteVideo.pause();
-                playPauseButton.innerHTML = `<img src="{{ asset('assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]">`;
+    // Tab switching logic
+    function openTab(event, tabId) {
+        // Hide all tabs
+        document.querySelectorAll('[id^="stream"]').forEach(tab => {
+            if (tab.id.startsWith('stream')) {
+                tab.classList.add('hidden');
             }
         });
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('bg-[#ededed]'));
+        
+        // Show selected tab
+        const selectedTab = document.getElementById(tabId);
+        if (selectedTab) {
+            selectedTab.classList.remove('hidden');
+            event.currentTarget.classList.add('bg-[#ededed]');
+            
+            // Extract project ID from tab ID
+            const projectId = tabId.replace('stream', '');
+            currentActiveProject = projectId;
+            
+            // Find first camera for this project and set as active
+            const project = projectsData.find(p => p.project_id == projectId);
+            if (project && project.camera.length > 0) {
+                currentActiveCamera = project.camera[0].id;
+                switchMainVideo(currentActiveCamera, projectId);
+            }
+        }
+    }
 
-        const volumeSlider = document.getElementById('volume-slider');
-        volumeSlider.addEventListener('input', () => {
-            remoteVideo.volume = volumeSlider.value;
-        });
+    // Video controls setup
+    function setupVideoControls() {
+        projectsData.forEach(project => {
+            const projectId = project.project_id;
+            
+            // Play/Pause button
+            const playPauseButton = document.getElementById(`play-pause${projectId}`);
+            const mainVideo = document.getElementById(`mainVideo${projectId}`);
+            
+            if (playPauseButton && mainVideo) {
+                playPauseButton.addEventListener('click', () => {
+                    if (mainVideo.paused) {
+                        mainVideo.play();
+                        playPauseButton.innerHTML = `<img src="{{ asset('admin-theme/assets/images/pause.png') }}" class="w-[20px] object-contain mr-[10px]">`;
+                    } else {
+                        mainVideo.pause();
+                        playPauseButton.innerHTML = `<img src="{{ asset('admin-theme/assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]">`;
+                    }
+                });
+            }
 
-        const speedSlider = document.getElementById('custom-speed');
-        speedSlider.addEventListener('input', () => {
-            remoteVideo.playbackRate = speedSlider.value;
+            // Volume slider
+            const volumeSlider = document.getElementById(`volume-slider${projectId}`);
+            if (volumeSlider && mainVideo) {
+                volumeSlider.addEventListener('input', () => {
+                    mainVideo.volume = volumeSlider.value;
+                });
+            }
+
+            // Speed slider
+            const speedSlider = document.getElementById(`custom-speed${projectId}`);
+            if (speedSlider && mainVideo) {
+                speedSlider.addEventListener('input', () => {
+                    mainVideo.playbackRate = speedSlider.value;
+                });
+            }
+
+            // Hang up button
+            const hangUpButton = document.getElementById(`hang-up${projectId}`);
+            if (hangUpButton) {
+                hangUpButton.addEventListener('click', hangUpAllConnections);
+            }
+
+            // Reconnect button
+            const reconnectButton = document.getElementById(`reconnect${projectId}`);
+            if (reconnectButton) {
+                reconnectButton.addEventListener('click', () => {
+                    console.log('Reconnecting all cameras...');
+                    hangUpAllConnections().then(() => {
+                        setTimeout(initializeAllCameras, 1000);
+                    });
+                });
+            }
         });
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Activate first tab
+        const firstTabButton = document.querySelector('.tab-button');
+        if (firstTabButton) {
+            const onclick = firstTabButton.getAttribute('onclick');
+            const tabId = onclick.match(/'([^']+)'/)[1];
+            const firstTab = document.getElementById(tabId);
+            
+            if (firstTab) {
+                firstTab.classList.remove('hidden');
+                firstTabButton.classList.add('bg-[#ededed]');
+                
+                const projectId = tabId.replace('stream', '');
+                currentActiveProject = projectId;
+            }
+        }
+
+        // Setup video controls
+        setupVideoControls();
+
+        // Start listening for new rooms
+        listenForNewRooms();
+
+        // Initialize all camera connections
+        initializeAllCameras();
 
         // Cleanup on page unload
-        window.addEventListener('beforeunload', hangUp);
+        window.addEventListener('beforeunload', hangUpAllConnections);
     });
+
+    // Make functions globally available
+    window.openTab = openTab;
+    window.switchCamera = switchCamera;
 </script>
 @endpush
