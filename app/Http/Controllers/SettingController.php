@@ -12,10 +12,14 @@ use App\Models\Trackable;
 
 class SettingController extends Controller
 {
+
+    public function index(){
+        return view('settings.account-settings');
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index(
+    public function indexOld(
         EquipmentDataTable $equipment,
         MappingDatatable $mapping,
         TrackableDataTable $trackable
