@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\EquipmentDataTable;
-use App\DataTables\MappingDatatable;
+use App\DataTables\MappingDataTable;
 use App\DataTables\TrackableDataTable;
 use App\Models\Company;
 use App\Models\Equipment;
