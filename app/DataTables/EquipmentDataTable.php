@@ -26,19 +26,31 @@ class EquipmentDataTable extends DataTable
                 return $equipment->equipment_code ?? '-';
             })
             ->addColumn('company_name', function ($equipment) {
-                return $equipment->company ? $equipment->company->company_name : '-';
+                $mapping = $equipment->mappingAsCamera ?? $equipment->mappingAsTablet;
+                return $mapping && $mapping->company ? $mapping->company->company_name : '-';
             })
             ->addColumn('project_name', function ($equipment) {
-                return $equipment->project ? $equipment->project->name : '-';
+                $mapping = $equipment->mappingAsCamera ?? $equipment->mappingAsTablet;
+                return $mapping && $mapping->project ? $mapping->project->name : '-';
             })
-            ->editColumn('plant_name', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? '-') . '</p>';
+            ->addColumn('plant_name', function ($equipment) {
+                $mapping = $equipment->mappingAsCamera ?? $equipment->mappingAsTablet;
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . $mapping && $mapping->project->plant_name ? $mapping->project->plant_name : '-' . '</p>';
             })
+            // ->editColumn('plant_name', function ($equipment) {
+            //     return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? '-') . '</p>';
+            // })
             ->editColumn('equipment_type', function ($equipment) {
                 return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ucfirst($equipment->type) . '</p>';
             })
             ->editColumn('mapped_to', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->mapped_to ?? '-') . '</p>';
+                if ($equipment->type === 'camera' && $equipment->mappingAsCamera && $equipment->mappingAsCamera->tablet) {
+                    return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' 
+                        . $equipment->mappingAsCamera->tablet->equipment_name 
+                        . '</p>';
+                }
+            
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">-</p>';
             })
             ->editColumn('streaming_link', function ($equipment) {
                 if ($equipment->stream_link) {
@@ -89,7 +101,13 @@ class EquipmentDataTable extends DataTable
      */
     public function query(Equipment $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()
+        ->with([
+            'mappingAsCamera.company',
+            'mappingAsCamera.project',
+            'mappingAsTablet.company',
+            'mappingAsTablet.project',
+        ]);
     }
 
     /**

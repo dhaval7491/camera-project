@@ -19,4 +19,14 @@ class Equipment extends Model implements AuthenticatableContract
         'equipment_code',
         'password'
     ];
+
+    public function mappingAsCamera()
+    {
+        return $this->hasOne(Mapping::class, 'camera_id');
+    }
+
+    public function mappingAsTablet()
+    {
+        return $this->hasOne(Mapping::class, 'tablet_id');
+    }
 }
