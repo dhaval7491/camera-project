@@ -38,7 +38,7 @@ class MappingController extends Controller
     {
         $data = $request->validated();
         Mapping::create($data);
-        return redirect()->route('mappings.index');
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -73,7 +73,7 @@ class MappingController extends Controller
     {
         $data = $request->validated();
         $mapping->update($data);
-        return redirect()->route('mappings.index');
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -82,7 +82,7 @@ class MappingController extends Controller
     public function destroy(Mapping $mapping)
     {
         $mapping->delete();
-        return redirect()->route('mappings.index');
+        return redirect()->route('settings.index');
     }
 
     public function toggleActive(Mapping $mapping)

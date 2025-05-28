@@ -49,11 +49,11 @@
 
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="toggleModal('createTrackableModal')"
-                    class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
+                    class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                     Cancel
                 </button>
                 <button type="submit"
-                    class="px-4 py-2 bg-[#3D3D3D] text-white rounded-lg hover:bg-[#2D2D2D] transition-colors">
+                    class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#437651] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
                     Create
                 </button>
             </div>

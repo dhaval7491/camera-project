@@ -41,7 +41,7 @@ class TrackableDataTable extends DataTable
             })
             ->editColumn('status', function ($trackable) {
                 $status = $trackable->is_active ? 'Active' : 'Inactive';
-                $color = $trackable->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $trackable->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$trackable->id}\" onclick=\"toggleTrackableStatus({$trackable->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($trackable) {
@@ -50,7 +50,7 @@ class TrackableDataTable extends DataTable
                     <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
                         <ul>
                             <li class="py-[5px]">
-                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $trackable->id . ')">
+                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showTrackableEditModal(' . $trackable->id . ')">
                                     <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
                                     <p>Edit</p>
                                 </a>

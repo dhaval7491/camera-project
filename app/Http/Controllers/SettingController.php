@@ -12,14 +12,10 @@ use App\Models\Trackable;
 
 class SettingController extends Controller
 {
-
-    public function index(){
-        return view('settings.account-settings');
-    }
     /**
      * Display a listing of the resource.
      */
-    public function indexOld(
+    public function index(
         EquipmentDataTable $equipment,
         MappingDatatable $mapping,
         TrackableDataTable $trackable
@@ -42,6 +38,8 @@ class SettingController extends Controller
             'plants' => Project::distinct()->pluck('plant_name')->toArray(), // Or from Equipment if needed
             'equipments' => Equipment::pluck('equipment_name', 'id')->toArray(),
             'trackables' => Trackable::pluck('trackable_name', 'id')->toArray(),
+            'cameras' => Equipment::where('type', 'camera')->pluck('equipment_name', 'id')->toArray(),
+            'tablets' => Equipment::where('type', 'tablet')->pluck('equipment_name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
                 0 => 'Inactive'

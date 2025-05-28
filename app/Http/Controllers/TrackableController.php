@@ -44,7 +44,7 @@ class TrackableController extends Controller
             }
         }
 
-        return redirect()->route('trackables.index');
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -90,10 +90,11 @@ class TrackableController extends Controller
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Trackable updated successfully'
-        ]);
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Trackable updated successfully'
+        // ]);
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -102,7 +103,7 @@ class TrackableController extends Controller
     public function destroy(Trackable $trackable)
     {
         $trackable->delete();
-        return redirect()->route('trackables.index');
+        return redirect()->route('settings.index');
     }
 
     public function toggleActive(Trackable $trackable)

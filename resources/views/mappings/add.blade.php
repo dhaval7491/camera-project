@@ -1,5 +1,5 @@
 <x-modal id="createMappingModal" title="Create Mapping" class="max-w-lg">
-    <form method="POST" action="{{ route('mappings.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('mappings.store') }}" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         <div class="space-y-4">
             <x-form-input
@@ -91,11 +91,11 @@
 
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="toggleModal('createMappingModal')"
-                    class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
+                    class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                     Cancel
                 </button>
                 <button type="submit"
-                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#437651] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
                     Create
                 </button>
             </div>

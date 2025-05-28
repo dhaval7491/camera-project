@@ -20,25 +20,25 @@ class EquipmentDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('name', function ($equipment) {
-                return $equipment->equipment_name ?? 'N/A';
+                return $equipment->equipment_name ?? '-';
             })
             ->addColumn('code', function ($equipment) {
-                return $equipment->equipment_code ?? 'N/A';
+                return $equipment->equipment_code ?? '-';
             })
             ->addColumn('company_name', function ($equipment) {
-                return $equipment->company ? $equipment->company->company_name : 'N/A';
+                return $equipment->company ? $equipment->company->company_name : '-';
             })
             ->addColumn('project_name', function ($equipment) {
-                return $equipment->project ? $equipment->project->name : 'N/A';
+                return $equipment->project ? $equipment->project->name : '-';
             })
             ->editColumn('plant_name', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? 'N/A') . '</p>';
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? '-') . '</p>';
             })
             ->editColumn('equipment_type', function ($equipment) {
                 return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ucfirst($equipment->type) . '</p>';
             })
             ->editColumn('mapped_to', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->mapped_to ?? 'N/A') . '</p>';
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->mapped_to ?? '-') . '</p>';
             })
             ->editColumn('streaming_link', function ($equipment) {
                 if ($equipment->stream_link) {
@@ -48,11 +48,11 @@ class EquipmentDataTable extends DataTable
                             <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-streaming-link absolute right-0 top-[20px] w-[23px] cursor-pointer" data-link="' . $equipment->stream_link . '">
                         </div>';
                 }
-                return 'N/A';
+                return '-';
             })
             ->addColumn('status', function ($equipment) {
                 $status = $equipment->is_active ? 'Active' : 'Inactive';
-                $color = $equipment->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $equipment->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($equipment) {

@@ -38,7 +38,7 @@ class EquipmentController extends Controller
             $data['password'] = bcrypt($data['password']);
         }
         Equipment::create($data);
-        return redirect()->route('equipments.index');
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -79,7 +79,7 @@ class EquipmentController extends Controller
             $data['password'] = bcrypt($data['password']);
         }
         $equipment->update($data);
-        return redirect()->route('equipments.index');
+        return redirect()->route('settings.index');
     }
 
     /**
@@ -88,7 +88,7 @@ class EquipmentController extends Controller
     public function destroy(Equipment $equipment)
     {
         $equipment->delete();
-        return redirect()->route('equipments.index');
+        return redirect()->route('settings.index');
     }
 
     /**

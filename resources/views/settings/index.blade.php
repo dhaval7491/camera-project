@@ -36,8 +36,8 @@
                                                 <li class="list-inline-item mr-[15px]">
                                                     <button
                                                         class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModale()">
-                                                        <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Add Equipment
+                                                        onclick="toggleModal('createEquipmentModal')">
+                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
                                                     </button>
                                                 </li>
                                             </ul>
@@ -108,8 +108,8 @@
                                                 <li class="list-inline-item mr-[15px]">
                                                     <button
                                                         class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModalm()">
-                                                        <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Create Mapping
+                                                        onclick="toggleModal('createMappingModal')">
+                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Create Mapping
                                                     </button>
                                                 </li>
                                             </ul>
@@ -193,8 +193,8 @@
                                                 <li class="list-inline-item mr-[15px]">
                                                     <button
                                                         class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModalcont()">
-                                                        <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Add new
+                                                        onclick="toggleModal('createTrackableModal')">
+                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add new
                                                     </button>
                                                 </li>
                                             </ul>
@@ -349,6 +349,17 @@
         </div>
     </div>
 </div>
+<!-- Create Equipment Modal -->
+@include('equipments.add')
+
+<!-- Edit Equipment Modal -->
+@include('equipments.edit')
+@include('mappings.add')
+@include('mappings.edit')
+<!-- Create Trackable Modal -->
+@include('trackables.add')
+<!-- Edit Trackable Modal -->
+@include('trackables.edit')
 @endsection
 
 @push('styles')
@@ -399,6 +410,9 @@
 {!! $equipmentDataTable->scripts() !!}
 <script>
     $(document).ready(function() {
+        let mappingTable;
+        let trackableTable;
+        let equipmentTable = $('#equipments-table').DataTable()
         // Initialize Select2 for all filter selects
         $('.filter-select').select2({
             placeholder: function() {
@@ -452,7 +466,7 @@
             if (!initializedTables.mapping && $('#mappings-table').length) {
                 // Load the mapping DataTable via AJAX
                 $.get('{{ route("mappings.index") }}', function(data) {
-                    $('#mappings-table').DataTable({
+                 mappingTable =  $('#mappings-table').DataTable({
                         processing: true,
                         serverSide: true,
                         ajax: '{{ route("mappings.index") }}',
@@ -487,7 +501,7 @@
             if (!initializedTables.trackable && $('#trackables-table').length) {
                 // Load the trackable DataTable via AJAX
                 $.get('{{ route("trackables.index") }}', function(data) {
-                    $('#trackables-table').DataTable({
+                    trackableTable = $('#trackables-table').DataTable({
                         processing: true,
                         serverSide: true,
                         ajax: '{{ route("trackables.index") }}',
@@ -541,6 +555,202 @@
                     }
                 }
             }, 100);
+        });
+
+
+        window.toggleEquipmentStatus = function(equipmentId) {
+            $.ajax({
+                url: '{{ url("equipments") }}/' + equipmentId + '/toggle-active',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        equipmentTable.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
+                }
+            });
+        };
+
+        // Copy streaming link to clipboard
+        $(document).on('click', '.copy-streaming-link', function() {
+            let url = $(this).data('link');
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy link');
+            });
+        });
+
+        // Fetch equipment data and populate edit modal
+        window.showEditModal = function(equipmentId) {
+            $.ajax({
+                url: '{{ url("equipments") }}/' + equipmentId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    // Populate the edit modal fields
+                    $('#edit_equipment_id').val(response.id);
+                    $('#edit_equipment_name').val(response.equipment_name);
+                    $('#edit_stream_link').val(response.stream_link);
+                    $('#edit_equipment_code').val(response.equipment_code);
+                    $('#editEquipmentForm').attr('action', '{{ url("equipments") }}/' + response.id);
+
+                    // Set the correct radio button and show appropriate fields
+                    if (response.type === 'camera') {
+                        $('#edit_type_camera').prop('checked', true);
+                    } else if (response.type === 'tablet') {
+                        $('#edit_type_tablet').prop('checked', true);
+                    }
+
+                    // Open the edit modal
+                    toggleModal('editEquipmentModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching equipment data:', xhr);
+                    alert('Failed to load equipment data');
+                }
+            });
+        };
+
+        window.toggleMappingStatus = function(mappingId) {
+            $.ajax({
+                url: '{{ url("mappings") }}/' + mappingId + '/toggle-active',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        mappingTable.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
+                }
+            });
+        };
+
+        window.showEditMappingModal = function(mappingId) {
+            $.ajax({
+                url: '{{ url("mappings") }}/' + mappingId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    $('#edit_mapping_id').val(response.id);
+                    $('#edit_company_id').val(response.company_id);
+                    $('#edit_project_id').val(response.project_id);
+                    $('#edit_camera_id').val(response.camera_id);
+                    $('#edit_tablet_id').val(response.tablet_id);
+                    $('#editMappingForm').attr('action', '{{ url("mappings") }}/' + response.id);
+                    toggleModal('editMappingModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching mapping data:', xhr);
+                    alert('Failed to load mapping data');
+                }
+            });
+        };
+
+        window.toggleTrackableStatus = function(trackableId) {
+            $.ajax({
+                url: '{{ url("trackables") }}/' + trackableId + '/toggle-active',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        trackableTable.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
+                }
+            });
+        };
+
+        // Fetch trackable data and populate edit modal
+        window.showTrackableEditModal = function(trackableId) {
+            $.ajax({
+                url: '{{ url("trackables") }}/' + trackableId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    // Populate the edit modal fields
+                    $('#edit_trackable_id').val(response.id);
+                    $('#edit_trackable_name').val(response.trackable_name);
+                    $('#edit_other_name').val(response.other_name);
+                    $('#edit_status').text(response.status).removeClass('bg-[#047413] bg-[#F96767]').addClass(response.status === 'Active' ? 'bg-[#047413]' : 'bg-[#F96767]');
+                    $('#editTrackableForm').attr('action', '{{ url("trackables") }}/' + response.id);
+
+                    // Populate linked objects
+                    let container = $('#editLinkedObjectsContainer');
+                    container.empty();
+                    if (response.linked_objects && response.linked_objects.length > 0) {
+                        response.linked_objects.forEach(function(object, index) {
+                            let div = $('<div>').addClass('flex align-middle input-group');
+                            let input = $('<input>')
+                                .attr('type', 'text')
+                                .attr('name', 'linked_objects[]')
+                                .val(object)
+                                .addClass('h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]')
+                                .attr('placeholder', 'Enter Linked Object');
+                            let button = $('<button>')
+                                .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
+                                .html('<img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] h-[20px]" alt="Delete">')
+                                .on('click', function() { div.remove(); });
+                            div.append(input).append(button);
+                            container.append(div);
+                        });
+                    }
+                    // Add one empty input field
+                    addNewLinkedObjectField('#editLinkedObjectsContainer', 'linked_objects[]');
+
+                    // Open the edit modal
+                    toggleModal('editTrackableModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching trackable data:', xhr);
+                    alert('Failed to load trackable data');
+                }
+            });
+        };
+
+        // Handle edit form submission via AJAX
+        $('#editTrackableForm').on('submit', function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST', // Laravel handles PUT via _method
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        table.ajax.reload(null, false); // Refresh DataTable
+                        toggleModal('editTrackableModal'); // Close modal
+                        alert('Trackable updated successfully');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error updating trackable:', xhr);
+                    let errors = xhr.responseJSON?.errors;
+                    if (errors) {
+                        let errorMsg = Object.values(errors).flat().join('\n');
+                        alert('Validation errors:\n' + errorMsg);
+                    } else {
+                        alert('Failed to update trackable');
+                    }
+                }
+            });
         });
     });
 

@@ -39,13 +39,13 @@ class MappingDatatable extends DataTable
             ->editColumn('streaming_links', function ($mapping) {
                 return '
                     <div class="w-72 relative">
-                        <span class="truncate block w-full p-2 rounded">' . ($mapping->equipment->stream_link ?? 'N/A') . '</span>
+                        <span class="truncate block w-full p-2 rounded">' . ($mapping->equipment->stream_link ?? '-') . '</span>
                         <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
                     </div>';
             })
             ->addColumn('status', function ($mapping) {
                 $status = $mapping->is_active ? 'Active' : 'Inactive';
-                $color = $mapping->is_active ? 'bg-green-600' : 'bg-red-700';
+                $color = $mapping->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$mapping->id}\" onclick=\"toggleMappingStatus({$mapping->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($mapping) {
