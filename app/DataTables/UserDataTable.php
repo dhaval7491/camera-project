@@ -141,7 +141,6 @@ class UserDataTable extends DataTable
             Column::make('company_name')->title('Company Name'),
             Column::make('access_level')->title('Access Level'),
             Column::make('status')->title('Status'),
-            Column::make('created_at')->title('Member Since'),
             Column::computed('action')
                   ->title('Action')
                   ->exportable(false)
