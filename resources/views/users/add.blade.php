@@ -109,7 +109,7 @@
                     <label for="image" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Upload Image</label>
                 </div>
                 <div class="lg:w-4/6 w-full">
-                    <input type="file" name="image" id="image" class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#3D3D3D] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]">
+                    <input type="file" name="image" id="image" class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]">
                     @error('image')
                     <p class="text-red-500 text-sm">{{ $message }}</p>
                     @enderror
