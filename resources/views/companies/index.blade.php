@@ -133,8 +133,11 @@
 @endpush
 
 @push('scripts')
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {!! $dataTable->scripts() !!}
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 <script>
 $(document).ready(function() {
     let table = $('#companies-table').DataTable();
@@ -147,6 +150,186 @@ $(document).ready(function() {
         allowClear: true,
         closeOnSelect: false,
         width: '100%'
+    });
+
+    // jQuery Validation for Create Company Form
+    $('#createCompanyForm').validate({
+        rules: {
+            company_name: {
+                required: true,
+                minlength: 2
+            },
+            logo: {
+                required: true,
+                extension: "jpg|jpeg|png|gif"
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            admin_name: {
+                required: true,
+                minlength: 2
+            },
+            admin_email: {
+                required: true,
+                email: true
+            },
+            admin_password: {
+                required: true,
+                minlength: 6
+            }
+        },
+        messages: {
+            company_name: {
+                required: "Please enter a company name",
+                minlength: "Company name must be at least 2 characters long"
+            },
+            logo: {
+                required: "Please upload a company logo",
+                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            admin_name: {
+                required: "Please enter an admin name",
+                minlength: "Admin name must be at least 2 characters long"
+            },
+            admin_email: {
+                required: "Please enter an admin email",
+                email: "Please enter a valid email address"
+            },
+            admin_password: {
+                required: "Please enter a password",
+                minlength: "Password must be at least 6 characters long"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+
+    // jQuery Validation for Edit Company Form
+    $('#editCompanyForm').validate({
+        rules: {
+            company_name: {
+                required: true,
+                minlength: 2
+            },
+            logo: {
+                extension: "jpg|jpeg|png|gif"
+            },
+            location: {
+                required: true,
+                minlength: 2
+            }
+        },
+        messages: {
+            company_name: {
+                required: "Please enter a company name",
+                minlength: "Company name must be at least 2 characters long"
+            },
+            logo: {
+                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+
+
+    // Handle Create button click
+    $('#createCompanySubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#createCompanyForm').valid()) {
+            var formData = new FormData($('#createCompanyForm')[0]);
+            $.ajax({
+                url: '{{ route('companies.store') }}',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('createCompanyModal');
+                    table.ajax.reload(null, false);
+                    alert('Company created successfully');
+                    $('#createCompanyForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error creating company:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + key + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + key).addClass('input-error');
+                        });
+                    } else {
+                        alert('Failed to create company');
+                    }
+                }
+            });
+        }
+    });
+
+    // Handle Edit button click
+    $('#editCompanySubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#editCompanyForm').valid()) {
+            var formData = new FormData($('#editCompanyForm')[0]);
+            var companyId = $('#edit_company_id').val();
+            $.ajax({
+                url: '{{ url("companies") }}/' + companyId,
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('editCompanyModal');
+                    table.ajax.reload(null, false);
+                    alert('Company updated successfully');
+                    $('#editCompanyForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error updating company:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + key + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + key).addClass('input-error');
+                        });
+                    } else {
+                        alert('Failed to update company');
+                    }
+                }
+            });
+        }
     });
 
     // Apply filters to DataTable

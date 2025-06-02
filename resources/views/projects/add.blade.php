@@ -27,7 +27,7 @@
             label="Location"
             type="text"
             name="location"
-            id="location"
+            id="p_location"
             placeholder="Enter location"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
