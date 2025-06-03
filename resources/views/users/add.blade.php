@@ -3,7 +3,7 @@
         @csrf
         <div class="space-y-4">
             <!-- User Name -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="user_name" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">User Name</label>
                 </div>
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Email -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="email" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Email</label>
                 </div>
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Company Name -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="company_id" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Company Name</label>
                 </div>
@@ -41,7 +41,7 @@
             </div>
 
             <!-- Project Name -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="project_id" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Project Name</label>
                 </div>
@@ -57,7 +57,7 @@
             </div>
 
             <!-- Location -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="location" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Location</label>
                 </div>
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Access Level -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="access_level" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Access Level</label>
                 </div>
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Image Upload -->
-            <div class="flex flex-wrap mb-[30px]">
+            <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="image" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Upload Image</label>
                 </div>
