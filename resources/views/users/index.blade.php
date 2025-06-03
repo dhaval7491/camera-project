@@ -135,15 +135,238 @@ $(document).ready(function() {
         width: '100%'
     });
 
-    // Trigger filter on select2 change
-    $('#user-filter, #company-filter, #project-filter, #status-filter').on('change', function() {
-        table.ajax.reload();
+    // jQuery Validation for Create User Form
+    $('#createUserForm').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 2
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            company_id: {
+                required: true
+            },
+            project_id: {
+                required: true
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            access_level: {
+                required: true,
+                minlength: 2
+            },
+            image: {
+                required: true,
+                extension: "jpg|jpeg|png|gif"
+            }
+        },
+        messages: {
+            user_name: {
+                required: "Please enter a user name",
+                minlength: "User name must be at least 2 characters long"
+            },
+            email: {
+                required: "Please enter an email",
+                email: "Please enter a valid email address"
+            },
+            company_id: {
+                required: "Please select a company"
+            },
+            project_id: {
+                required: "Please select a project"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            access_level: {
+                required: "Please enter an access level",
+                minlength: "Access level must be at least 2 characters long"
+            },
+            image: {
+                required: "Please upload an image",
+                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
     });
 
-    // Reopen modal if there are validation errors
-    @if($errors -> any())
-    toggleModal('createUserModal');
-    @endif
+    // jQuery Validation for Edit User Form
+    $('#editUserForm').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 2
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            company_id: {
+                required: true
+            },
+            project_id: {
+                required: true
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            access_level: {
+                required: true,
+                minlength: 2
+            },
+            image: {
+                extension: "jpg|jpeg|png|gif"
+            }
+        },
+        messages: {
+            user_name: {
+                required: "Please enter a user name",
+                minlength: "User name must be at least 2 characters long"
+            },
+            email: {
+                required: "Please enter an email",
+                email: "Please enter a valid email address"
+            },
+            company_id: {
+                required: "Please select a company"
+            },
+            project_id: {
+                required: "Please select a project"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            access_level: {
+                required: "Please enter an access level",
+                minlength: "Access level must be at least 2 characters long"
+            },
+            image: {
+                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+
+    // Handle Create User button click
+    $('#createUserSubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#createUserForm').valid()) {
+            var formData = new FormData($('#createUserForm')[0]);
+            $.ajax({
+                url: '{{ route('users.store') }}',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('createUserModal');
+                    table.ajax.reload(null, false);
+                    toastr.success('User created successfully');
+                    $('#createUserForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error creating user:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key) + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key)).addClass('input-error');
+                        });
+                    } else {
+                        toastr.error('Failed to create user. Please try again.');
+                    }
+                }
+            });
+        }
+    });
+
+    // Handle Edit User button click
+    $('#editUserSubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#editUserForm').valid()) {
+            var formData = new FormData($('#editUserForm')[0]);
+            var userId = $('#edit_user_id').val();
+            $.ajax({
+                url: '{{ url("users") }}/' + userId,
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('editUserModal');
+                    table.ajax.reload(null, false);
+                    toastr.success('User updated successfully');
+                    $('#editUserForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                    $('#edit_user_image').siblings('div').remove();
+                },
+                error: function(xhr) {
+                    console.error('Error updating user:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + (key === 'user_name' ? 'edit_user_name' : key === 'email' ? 'edit_email' : key === 'company_id' ? 'edit_company_id' : key === 'project_id' ? 'edit_project_id' : key === 'location' ? 'edit_location' : key === 'access_level' ? 'edit_access_level' : key === 'image' ? 'edit_user_image' : key) + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + (key === 'user_name' ? 'edit_user_name' : key === 'email' ? 'edit_email' : key === 'company_id' ? 'edit_company_id' : key === 'project_id' ? 'edit_project_id' : key === 'location' ? 'edit_location' : key === 'access_level' ? 'edit_access_level' : key === 'image' ? 'edit_user_image' : key)).addClass('input-error');
+                        });
+                    } else {
+                        toastr.error('Failed to update user. Please try again.');
+                    }
+                }
+            });
+        }
+    });
+
+
+    // Apply filters to DataTable
+    function applyFilters() {
+        let userIds = $('#user-filter').val() || [];
+        let companyIds = $('#company-filter').val() || [];
+        let projectIds = $('#project-filter').val() || [];
+        let statuses = $('#status-filter').val() || [];
+
+        table.ajax.url('{{ route('users.data') }}?' + $.param({
+            user_ids: userIds,
+            company_ids: companyIds,
+            project_ids: projectIds,
+            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked')
+        })).load();
+    }
+
+    // Trigger filter on select2 change
+    $('#user-filter, #company-filter, #project-filter, #status-filter').on('change', function() {
+        applyFilters();
+    });
 
     window.toggleUserStatus = function(userId) {
         $.ajax({

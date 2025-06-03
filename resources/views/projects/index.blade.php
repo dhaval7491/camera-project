@@ -144,6 +144,175 @@ $(document).ready(function() {
         width: '100%'
     });
 
+    // jQuery Validation for Create Project Form
+    $('#createProjectForm').validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2
+            },
+            company_id: {
+                required: true
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            plant_name: {
+                required: true,
+                minlength: 2
+            }
+        },
+        messages: {
+            name: {
+                required: "Please enter a project name",
+                minlength: "Project name must be at least 2 characters long"
+            },
+            company_id: {
+                required: "Please select a company"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            plant_name: {
+                required: "Please enter a plant name",
+                minlength: "Plant name must be at least 2 characters long"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+
+    // jQuery Validation for Edit Project Form
+    $('#editProjectForm').validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 2
+            },
+            company_id: {
+                required: true
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            plant_name: {
+                required: true,
+                minlength: 2
+            }
+        },
+        messages: {
+            name: {
+                required: "Please enter a project name",
+                minlength: "Project name must be at least 2 characters long"
+            },
+            company_id: {
+                required: "Please select a company"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            plant_name: {
+                required: "Please enter a plant name",
+                minlength: "Plant name must be at least 2 characters long"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+
+    // Handle Edit Project button click
+    $('#editProjectSubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#editProjectForm').valid()) {
+            var formData = new FormData($('#editProjectForm')[0]);
+            var projectId = $('#edit_project_id').val();
+            $.ajax({
+                url: '{{ url("projects") }}/' + projectId,
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('editProjectModal');
+                    table.ajax.reload(null, false);
+                    toastr.success('Project updated successfully');
+                    $('#editProjectForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error updating project:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
+                        });
+                    } else {
+                        toastr.error('Failed to update project. Please try again.');
+                    }
+                }
+            });
+        }
+    });
+
+    // Handle Create Project button click
+    $('#createProjectSubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#createProjectForm').valid()) {
+            var formData = new FormData($('#createProjectForm')[0]);
+            $.ajax({
+                url: '{{ route('projects.store') }}',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('createProjectModal');
+                    table.ajax.reload(null, false);
+                    toastr.success('Project created successfully');
+                    $('#createProjectForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error creating project:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key) + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key)).addClass('input-error');
+                        });
+                    } else {
+                        toastr.error('Failed to create project. Please try again.');
+                    }
+                }
+            });
+        }
+    });
+
     // Apply filters to DataTable
     function applyFilters() {
         let companyIds = $('#company-filter').val() || [];
@@ -171,11 +340,6 @@ $(document).ready(function() {
             $input.css('width', '0').css('padding', '0');
         }
     });
-
-    // Reopen modal if there are validation errors
-    @if($errors -> any())
-    toggleModal('createProjectModal');
-    @endif
 
     // Toggle dot dropdown for actions
     window.toggleDotDropdown = function(event) {

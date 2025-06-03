@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -51,9 +52,19 @@
 <!-- <script src="{{ asset('admin-theme/assets/js/graph-script.js')}}"></script>
 <script src="{{ asset('admin-theme/assets/js/chart-script.js')}}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 <!---------------------- responsive sidebar collapse ------------------->
 <script>
     $(document).ready(function() {
+        // Configure toastr
+    toastr.options = {
+        positionClass: 'toast-bottom-left',
+        progressBar: true,
+        timeOut: 5000,
+        closeButton: true
+    };
         const sidepanel = $("#mySidepanel");
         const openButton = $("#openButton");
 
