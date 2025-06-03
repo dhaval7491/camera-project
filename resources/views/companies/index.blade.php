@@ -44,7 +44,7 @@
                     </div>
                 </p>
                 <p class="flex items-center mr-[8px]">
-                    <select id="company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                    <select id="company-filter" multiple class="filter-select w-[150px] p-2 border border-[#EBEBEB] rounded-[11px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                         @foreach($companies as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach

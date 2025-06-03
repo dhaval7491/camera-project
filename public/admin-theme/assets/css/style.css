@@ -2183,6 +2183,12 @@ box-shadow:none;
     height: 300px !important
     max-width: 100% !important;
   } */
+.selection
+{
+  height:35px;
+  border:1px solid #EBEBEB;
+  font-family: manrope-medium;
+}
 
 
 

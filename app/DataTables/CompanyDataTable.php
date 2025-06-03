@@ -23,7 +23,7 @@ class CompanyDataTable extends DataTable
             
                 return '
                     <div class="flex items-center">
-                        <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
+                        <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
                         <div class="text-[#344563] text-[15px] manrope-regular cursor-pointer">
                             ' . $company->company_name . '
                         </div>

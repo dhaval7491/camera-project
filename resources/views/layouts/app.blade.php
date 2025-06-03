@@ -201,5 +201,38 @@
         });
     });
 </script>
+<script> 
+$('.filter-select').select2({
+  closeOnSelect: false,
+  dropdownParent: $('body'),
+  width: '100%'
+});
+
+$('.filter-select').on('select2:open', function () {
+  setTimeout(() => {
+    if ($('#custom-textarea').length === 0) {
+      const customInput = `
+        <input type="text" id="custom-textarea" 
+          placeholder="search" 
+          class="w-full p-2 text-sm border-t border-gray-300 focus:outline-none" />
+      `;
+      $('.select2-dropdown .select2-results').before(customInput);
+
+      $('#custom-textarea').on('keyup', function () {
+        const searchTerm = $(this).val().toLowerCase();
+
+        $('.select2-results__option').each(function () {
+          const text = $(this).text().toLowerCase();
+          if (text.indexOf(searchTerm) > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
+    }
+  }, 10);
+});
+</script>
 @stack('scripts')
 </html>

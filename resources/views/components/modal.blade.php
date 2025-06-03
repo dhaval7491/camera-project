@@ -9,7 +9,7 @@
     <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
 
     <!-- Modal Container -->
-    <div class="relative inline-block bg-white rounded-[40px] shadow-xl max-w-lg sm:my-8 sm:align-middle transform transition-all overflow-hidden px-[20px] py-[20px] {{ $class }}">
+    <div class="relative inline-block bg-white rounded-[40px] shadow-xl sm:my-8 sm:align-middle transform transition-all overflow-hidden px-[20px] py-[20px] {{ $class }}">
         
         <!-- Modal Header -->
         <div class="flex justify-between py-[10px]">

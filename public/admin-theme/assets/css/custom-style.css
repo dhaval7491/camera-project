@@ -552,3 +552,54 @@ table.dataTable tbody th, table.dataTable tbody td {
   {
     padding: 3px 1px;
   }
+  .select2-container--default .select2-selection--multiple
+{
+    height: 40px !important;
+    border: 1px solid #EBEBEB !important;
+    font-family: manrope-medium !important;
+    border-radius: 15px;
+    padding-bottom: 0px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+   width: 163px;
+    /*  white-space: nowrap; */
+}
+.select2-container--default .select2-selection--multiple::-webkit-scrollbar 
+{
+  display:none;
+}
+.select2-container .select2-selection--multiple .select2-selection__rendered {
+  display: block;
+    list-style: none;
+    padding: 0;
+}
+.select2-container--default .select2-search--inline .select2-search__field 
+{
+  padding-top:3px;
+  height: 29px;
+}
+.select2-container--default .select2-results__option
+{
+    font-family: manrope-regular !important;
+    font-size: 13px;
+    font-weight: 400;
+    color: #484444;
+    letter-spacing: 1px;
+}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
+    background-color: #cce7d4;
+    color: rgb(0, 0, 0);
+
+}
+.select2-container--default .select2-results__option--selected{
+    background-color: #437651;
+    color: #fff;;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice 
+{
+  font-size: 12px;
+    background-color: #cce7d4;
+    color: #594a56;
+    border: 1px solid #b7bcb8;
+    font-family: manrope-regular;
+}
