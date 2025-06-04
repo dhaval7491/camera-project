@@ -17,8 +17,16 @@
             <a href="{{ route('streams.index') }}">Back</a>
         </p>
         @foreach($projects as $index => $project)
-        <div class="video-player px-[10px] relative w-[90%] {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
-            <video class="w-full mt-[5px]" id="mainVideo{{ $project['project_id'] }}" autoplay playsinline></video>
+        <div class="video-player px-[10px] relative w-full {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
+            <div class="video-container relative w-full" style="aspect-ratio: 16/9;">
+                <video
+                    class="w-full h-full object-cover rounded-lg"
+                    id="mainVideo{{ $project['project_id'] }}"
+                    autoplay
+                    playsinline
+                    style="background-color: #000;">
+                </video>
+            </div>
             <p id="statusText{{ $project['project_id'] }}" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
             <div class="video-controls">
                 <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[18px] pb-[10px] pl-[40px]">
@@ -89,9 +97,9 @@
                     x-transition:leave="transition transform ease-in duration-200"
                     x-transition:leave-start="translate-y-0 opacity-100"
                     x-transition:leave-end="-translate-y-10 opacity-0"
-                    class="absolute top-0 bg-[#0000007a] mr-[10px] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]">
+                    class="absolute top-0 bg-[#0000007a] mr-[10px] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2] w-full">
                     @foreach($project['camera'] as $camera)
-                    <li class="flex flex-col items-center w-[15%]">
+                    <li class="flex flex-col items-center">
                         <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
                             <!-- <img src="{{ asset('admin-theme/assets/images/live-stream.png') }}" class="w-full"> -->
                             <div class="video-box" id="video-box-{{ $camera['id']}}">
@@ -167,7 +175,7 @@
 
 <!-- Hidden data for JavaScript -->
 <script type="application/json" id="projectsData">
-@json($projects)
+    @json($projects)
 </script>
 
 @endsection
@@ -212,7 +220,7 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        background: rgba(0,0,0,0.7);
+        background: rgba(0, 0, 0, 0.7);
         color: white;
         padding: 2px 6px;
         border-radius: 4px;
@@ -226,9 +234,17 @@
         display: inline-block;
     }
 
-    .status-connecting { background-color: orange; }
-    .status-connected { background-color: green; }
-    .status-disconnected { background-color: red; }
+    .status-connecting {
+        background-color: orange;
+    }
+
+    .status-connected {
+        background-color: green;
+    }
+
+    .status-disconnected {
+        background-color: red;
+    }
 </style>
 @endpush
 @push('scripts')
@@ -256,6 +272,7 @@
     const remoteStreams = new Map(); // Store all remote streams
     let currentActiveProject = null;
     let currentActiveCamera = null;
+    let firstStreamConnected = false; // Track if any stream has connected and started playing
 
     // WebRTC configuration
     const configuration = {
@@ -271,31 +288,78 @@
     // Initialize all cameras for all projects
     async function initializeAllCameras() {
         console.log('Initializing all cameras...', projectsData);
-        
+
         for (const project of projectsData) {
             const projectId = String(project.project_id);
             console.log(`Processing project ${projectId} with ${project.camera.length} cameras`);
-            
+
+            // Set current active project to first project if not set
+            if (!currentActiveProject) {
+                currentActiveProject = projectId;
+                console.log(`Set active project: ${currentActiveProject}`);
+            }
+
             for (const camera of project.camera) {
                 const cameraId = String(camera.id);
                 console.log(`Initializing camera ${cameraId} for project ${projectId}`);
-                
+
                 // Add a small delay between connections to avoid overwhelming
                 setTimeout(() => {
                     joinRoom(cameraId, projectId);
                 }, Math.random() * 2000); // Random delay up to 2 seconds
             }
+        }
+    }
 
-            // Set first camera as active for first project
-            if (project.camera.length > 0 && !currentActiveProject) {
-                currentActiveProject = projectId;
-                currentActiveCamera = String(project.camera[0].id);
-                console.log(`Set active project: ${currentActiveProject}, active camera: ${currentActiveCamera}`);
-                
-                // Delay setting main video to allow connection to establish
-                setTimeout(() => {
-                    switchMainVideo(currentActiveCamera, projectId);
-                }, 3000);
+    // Function to set first connected stream as main video
+    function setFirstConnectedStream(cameraId, projectId, remoteStream) {
+        if (!firstStreamConnected) {
+            console.log(`First stream connected: Camera ${cameraId} from Project ${projectId}`);
+
+            // Switch to the project that has the first connected stream
+            currentActiveProject = projectId;
+            currentActiveCamera = cameraId;
+            firstStreamConnected = true;
+
+            // Show the correct project tab
+            showProjectTab(projectId);
+
+            // Set the main video for this project
+            const mainVideo = document.getElementById(`mainVideo${projectId}`);
+            if (mainVideo && remoteStream) {
+                mainVideo.srcObject = remoteStream;
+                console.log(`Set main video to first connected stream: Camera ${cameraId}`);
+
+                // Update status
+                const statusElement = document.getElementById(`statusText${projectId}`);
+                if (statusElement) {
+                    statusElement.textContent = `Now viewing camera ${cameraId} (first connected)`;
+                }
+            }
+        }
+    }
+
+    // Function to show specific project tab
+    function showProjectTab(projectId) {
+        // Hide all tabs
+        document.querySelectorAll('[id^="stream"]').forEach(tab => {
+            if (tab.id.startsWith('stream')) {
+                tab.classList.add('hidden');
+            }
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('bg-[#ededed]'));
+
+        // Show selected tab
+        const selectedTab = document.getElementById(`stream${projectId}`);
+        if (selectedTab) {
+            selectedTab.classList.remove('hidden');
+
+            // Find and activate the corresponding button
+            const correspondingButton = document.querySelector(`[onclick*="stream${projectId}"]`);
+            if (correspondingButton) {
+                correspondingButton.classList.add('bg-[#ededed]');
             }
         }
     }
@@ -306,15 +370,15 @@
             // Ensure cameraId is a string
             const roomId = String(cameraId);
             const connectionKey = `${projectId}-${roomId}`;
-            
+
             console.log(`Attempting to join room: ${roomId} for project: ${projectId}`);
-            
+
             // Close existing connection if any
             if (peerConnections.has(connectionKey)) {
                 console.log(`Closing existing connection for ${connectionKey}`);
                 peerConnections.get(connectionKey).close();
                 peerConnections.delete(connectionKey);
-                
+
                 // Also clean up the stream
                 if (remoteStreams.has(connectionKey)) {
                     const stream = remoteStreams.get(connectionKey);
@@ -330,12 +394,12 @@
 
             // Reference to the room in Firestore
             const roomRef = db.collection('rooms').doc(roomId);
-            
+
             // Wait for room to exist with timeout
             let roomSnapshot;
             let attempts = 0;
             const maxAttempts = 10;
-            
+
             do {
                 roomSnapshot = await roomRef.get();
                 if (!roomSnapshot.exists) {
@@ -371,7 +435,7 @@
                 console.error(`Failed to create RTCPeerConnection for ${roomId}:`, error);
                 return;
             }
-            
+
             peerConnections.set(connectionKey, peerConnection);
 
             // Set up remote stream
@@ -387,13 +451,8 @@
                 thumbnailVideo.srcObject = remoteStream;
             }
 
-            // Set main video source if this is the active camera
-            if (currentActiveProject == projectId && currentActiveCamera == roomId && mainVideo) {
-                mainVideo.srcObject = remoteStream;
-            }
-
             // Register peer connection listeners BEFORE setting up candidates
-            registerPeerConnectionListeners(peerConnection, roomId, projectId);
+            registerPeerConnectionListeners(peerConnection, roomId, projectId, remoteStream);
 
             // Set up ICE candidate handling
             const calleeCandidatesCollection = roomRef.collection('calleeCandidates');
@@ -421,6 +480,16 @@
                         console.log(`Adding track to remote stream for ${roomId}`);
                         remoteStream.addTrack(track);
                     });
+
+                    // Check if this stream has video tracks and set as main if it's the first
+                    const videoTracks = event.streams[0].getVideoTracks();
+                    if (videoTracks.length > 0) {
+                        console.log(`Video track detected for camera ${roomId}`);
+                        // Wait a moment for the stream to be ready, then check if it should be the main video
+                        setTimeout(() => {
+                            setFirstConnectedStream(roomId, projectId, remoteStream);
+                        }, 1000);
+                    }
                 }
             };
 
@@ -467,7 +536,7 @@
                     if (change.type === 'added' && peerConnection.signalingState !== 'closed') {
                         const data = change.doc.data();
                         console.log(`Adding remote ICE candidate for ${roomId}`);
-                        
+
                         try {
                             peerConnection.addIceCandidate(new RTCIceCandidate(data))
                                 .catch(error => console.error(`Error adding ICE candidate for ${roomId}:`, error));
@@ -493,7 +562,7 @@
         }
     }
 
-    // Switch camera stream in main video
+    // Switch camera stream in main video (manual selection)
     function switchCamera(cameraId, projectId) {
         const roomId = String(cameraId);
         const connectionKey = `${projectId}-${roomId}`;
@@ -503,8 +572,8 @@
         if (remoteStream && mainVideo) {
             mainVideo.srcObject = remoteStream;
             currentActiveCamera = roomId;
-            console.log(`Switched main video to camera ${roomId}`);
-            
+            console.log(`Manually switched main video to camera ${roomId}`);
+
             const statusElement = document.getElementById(`statusText${projectId}`);
             if (statusElement) {
                 statusElement.textContent = `Now viewing camera ${roomId}`;
@@ -514,30 +583,17 @@
         }
     }
 
-    // Switch main video when changing projects
-    function switchMainVideo(cameraId, projectId) {
-        const roomId = String(cameraId);
-        const connectionKey = `${projectId}-${roomId}`;
-        const remoteStream = remoteStreams.get(connectionKey);
-        const mainVideo = document.getElementById(`mainVideo${projectId}`);
-
-        if (remoteStream && mainVideo) {
-            mainVideo.srcObject = remoteStream;
-            console.log(`Set main video for project ${projectId} to camera ${roomId}`);
-        }
-    }
-
     // Register peer connection listeners
-    function registerPeerConnectionListeners(peerConnection, cameraId, projectId) {
+    function registerPeerConnectionListeners(peerConnection, cameraId, projectId, remoteStream) {
         const roomId = String(cameraId);
         const statusElement = document.getElementById(`video-box-${roomId}`)?.querySelector('.video-status');
-        
+
         peerConnection.onconnectionstatechange = () => {
             console.log(`Connection state change for ${roomId}: ${peerConnection.connectionState}`);
-            
+
             if (statusElement) {
                 statusElement.className = `video-status status-${peerConnection.connectionState === 'connected' ? 'connected' : 
-                    peerConnection.connectionState === 'connecting' ? 'connecting' : 'disconnected'}`;
+                peerConnection.connectionState === 'connecting' ? 'connecting' : 'disconnected'}`;
             }
 
             const projectStatusElement = document.getElementById(`statusText${projectId}`);
@@ -547,6 +603,13 @@
 
             if (peerConnection.connectionState === 'connected') {
                 console.log(`Successfully connected to camera ${roomId}`);
+
+                // Check if this should be set as the main video (first connected stream)
+                if (!firstStreamConnected && remoteStream && remoteStream.getVideoTracks().length > 0) {
+                    setTimeout(() => {
+                        setFirstConnectedStream(roomId, projectId, remoteStream);
+                    }, 500);
+                }
             } else if (peerConnection.connectionState === 'failed') {
                 console.error(`Connection failed for camera ${roomId}`);
                 // Attempt to reconnect after a delay
@@ -559,7 +622,7 @@
 
         peerConnection.oniceconnectionstatechange = () => {
             console.log(`ICE connection state change for ${roomId}: ${peerConnection.iceConnectionState}`);
-            
+
             if (peerConnection.iceConnectionState === 'failed') {
                 console.error(`ICE connection failed for camera ${roomId}`);
             }
@@ -586,9 +649,10 @@
                 console.log(`Closing connection: ${connectionKey}`);
                 peerConnection.close();
             }
-            
+
             peerConnections.clear();
             remoteStreams.clear();
+            firstStreamConnected = false; // Reset first stream flag
 
             // Clear all video sources
             document.querySelectorAll('video').forEach(video => {
@@ -612,7 +676,7 @@
                 if (change.type === 'added') {
                     const roomId = change.doc.id;
                     const data = change.doc.data();
-                    
+
                     // Check if this room corresponds to any of our cameras
                     for (const project of projectsData) {
                         const camera = project.camera.find(cam => cam.id === roomId);
@@ -628,31 +692,28 @@
 
     // Tab switching logic
     function openTab(event, tabId) {
-        // Hide all tabs
-        document.querySelectorAll('[id^="stream"]').forEach(tab => {
-            if (tab.id.startsWith('stream')) {
-                tab.classList.add('hidden');
+        showProjectTab(tabId.replace('stream', ''));
+
+        // Extract project ID from tab ID
+        const projectId = tabId.replace('stream', '');
+        currentActiveProject = projectId;
+
+        // If there's already a connected camera for this project, show it
+        const project = projectsData.find(p => p.project_id == projectId);
+        if (project && project.camera.length > 0) {
+            // Find first connected camera for this project
+            let connectedCamera = null;
+            for (const camera of project.camera) {
+                const connectionKey = `${projectId}-${camera.id}`;
+                if (remoteStreams.has(connectionKey)) {
+                    connectedCamera = camera.id;
+                    break;
+                }
             }
-        });
-        
-        // Remove active class from all buttons
-        document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('bg-[#ededed]'));
-        
-        // Show selected tab
-        const selectedTab = document.getElementById(tabId);
-        if (selectedTab) {
-            selectedTab.classList.remove('hidden');
-            event.currentTarget.classList.add('bg-[#ededed]');
-            
-            // Extract project ID from tab ID
-            const projectId = tabId.replace('stream', '');
-            currentActiveProject = projectId;
-            
-            // Find first camera for this project and set as active
-            const project = projectsData.find(p => p.project_id == projectId);
-            if (project && project.camera.length > 0) {
-                currentActiveCamera = project.camera[0].id;
-                switchMainVideo(currentActiveCamera, projectId);
+
+            if (connectedCamera) {
+                currentActiveCamera = connectedCamera;
+                switchCamera(connectedCamera, projectId);
             }
         }
     }
@@ -661,11 +722,11 @@
     function setupVideoControls() {
         projectsData.forEach(project => {
             const projectId = project.project_id;
-            
+
             // Play/Pause button
             const playPauseButton = document.getElementById(`play-pause${projectId}`);
             const mainVideo = document.getElementById(`mainVideo${projectId}`);
-            
+
             if (playPauseButton && mainVideo) {
                 playPauseButton.addEventListener('click', () => {
                     if (mainVideo.paused) {
@@ -715,22 +776,6 @@
 
     // Initialize everything when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
-        // Activate first tab
-        const firstTabButton = document.querySelector('.tab-button');
-        if (firstTabButton) {
-            const onclick = firstTabButton.getAttribute('onclick');
-            const tabId = onclick.match(/'([^']+)'/)[1];
-            const firstTab = document.getElementById(tabId);
-            
-            if (firstTab) {
-                firstTab.classList.remove('hidden');
-                firstTabButton.classList.add('bg-[#ededed]');
-                
-                const projectId = tabId.replace('stream', '');
-                currentActiveProject = projectId;
-            }
-        }
-
         // Setup video controls
         setupVideoControls();
 
