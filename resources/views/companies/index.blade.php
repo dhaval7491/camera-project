@@ -136,8 +136,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {!! $dataTable->scripts() !!}
-<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
 <script>
 $(document).ready(function() {
     let table = $('#companies-table').DataTable();
@@ -273,7 +271,7 @@ $(document).ready(function() {
                 success: function(response) {
                     toggleModal('createCompanyModal');
                     table.ajax.reload(null, false);
-                    alert('Company created successfully');
+                    toastr.success('Company created successfully');
                     $('#createCompanyForm')[0].reset();
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
@@ -288,7 +286,7 @@ $(document).ready(function() {
                             $('#' + key).addClass('input-error');
                         });
                     } else {
-                        alert('Failed to create company');
+                        toastr.error('Failed to create company');
                     }
                 }
             });
@@ -310,7 +308,7 @@ $(document).ready(function() {
                 success: function(response) {
                     toggleModal('editCompanyModal');
                     table.ajax.reload(null, false);
-                    alert('Company updated successfully');
+                    toastr.success('Company updated successfully');
                     $('#editCompanyForm')[0].reset();
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
@@ -325,7 +323,7 @@ $(document).ready(function() {
                             $('#' + key).addClass('input-error');
                         });
                     } else {
-                        alert('Failed to update company');
+                        toastr.error('Failed to update company');
                     }
                 }
             });

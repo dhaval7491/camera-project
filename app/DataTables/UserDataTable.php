@@ -145,7 +145,7 @@ class UserDataTable extends DataTable
                   ->title('Action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(60)
+                //   ->width(60)
                   ->addClass('text-center'),
         ];
     }

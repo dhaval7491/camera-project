@@ -40,7 +40,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::get('/alerts/load-more', [AlertController::class, 'loadMore'])->name('alerts.load-more');
     Route::get('/get-company-data', [CompanyController::class, 'data'])->name('companies.data');
     Route::get('/get-project-data', [ProjectController::class, 'data'])->name('projects.data');
-    Route::get('/get-user-data', [ProjectController::class, 'data'])->name('users.data');
+    Route::get('/get-user-data', [UserController::class, 'data'])->name('users.data');
     // New routes for toggling active status
     Route::post('/companies/{company}/toggle-active', [CompanyController::class, 'toggleActive'])->name('companies.toggle-active');
     Route::post('/projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggle-active');
