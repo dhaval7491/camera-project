@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">All Companies</h3>
+                    <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">All Companies</h3>
                 </div>
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                     <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
@@ -25,7 +25,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Filter Section -->
         <div class="table-filter-block mt-[20px]">
             <div class="flex justify-end">
@@ -78,7 +77,7 @@
         <div class="form-list-table">
             <div class="mt-[20px]">
                 <div class="relative overflow-x-scroll h-full">
-                    {!! $dataTable->table(['class' => 'table table-bordered table-striped min-w-full leading-normal w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap'], true) !!}
+                    {!! $dataTable->table(['class' => 'table table-bordered table-striped min-w-full leading-normal w-full whitespace-nowrap all-table'], true) !!}
                 </div>
             </div>
         </div>
@@ -94,43 +93,14 @@
 <!-- Create User Modal -->
 @include('users.add')
 @endsection
-
 @push('styles')
+@endpush
+<!-- @section('css') -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-.select2-container--default .select2-selection--multiple {
-    border: 1px solid #ebebeb;
-    border-radius: 10px;
-    padding: 2px;
-    min-height: 34px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__rendered {
-    padding: 0 4px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #f5f5f5;
-    border: 1px solid #ebebeb;
-    border-radius: 4px;
-    padding: 2px 6px;
-    margin: 2px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #444;
-    margin-right: 4px;
-}
-.select2-container .select2-search--inline .select2-search__field {
-    margin-top: 4px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    color: #444;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-    color: #444;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-}
+
 </style>
-@endpush
+<!-- @endsection -->
 
 @push('scripts')
 

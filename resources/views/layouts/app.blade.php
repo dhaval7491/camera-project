@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('admin-theme/assets/css/custom-style.css')}}">
+    <!-- @yield('css') -->
+    
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet" />
 </head>
 
@@ -29,7 +31,7 @@
         @include('layouts.nav-top')
         <div class="dashboard-body  pt-[100px]">
             @include('layouts.sidebar')
-            <div class="ml-[130px] pt-[20px] mr-[15px]">
+            <div class="ml-[130px] pt-[0px] mr-[15px]">
                 @yield('content')
                
             </div>

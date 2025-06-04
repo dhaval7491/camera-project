@@ -1,4 +1,4 @@
-<x-modal id="editMappingModal" title="Edit Mapping" class="max-w-lg">
+<x-modal id="editMappingModal" title="Edit Mapping" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="" id="editMappingForm">
         @csrf
         @method('PUT')

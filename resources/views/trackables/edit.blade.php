@@ -1,4 +1,4 @@
-<x-modal id="editTrackableModal" title="Edit Trackable" class="max-w-lg">
+<x-modal id="editTrackableModal" title="Edit Trackable" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="" id="editTrackableForm" enctype="multipart/form-data">
         @csrf
         @method('PUT')

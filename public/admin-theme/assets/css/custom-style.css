@@ -557,49 +557,65 @@ table.dataTable tbody th, table.dataTable tbody td {
     height: 40px !important;
     border: 1px solid #EBEBEB !important;
     font-family: manrope-medium !important;
-    border-radius: 15px;
-    padding-bottom: 0px;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    border-radius: 15px !important;
+    padding-bottom: 0px !important;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
    width: 163px;
     /*  white-space: nowrap; */
 }
 .select2-container--default .select2-selection--multiple::-webkit-scrollbar 
 {
-  display:none;
+  display:none !important;
 }
 .select2-container .select2-selection--multiple .select2-selection__rendered {
-  display: block;
-    list-style: none;
-    padding: 0;
+  display: block !important;
+    list-style: none !important;
+    padding: 0 !important;
 }
 .select2-container--default .select2-search--inline .select2-search__field 
 {
-  padding-top:3px;
-  height: 29px;
+  padding-top:3px !important;
+  padding-left:10px !important;
+  height: 29px !important;
+  font-size: 14px !important;
+  font-family: manrope-regular !important;
 }
 .select2-container--default .select2-results__option
 {
     font-family: manrope-regular !important;
-    font-size: 13px;
-    font-weight: 400;
-    color: #484444;
-    letter-spacing: 1px;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: #484444 !important;
+    letter-spacing: 1px !important;
 }
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
-    background-color: #cce7d4;
-    color: rgb(0, 0, 0);
+    background-color: #cce7d4 !important;
+    color: rgb(0, 0, 0) !important;
 
 }
 .select2-container--default .select2-results__option--selected{
-    background-color: #437651;
-    color: #fff;;
+    background-color: #437651 !important;
+    color: #fff !important;
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice 
 {
-  font-size: 12px;
-    background-color: #cce7d4;
-    color: #594a56;
-    border: 1px solid #b7bcb8;
-    font-family: manrope-regular;
+  font-size: 12px !important;
+    background-color: #cce7d4 !important;
+    color: #594a56 !important;
+    border: 1px solid #b7bcb8 !important;
+    font-family: manrope-regular !important;
+}
+.dataTables_filter
+{
+  display: none !important;
+}
+.all-table thead th:nth-child(1){
+text-align: left !important;
+}
+.all-table thead th{
+    text-align: center !important;
+    color:#3D3D3D;
+    font-family: manrope-regular !important;
+    font-size:16px;
 }

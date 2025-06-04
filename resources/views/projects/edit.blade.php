@@ -1,5 +1,5 @@
-<x-modal id="editProjectModal" title="Edit Project" class="max-w-lg">
-    <form id="editProjectForm" method="POST" enctype="multipart/form-data" class="mt-[40px]">
+<x-modal id="editProjectModal" title="Edit Project" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
+    <form method="POST" action="" id="editProjectForm" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         @method('PUT')
         <input type="hidden" name="id" id="edit_project_id">
