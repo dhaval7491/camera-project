@@ -1,4 +1,4 @@
-<x-modal id="createTrackableModal" title="Add Trackable" class="max-w-lg">
+<x-modal id="createTrackableModal" title="Add Trackable" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="{{ route('trackables.store') }}" id="createTrackableForm" enctype="multipart/form-data">
         @csrf
         <div class="space-y-4">

@@ -1,4 +1,4 @@
-<x-modal id="createCompanyModal" title="Create a New Company" class="max-w-lg">
+<x-modal id="createCompanyModal" title="Create a New Company" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form id="createCompanyForm" method="POST" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         <x-form-input

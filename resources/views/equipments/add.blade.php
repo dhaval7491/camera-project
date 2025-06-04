@@ -1,4 +1,4 @@
-<x-modal id="createEquipmentModal" title="Add Equipment" class="max-w-lg">
+<x-modal id="createEquipmentModal" title="Add Equipment" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="{{ route('equipments.store') }}" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         <!-- Equipment Type -->

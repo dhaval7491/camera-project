@@ -1,4 +1,4 @@
-<x-modal id="createProjectModal" title="Create a New Project" class="max-w-lg">
+<x-modal id="createProjectModal" title="Create a New Project" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="{{ route('projects.store') }}" id="createProjectForm" enctype="multipart/form-data" class="mt-[40px]">
         @csrf
         <x-form-input

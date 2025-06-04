@@ -1,4 +1,4 @@
-<x-modal id="editUserModal" title="Edit User" class="max-w-lg">
+<x-modal id="editUserModal" title="Edit User" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="" id="editUserForm" enctype="multipart/form-data">
         @csrf
         @method('PUT')
