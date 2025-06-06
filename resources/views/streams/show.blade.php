@@ -1,5 +1,40 @@
 @extends('layouts.app')
 @section('content')
+<style>
+    .video-box {
+      width: 140px; /* Match video width */
+      height: 80px; /* Match video height */
+      max-width: 100%; /* Ensure responsiveness */
+      position: relative; /* For positioning video-info */
+      margin: 10px; /* Optional: spacing */
+      overflow: hidden; /* Prevent overflow */
+    }
+
+    .video-box video {
+      width: 100%; /* Fill video-box width */
+      height: 100%; /* Fill video-box height */
+      display: block; /* Remove extra space below video */
+      object-fit: cover; /* Ensure video fills container without distortion */
+    }
+
+    .video-info {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .video-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-connecting {
+      background-color: orange; /* Example styling for connecting status */
+    }
+  </style>
 <div class="flex flex-wrap">
     <div class="lg:w-1/6 md:w-1/6 w-full">
         <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll">
@@ -102,8 +137,8 @@
                     <li class="flex flex-col items-center">
                         <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
                             <!-- <img src="{{ asset('admin-theme/assets/images/live-stream.png') }}" class="w-full"> -->
-                            <div class="video-box" id="video-box-{{ $camera['id']}}">
-                                <video width="140px" height="80px" id="video-{{ $camera['id']}}" autoplay playsinline></video>
+                            <div class="video-box w-full" id="video-box-{{ $camera['id']}}">
+                                <video width="140" height="80" id="video-{{ $camera['id']}}" autoplay playsinline></video>
                                 <div class="video-info">
                                     <div class="video-status status-connecting"></div>
                                 </div>
