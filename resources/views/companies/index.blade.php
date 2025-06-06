@@ -76,7 +76,7 @@
         <!-- Table Section -->
         <div class="form-list-table">
             <div class="mt-[20px]">
-                <div class="relative overflow-x-scroll h-full">
+                <div class="relative">
                     {!! $dataTable->table(['class' => 'table table-bordered table-striped min-w-full leading-normal w-full whitespace-nowrap all-table'], true) !!}
                 </div>
             </div>

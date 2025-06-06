@@ -154,7 +154,7 @@
         <div class="form-list-table">
             <div class="mt-[20px]">
                 <div class="relative overflow-x-scroll h-full">
-                    {!! $dataTable->table(['class' => 'w-full text-sm text-left'], true) !!}
+                    {!! $dataTable->table(['class' => 'all-table w-full text-sm text-left'], true) !!}
                 </div>
             </div>
         </div>

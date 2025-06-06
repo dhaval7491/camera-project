@@ -12,7 +12,7 @@
     <div class="{{ $class }}" style="width:550px !important;">
         
         <!-- Modal Header -->
-        <div class="flex justify-between py-[10px]">
+        <div class="flex justify-between py-[10px] mb-[30px]">
             <h4 class="manrope-medium font-medium text-[18px] text-black mt-[10px]">
                 {{ $title }}
             </h4>

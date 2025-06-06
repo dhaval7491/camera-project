@@ -70,8 +70,8 @@
         <!-- Table Section -->
         <div class="form-list-table">
             <div class="mt-[20px]">
-                <div class="relative overflow-x-auto h-full">
-                    {!! $dataTable->table(['class' => 'table table-bordered table-striped w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'], true) !!}
+                <div class="relative">
+                    {!! $dataTable->table(['class' => 'all-table table table-bordered table-striped w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'], true) !!}
                 </div>
             </div>
         </div>

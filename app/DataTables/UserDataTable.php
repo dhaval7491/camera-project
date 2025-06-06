@@ -45,7 +45,7 @@ class UserDataTable extends DataTable
             })
             ->addColumn('action', function ($user) {
                 return '
-                    <ul class="flex justify-center">
+                    <ul class="flex justify-center align-items-center">
                         <li class="py-[5px]"><a href="' . route('users.show', $user->id) . '" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
                             <img src="' . asset('admin-theme/assets/images/view.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
@@ -60,7 +60,7 @@ class UserDataTable extends DataTable
                                 ' . csrf_field() . '
                                 ' . method_field('DELETE') . '
                                 <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
-                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] mr-[11px] object-contain">
+                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
                                 </button>
                             </form>
                         </li>
@@ -137,16 +137,16 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('name')->title('User Name'),
-            Column::make('company_name')->title('Company Name'),
-            Column::make('access_level')->title('Access Level'),
-            Column::make('status')->title('Status'),
+            Column::make('name')->title('User Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('access_level')->title('Access Level')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                   ->title('Action')
                   ->exportable(false)
                   ->printable(false)
                 //   ->width(60)
-                  ->addClass('text-center'),
+                  ->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
         ];
     }
 

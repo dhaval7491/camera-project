@@ -610,6 +610,10 @@ table.dataTable tbody th, table.dataTable tbody td {
    width: 163px;
     /*  white-space: nowrap; */
 }
+.select2-container--default .select2-selection--multiple:focus 
+{
+  border: 1px solid #437651 !important;
+}
 .select2-container--default .select2-selection--multiple::-webkit-scrollbar 
 {
   display:none !important;
@@ -656,6 +660,10 @@ table.dataTable tbody th, table.dataTable tbody td {
 {
   display: none !important;
 }
+.all-table 
+{
+  white-space: nowrap;
+}
 .all-table thead th:nth-child(1){
 text-align: left !important;
 }
@@ -664,4 +672,29 @@ text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
     font-size:16px;
+}
+#search-input:focus-visible 
+{
+  border: 1px solid #437651;
+    outline: none;
+}
+.dataTables_wrapper 
+{
+    height: calc(100vh - 249px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.dataTables_info 
+{
+  position: fixed;
+  bottom:20px;
+  left:160px;
+  background-color: #fff;
+}
+.dataTables_paginate 
+{
+  position: fixed;
+  bottom: 20px;
+  right: 41px;
+  background-color: #fff;
 }
