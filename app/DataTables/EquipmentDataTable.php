@@ -144,16 +144,16 @@ class EquipmentDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
-            Column::make('name')->title('Equipment Name'),
-            Column::make('code')->title('Equipment Code'),
-            Column::make('company_name')->title('Company Name'),
-            Column::make('project_name')->title('Project Name'),
-            Column::make('plant_name')->title('Plant Name'),
-            Column::make('equipment_type')->title('Equipment Type'),
-            Column::make('mapped_to')->title('Mapped To'),
-            Column::make('streaming_link')->title('Streaming Links'),
-            Column::make('status')->title('Status'),
+                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('name')->title('Equipment Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('code')->title('Equipment Code')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('plant_name')->title('Plant Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('equipment_type')->title('Equipment Type')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('mapped_to')->title('Mapped To')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('streaming_link')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

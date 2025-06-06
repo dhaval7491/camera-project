@@ -5,7 +5,7 @@
     <div class="form-list">
         <div class="">
             <div class="py-[10px] px-[25px] mt-[0px] flex">
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
                 </button>
                 <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'mapping')">
@@ -48,6 +48,20 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
+                                        <div class="relative flex items-center mr-[8px]">
+                                            <!-- Search Input -->
+                                            <input type="text" id="search-input"
+                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                placeholder="Search...">
+
+                                            <!-- Search Button -->
+                                            <button id="search-toggle"
+                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                            </button>
+                                        </div>
+                                    </p>
+                                    <p class="flex items-center mr-[8px]">
                                         <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                                             @foreach($companies as $id => $name)
                                             <option value="{{ $id }}">{{ $name }}</option>
@@ -86,8 +100,8 @@
                             </div>
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
-                                    <div class="relative overflow-x-scroll h-full">
-                                        {!! $equipmentDataTable->table(['class' => 'table table-bordered table-striped', 'id' => 'equipments-table'], true) !!}
+                                    <div class="relative">
+                                        {!! $equipmentDataTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape', 'id' => 'equipments-table'], true) !!}
                                     </div>
                                 </div>
                             </div>
@@ -160,13 +174,13 @@
                                         <table id="mappings-table" class="w-full text-sm text-left">
                                             <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
-                                                    <th class="text-center"><div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div></th>
+                                                    <th class="text-center"><div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div></th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Company Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Project Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Plant Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Camera Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Tablet Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Streaming Links</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Streaming Links</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Status</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Action</th>
                                                 </tr>
@@ -262,7 +276,7 @@
                                                     <button
                                                         class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
                                                         onclick="toggleModaladdai()">
-                                                        <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Add New
+                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
                                                     </button>
                                                 </li>
                                             </ul>
@@ -314,7 +328,7 @@
                                                     <button
                                                         class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
                                                         onclick="toggleModalevent()">
-                                                        <span class="mr-[10px]"><img src="assets/images/add.png" class="w-[15px] mt-[2px]"></span> Add New
+                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
                                                     </button>
                                                 </li>
                                             </ul>
@@ -325,11 +339,11 @@
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
-                                        <table id="event-types-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
+                                        <table id="event-types-table" class=" all-table w-full text-sm text-left">
+                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0] whitespace-nowrap">
                                                 <tr>
                                                     <th class="text-center pl-[10px]"><div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div></th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Event Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center color-[#3D3D3D] text-[15px] manrope-regular ">Event Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Condition</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Wind Threshold</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Height Threshold</th>

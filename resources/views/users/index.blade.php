@@ -32,6 +32,20 @@
         <div class="table-filter-block mt-[20px]">
             <div class="flex justify-end">
                 <p class="flex items-center mr-[8px]">
+                    <div class="relative flex items-center mr-[8px]">
+                        <!-- Search Input -->
+                        <input type="text" id="search-input"
+                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                            placeholder="Search...">
+
+                        <!-- Search Button -->
+                        <button id="search-toggle"
+                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                        </button>
+                    </div>
+                </p>
+                <p class="flex items-center mr-[8px]">
                     <select id="user-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="User">
                         @foreach($users as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
@@ -65,8 +79,8 @@
         <!-- Table Section -->
         <div class="form-list-table">
             <div class="mt-[20px]">
-                <div class="relative overflow-x-auto h-full">
-                    {!! $dataTable->table(['class' => 'w-full text-sm text-left rtl:text-right'], true) !!}
+                <div class="relative">
+                    {!! $dataTable->table(['class' => 'all-table w-full text-sm text-left rtl:text-right'], true) !!}
                 </div>
             </div>
         </div>

@@ -153,7 +153,7 @@
         <div class="form-list-table">
             <div class="mt-[20px]">
                 <div class="relative overflow-x-scroll h-full">
-                    {!! $dataTable->table(['class' => 'table table-bordered table-striped'], true) !!}
+                    {!! $dataTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
                 </div>
             </div>
         </div>

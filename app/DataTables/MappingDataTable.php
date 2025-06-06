@@ -109,15 +109,15 @@ class MappingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('checkbox')->title('')->addClass('text-center')->orderable(false)->searchable(false),
-            Column::make('company_name')->title('Company Name')->addClass('text-left'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left'),
-            Column::make('plant_name')->title('Plant Name')->addClass('text-left'),
-            Column::make('camera_name')->title('Camera Name')->addClass('text-center'),
-            Column::make('tablet_name')->title('Tablet Name')->addClass('text-center'),
-            Column::make('streaming_links')->title('Streaming Links')->addClass('text-left'),
-            Column::make('status')->title('Status')->addClass('text-center'),
-            Column::make('action')->title('Action')->addClass('text-center')->orderable(false)->searchable(false),
+            Column::make('checkbox')->title('')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false),
+            Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('plant_name')->title('Plant Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('camera_name')->title('Camera Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('tablet_name')->title('Tablet Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('streaming_links')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false),
         ];
     }
 
