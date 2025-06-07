@@ -48,18 +48,18 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
-                                        <div class="relative flex items-center mr-[8px]">
-                                            <!-- Search Input -->
-                                            <input type="text" id="search-input"
-                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                placeholder="Search...">
+                                    <div class="relative flex items-center mr-[8px]">
+                                        <!-- Search Input -->
+                                        <input type="text" id="search-input"
+                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                            placeholder="Search...">
 
-                                            <!-- Search Button -->
-                                            <button id="search-toggle"
-                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                            </button>
-                                        </div>
+                                        <!-- Search Button -->
+                                        <button id="search-toggle"
+                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                        </button>
+                                    </div>
                                     </p>
                                     <p class="flex items-center mr-[8px]">
                                         <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
@@ -174,7 +174,9 @@
                                         <table id="mappings-table" class="w-full text-sm text-left">
                                             <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
-                                                    <th class="text-center"><div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div></th>
+                                                    <th class="text-center">
+                                                        <div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div>
+                                                    </th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Company Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Project Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Plant Name</th>
@@ -245,7 +247,9 @@
                                         <table id="trackables-table" class="w-full text-sm text-left">
                                             <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
-                                                    <th class="text-center pl-[10px] pb-[25px]"><div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div></th>
+                                                    <th class="text-center pl-[10px] pb-[25px]">
+                                                        <div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
+                                                    </th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Trackable Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Other name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Linked Objects</th>
@@ -295,7 +299,9 @@
                                         <table id="ai-models-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
-                                                    <th class="text-center pl-[10px] pb-[25px]"><div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div></th>
+                                                    <th class="text-center pl-[10px] pb-[25px]">
+                                                        <div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
+                                                    </th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">AI Model Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Event Type</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Date Created</th>
@@ -342,7 +348,9 @@
                                         <table id="event-types-table" class=" all-table w-full text-sm text-left">
                                             <thead class="border-b-[2px] border-solid border-b-[#E9EDF0] whitespace-nowrap">
                                                 <tr>
-                                                    <th class="text-center pl-[10px]"><div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div></th>
+                                                    <th class="text-center pl-[10px]">
+                                                        <div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
+                                                    </th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center color-[#3D3D3D] text-[15px] manrope-regular ">Event Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Condition</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Wind Threshold</th>
@@ -387,9 +395,11 @@
         padding: 2px;
         min-height: 34px;
     }
+
     .select2-container--default .select2-selection--multiple .select2-selection__rendered {
         padding: 0 4px;
     }
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: #f5f5f5;
         border: 1px solid #ebebeb;
@@ -397,16 +407,19 @@
         padding: 2px 6px;
         margin: 2px;
     }
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
         color: #444;
         margin-right: 4px;
     }
+
     .select2-container .select2-search--inline .select2-search__field {
         margin-top: 4px;
         font-family: 'Manrope', sans-serif;
         font-size: 14px;
         color: #444;
     }
+
     .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
         color: #444;
         font-family: 'Manrope', sans-serif;
@@ -452,10 +465,17 @@
                 $('#ai-models-table').DataTable({
                     responsive: true,
                     pageLength: 10,
-                    order: [[1, 'asc']],
-                    columnDefs: [
-                        { orderable: false, targets: [0, 7] },
-                        { responsivePriority: 1, targets: [1, 5] }
+                    order: [
+                        [1, 'asc']
+                    ],
+                    columnDefs: [{
+                            orderable: false,
+                            targets: [0, 7]
+                        },
+                        {
+                            responsivePriority: 1,
+                            targets: [1, 5]
+                        }
                     ]
                 });
                 initializedTables.aiModel = true;
@@ -465,10 +485,17 @@
                 $('#event-types-table').DataTable({
                     responsive: true,
                     pageLength: 10,
-                    order: [[1, 'asc']],
-                    columnDefs: [
-                        { orderable: false, targets: [0, 6] },
-                        { responsivePriority: 1, targets: [1, 5] }
+                    order: [
+                        [1, 'asc']
+                    ],
+                    columnDefs: [{
+                            orderable: false,
+                            targets: [0, 6]
+                        },
+                        {
+                            responsivePriority: 1,
+                            targets: [1, 5]
+                        }
                     ]
                 });
                 initializedTables.eventType = true;
@@ -480,27 +507,64 @@
             if (!initializedTables.mapping && $('#mappings-table').length) {
                 // Load the mapping DataTable via AJAX
                 $.get('{{ route("mappings.index") }}', function(data) {
-                 mappingTable =  $('#mappings-table').DataTable({
+                    mappingTable = $('#mappings-table').DataTable({
                         processing: true,
                         serverSide: true,
                         ajax: '{{ route("mappings.index") }}',
-                        columns: [
-                            {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false},
-                            {data: 'company_name', name: 'company_name'},
-                            {data: 'project_name', name: 'project_name'},
-                            {data: 'plant_name', name: 'plant_name'},
-                            {data: 'camera_name', name: 'camera_name'},
-                            {data: 'tablet_name', name: 'tablet_name'},
-                            {data: 'streaming_links', name: 'streaming_links'},
-                            {data: 'status', name: 'status'},
-                            {data: 'action', name: 'action', orderable: false, searchable: false}
+                        columns: [{
+                                data: 'checkbox',
+                                name: 'checkbox',
+                                orderable: false,
+                                searchable: false
+                            },
+                            {
+                                data: 'company_name',
+                                name: 'company_name'
+                            },
+                            {
+                                data: 'project_name',
+                                name: 'project_name'
+                            },
+                            {
+                                data: 'plant_name',
+                                name: 'plant_name'
+                            },
+                            {
+                                data: 'camera_name',
+                                name: 'camera_name'
+                            },
+                            {
+                                data: 'tablet_name',
+                                name: 'tablet_name'
+                            },
+                            {
+                                data: 'streaming_links',
+                                name: 'streaming_links'
+                            },
+                            {
+                                data: 'status',
+                                name: 'status'
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
                         ],
                         responsive: true,
                         pageLength: 10,
-                        order: [[1, 'asc']],
-                        columnDefs: [
-                            { orderable: false, targets: [0, 8] },
-                            { responsivePriority: 1, targets: [1, 7] }
+                        order: [
+                            [1, 'asc']
+                        ],
+                        columnDefs: [{
+                                orderable: false,
+                                targets: [0, 8]
+                            },
+                            {
+                                responsivePriority: 1,
+                                targets: [1, 7]
+                            }
                         ]
                     });
                     initializedTables.mapping = true;
@@ -519,20 +583,48 @@
                         processing: true,
                         serverSide: true,
                         ajax: '{{ route("trackables.index") }}',
-                        columns: [
-                            {data: 'checkbox', name: 'checkbox', orderable: false, searchable: false},
-                            {data: 'trackable_name', name: 'trackable_name'},
-                            {data: 'other_name', name: 'other_name'},
-                            {data: 'linked_objects', name: 'linked_objects'},
-                            {data: 'status', name: 'status'},
-                            {data: 'action', name: 'action', orderable: false, searchable: false}
+                        columns: [{
+                                data: 'checkbox',
+                                name: 'checkbox',
+                                orderable: false,
+                                searchable: false
+                            },
+                            {
+                                data: 'trackable_name',
+                                name: 'trackable_name'
+                            },
+                            {
+                                data: 'other_name',
+                                name: 'other_name'
+                            },
+                            {
+                                data: 'linked_objects',
+                                name: 'linked_objects'
+                            },
+                            {
+                                data: 'status',
+                                name: 'status'
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            }
                         ],
                         responsive: true,
                         pageLength: 10,
-                        order: [[1, 'asc']],
-                        columnDefs: [
-                            { orderable: false, targets: [0, 5] },
-                            { responsivePriority: 1, targets: [1, 4] }
+                        order: [
+                            [1, 'asc']
+                        ],
+                        columnDefs: [{
+                                orderable: false,
+                                targets: [0, 5]
+                            },
+                            {
+                                responsivePriority: 1,
+                                targets: [1, 4]
+                            }
                         ]
                     });
                     initializedTables.trackable = true;
@@ -570,6 +662,236 @@
                 }
             }, 100);
         });
+
+        // jQuery Validation for Create Equipment Form
+        $('#createEquipmentForm').validate({
+            rules: {
+                type: {
+                    required: true
+                },
+                equipment_name: {
+                    required: true,
+                    minlength: 2
+                },
+                equipment_code: {
+                    required: true,
+                    minlength: 6
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                stream_link: {
+                    required: function(element) {
+                        return $('#createEquipmentForm input[name="type"]:checked').val() === 'camera';
+                    },
+                    url: true
+                }
+            },
+            messages: {
+                type: {
+                    required: "Please select an equipment type"
+                },
+                equipment_name: {
+                    required: "Please enter an equipment name",
+                    minlength: "Equipment name must be at least 2 characters long"
+                },
+                equipment_code: {
+                    required: "Please enter an equipment code",
+                    minlength: "Equipment code must be at least 6 characters long"
+                },
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must be at least 8 characters long"
+                },
+                stream_link: {
+                    required: "Please enter a streaming link for camera equipment",
+                    url: "Please enter a valid URL"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + (element.attr('name') === 'type' ? 'type_error' : element.attr('id') + '_error');
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+                if (element.attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + ($(element).attr('name') === 'type' ? 'type_error' : $(element).attr('id') + '_error');
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+                if ($(element).attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().removeClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Equipment Submission
+        $('#createEquipmentSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createEquipmentForm').valid()) {
+                var formData = new FormData($('#createEquipmentForm')[0]);
+                $.ajax({
+                    url: '{{ route("equipments.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createEquipmentModal');
+                        equipmentTable.ajax.reload(null, false);
+                        toastr.success('Equipment created successfully');
+                        $('#createEquipmentForm')[0].reset();
+                        $('#cameraFields').removeClass('hidden');
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                        $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating equipment:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'type' ? 'type_error' : key + '_error');
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                if (key === 'type') {
+                                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                                } else {
+                                    $('#' + key).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create equipment. Please try again.');
+                        }
+                    }
+                });
+            }
+        });
+
+        // jQuery Validation for Edit Equipment Form
+        $('#editEquipmentForm').validate({
+            rules: {
+                type: {
+                    required: true
+                },
+                equipment_name: {
+                    required: true,
+                    minlength: 2
+                },
+                equipment_code: {
+                    required: true,
+                    minlength: 6
+                },
+                password: {
+                    minlength: 8
+                },
+                stream_link: {
+                    required: function() {
+                        return $('#editEquipmentForm input[name="type"]:checked').val() === 'camera';
+                    },
+                    url: true
+                }
+            },
+            messages: {
+                type: {
+                    required: "Please select an equipment type"
+                },
+                equipment_name: {
+                    required: "Please enter an equipment name",
+                    minlength: "Equipment name must be at least 2 characters long"
+                },
+                equipment_code: {
+                    required: "Please enter an equipment code",
+                    minlength: "Equipment code must be at least 6 characters long"
+                },
+                password: {
+                    minlength: "Password must be at least 8 characters long"
+                },
+                stream_link: {
+                    required: "Please enter a streaming link for camera equipment",
+                    url: "Please enter a valid URL"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + (element.attr('name') === 'type' ? 'type_error' : element.attr('id') + '_error');
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+                if (element.attr('name') === 'type') {
+                    $('#editEquipmentForm input[name="type"]').parent().addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + ($(element).attr('name') === 'type' ? 'type_error' : $(element).attr('id') + '_error');
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+                if ($(element).attr('name') === 'type') {
+                    $('#editEquipmentForm input[name="type"]').parent().removeClass('input-error');
+                }
+            }
+        });
+
+        // Handle Edit Equipment Submission
+        $('#editEquipmentSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#editEquipmentForm').valid()) {
+                var formData = new FormData($('#editEquipmentForm')[0]);
+                var equipmentId = $('#edit_equipment_id').val();
+                $.ajax({
+                    url: '{{ route("equipments.update", ":id") }}'.replace(':id', equipmentId),
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('editEquipmentModal');
+                        equipmentTable.ajax.reload(null, false);
+                        toastr.success('Equipment updated successfully');
+                        $('#editEquipmentForm')[0].reset();
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating equipment:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key + '_error';
+                                $(errorDiv).text(error[0]).removeClass('hidden');
+                                if (key === 'type') {
+                                    $('#editEquipmentForm input[name="type"]').parent().addClass('input-error');
+                                } else {
+                                    $('#' + key).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to update equipment');
+                        }
+                    }
+                });
+            }
+        });
+
+        // Toggle camera fields for Create Equipment modal
+        $('#createEquipmentForm input[name="type"]').on('change', function() {
+            if ($(this).val() === 'camera') {
+                $('#cameraFields').removeClass('hidden');
+            } else {
+                $('#cameraFields').addClass('hidden');
+                $('#stream_link').val('').removeClass('input-error');
+                $('#stream_link_error').addClass('hidden').text('');
+            }
+        });
+
+        // Cancel Create Equipment Modal
+        window.cancelCreateEquipmentModal = function() {
+            $('#createEquipmentForm')[0].reset();
+            $('#cameraFields').removeClass('hidden');
+            $('.text-red-500').addClass('hidden');
+            $('input').removeClass('input-error');
+            $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+            toggleModal('createEquipmentModal');
+        };
 
 
         window.toggleEquipmentStatus = function(equipmentId) {
@@ -717,8 +1039,10 @@
                                 .attr('placeholder', 'Enter Linked Object');
                             let button = $('<button>')
                                 .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
-                                .html('<img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] h-[20px]" alt="Delete">')
-                                .on('click', function() { div.remove(); });
+                                .html('<img src="{{ asset('admin-theme/assets/images/delete.png ') }}" class="w-[20px] h-[20px]" alt="Delete">')
+                                .on('click', function() {
+                                    div.remove();
+                                });
                             div.append(input).append(button);
                             container.append(div);
                         });
