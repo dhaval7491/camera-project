@@ -96,7 +96,7 @@
                             <li class="nav-item">
                                 <button id="video-setting-menu{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <button id="listen-streams{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/listen.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
                             </li>
                             <li class="nav-item">
@@ -104,7 +104,7 @@
                             </li>
                             <li class="nav-item">
                                 <button id="reconnect{{ $project['project_id'] }}"><img src="{{ asset('admin-theme/assets/images/reconnect.png') }}" class="w-[20px] object-contain mr-[10px]"></button>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                     <div>
