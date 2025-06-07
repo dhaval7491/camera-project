@@ -1,16 +1,16 @@
 <x-modal id="createEquipmentModal" title="Add Equipment" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form id="createEquipmentForm" method="POST" enctype="multipart/form-data" class="mt-[40px]">
+    <form id="createEquipmentForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <!-- Equipment Type -->
         <div class="mb-[30px]">
-            <label class="block text-[15px] manrope-regular text-[#000000]">Equipment Type</label>
-            <div class="flex space-x-4 mt-1">
+            <label class="block text-[15px] manrope-regular text-[#000000] mb-[10px]">Equipment Type</label>
+            <div class="flex space-x-4 mb-3">
                 <label class="flex items-center">
-                    <input type="radio" name="type" value="camera" checked class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651] mr-2">
+                    <input type="radio" name="type" value="camera" checked class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651]" style="margin-right:10px;">
                     Camera
                 </label>
                 <label class="flex items-center">
-                    <input type="radio" name="type" value="tablet" class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651] mr-2">
+                    <input type="radio" name="type" value="tablet" class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651] mr-2" style="margin-right:10px;">
                     Tablet
                 </label>
             </div>
@@ -58,7 +58,7 @@
                 label-class="block text-[15px] manrope-regular text-[#000000]" />
         </div>
 
-        <div class="text-right mt-[100px]">
+        <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="cancelCreateEquipmentModal()"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                 Cancel

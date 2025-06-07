@@ -1,5 +1,5 @@
 <x-modal id="editEquipmentModal" title="Edit Equipment" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form id="editEquipmentForm" method="POST" enctype="multipart/form-data" class="mt-[40px]">
+    <form id="editEquipmentForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         @method('PUT')
         <input type="hidden" name="id" id="edit_equipment_id">
@@ -63,7 +63,7 @@
             <div id="stream_link_error" class="text-red-500 text-sm mt-1 hidden"></div>
         </div>
 
-        <div class="text-right mt-[100px]">
+        <div class="text-right mt-[50px] mb-[20px]]">
             <button type="button" onclick="cancelEditEquipmentModal()"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                 Cancel

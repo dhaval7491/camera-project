@@ -3,7 +3,7 @@
 @section('content')
 <div class="">
     <div class="form-list">
-        <div class="">
+        <div class="flex justify-between pr-[20px] mr-[5px]">
             <div class="py-[10px] px-[25px] mt-[0px] flex">
                 <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
@@ -21,81 +21,76 @@
                     Event Type
                 </button>
             </div>
+            <button
+                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="toggleModal('createEquipmentModal')" style="height:43px;">
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
+            </button>
+        </div>
             <div class="py-[10px] px-[25px] tab-content" id="v-pills-tabContent">
                 <div class="tab-prop hidden" id="equipment">
                     <div class="company-table h-full">
                         <div class="form-list">
                             <div class="">
                                 <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full flex">
+                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex">
                                         <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Equipment List</h3>
                                     </div>
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
-                                            <ul class="list-inline list-unstyled flex">
-                                                <li class="list-inline-item mr-[15px]">
-                                                    <button
-                                                        class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModal('createEquipmentModal')">
-                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
-                                                    </button>
-                                                </li>
-                                            </ul>
+                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
+                                        <div class="table-filter-block mt-[0px]">
+                                            <div class="flex justify-end">
+                                                <p class="flex items-center mr-[8px]">
+                                                    <div class="relative flex items-center mr-[8px]">
+                                                        <!-- Search Input -->
+                                                        <input type="text" id="search-input"
+                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                            placeholder="Search...">
+
+                                                        <!-- Search Button -->
+                                                        <button id="search-toggle"
+                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
+                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        </button>
+                                                    </div>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                                        @foreach($companies as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                                        @foreach($projects as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
+                                                        @foreach($equipments as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="equipment-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
+                                                        @foreach($plants as $plant)
+                                                        <option value="{{ $plant }}">{{ $plant }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                        @foreach($statuses as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="table-filter-block mt-[30px]">
-                                <div class="flex justify-end">
-                                    <p class="flex items-center mr-[8px]">
-                                    <div class="relative flex items-center mr-[8px]">
-                                        <!-- Search Input -->
-                                        <input type="text" id="search-input"
-                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                            placeholder="Search...">
-
-                                        <!-- Search Button -->
-                                        <button id="search-toggle"
-                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                        </button>
-                                    </div>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
-                                            @foreach($companies as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
-                                            @foreach($projects as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
-                                            @foreach($equipments as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="equipment-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                            @foreach($plants as $plant)
-                                            <option value="{{ $plant }}">{{ $plant }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                            @foreach($statuses as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
                                 </div>
                             </div>
                             <div class="form-list-table">
@@ -133,6 +128,20 @@
                             </div>
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
+                                    <p class="flex items-center mr-[8px]">
+                                        <div class="relative flex items-center mr-[8px]">
+                                            <!-- Search Input -->
+                                            <input type="text" id="search-input"
+                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                placeholder="Search...">
+
+                                            <!-- Search Button -->
+                                            <button id="search-toggle"
+                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                            </button>
+                                        </div>
+                                    </p>
                                     <p class="flex items-center mr-[8px]">
                                         <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                                             @foreach($companies as $id => $name)
@@ -172,19 +181,17 @@
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
                                         <table id="mappings-table" class="w-full text-sm text-left">
-                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
+                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
-                                                    <th class="text-center">
-                                                        <div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div>
-                                                    </th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Company Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Project Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Plant Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Camera Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Tablet Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Streaming Links</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Status</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Action</th>
+                                                    <th class="text-center"><div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div></th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Company Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Project Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Plant Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Camera Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Tablet Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Streaming Links</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Status</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -221,6 +228,20 @@
                             <div class="table-filter-block mt-[30px]">
                                 <div class="flex justify-end">
                                     <p class="flex items-center mr-[8px]">
+                                        <div class="relative flex items-center mr-[8px]">
+                                            <!-- Search Input -->
+                                            <input type="text" id="search-input"
+                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                placeholder="Search...">
+
+                                            <!-- Search Button -->
+                                            <button id="search-toggle"
+                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                            </button>
+                                        </div>
+                                    </p>
+                                    <p class="flex items-center mr-[8px]">
                                         <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
                                             @foreach($trackables as $id => $name)
                                             <option value="{{ $id }}">{{ $name }}</option>
@@ -245,7 +266,7 @@
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
                                         <table id="trackables-table" class="w-full text-sm text-left">
-                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
+                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
                                                     <th class="text-center pl-[10px] pb-[25px]">
                                                         <div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
@@ -297,7 +318,7 @@
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
                                         <table id="ai-models-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0]">
+                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
                                                     <th class="text-center pl-[10px] pb-[25px]">
                                                         <div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
@@ -346,7 +367,7 @@
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
                                         <table id="event-types-table" class=" all-table w-full text-sm text-left">
-                                            <thead class="border-b-[2px] border-solid border-b-[#E9EDF0] whitespace-nowrap">
+                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0] whitespace-nowrap">
                                                 <tr>
                                                     <th class="text-center pl-[10px]">
                                                         <div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>

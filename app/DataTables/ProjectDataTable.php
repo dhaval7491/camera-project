@@ -158,9 +158,9 @@ class ProjectDataTable extends DataTable
     {
         return [
             'name' => ['title' => 'Project Name', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular',],
-            'company_name' => ['title' => 'Company' , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
+            'company_name' => ['title' => 'Company' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
             'status' => ['title' => 'Status' , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
-            'created_at' => ['title' => 'Created At' , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
+            'created_at' => ['title' => 'Created At' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
             'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
         ];
     }
