@@ -1,5 +1,5 @@
 <x-modal id="createMappingModal" title="Create Mapping" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form method="POST" action="{{ route('mappings.store') }}" enctype="multipart/form-data" class="mt-[40px]">
+    <form method="POST" action="{{ route('mappings.store') }}" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <div class="space-y-4">
             <x-form-input

@@ -1,5 +1,5 @@
 <x-modal id="createCompanyModal" title="Create a New Company" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form id="createCompanyForm" method="POST" enctype="multipart/form-data" class="mt-[40px]">
+    <form id="createCompanyForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <x-form-input
             label="Company Name"
@@ -62,7 +62,7 @@
             label-class="block text-[15px] manrope-regular text-[#000000]" />
         <!-- <div id="admin_password_error" class="text-red-500 text-sm hidden"></div> -->
 
-        <div class="text-right mt-[100px]">
+        <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="toggleModal('createCompanyModal')"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                 Cancel

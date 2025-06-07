@@ -434,4 +434,20 @@ $(document).ready(function() {
     };
 });
 </script>
+<script> 
+$(document).ready(function () {
+    $('#projects-table thead th').each(function () {
+        const thText = $(this).text().trim();
+
+        if (thText === 'Status') {
+            $(this).addClass('status');
+        } else if (thText === 'Action') {
+            $(this).addClass('action');
+        } else if (thText === 'People') {
+            $(this).addClass('people');
+        } 
+        // Add more cases as needed
+    });
+});
+</script>
 @endpush
