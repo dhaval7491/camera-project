@@ -893,6 +893,299 @@
             }
         });
 
+        // jQuery Validation for Create Mapping Form
+        $('#createMappingForm').validate({
+            rules: {
+                company_id: {
+                    required: true
+                },
+                project_id: {
+                    required: true
+                },
+                camera_id: {
+                    required: true
+                },
+                tablet_id: {
+                    required: true
+                }
+            },
+            messages: {
+                company_id: {
+                    required: "Please select a company"
+                },
+                project_id: {
+                    required: "Please select a project"
+                },
+                camera_id: {
+                    required: "Please select a camera"
+                },
+                tablet_id: {
+                    required: "Please select a tablet"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + element.attr('id') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+            }
+        });
+
+        // Handle Create Mapping Submission
+        $('#createMappingSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createMappingForm').valid()) {
+                var formData = new FormData($('#createMappingForm')[0]);
+                $.ajax({
+                    url: '{{ route("mappings.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createMappingModal');
+                        mappingTable.ajax.reload(null, false);
+                        toastr.success('Mapping created successfully');
+                        $('#createMappingForm')[0].reset();
+                        $('#createMappingForm select').val(null).trigger('change');
+                        $('.text-red-500').addClass('hidden');
+                        $('select').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating mapping:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key + '_error';
+                                $(errorDiv).text(error[0]).removeClass('hidden');
+                                $('#' + key).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to create mapping');
+                        }
+                    }
+                });
+            }
+        });
+
+        // jQuery Validation for Edit Mapping Form
+        $('#editMappingForm').validate({
+            rules: {
+                company_id: {
+                    required: true
+                },
+                project_id: {
+                    required: true
+                },
+                camera_id: {
+                    required: true
+                },
+                tablet_id: {
+                    required: true
+                }
+            },
+            messages: {
+                company_id: {
+                    required: "Please select a company"
+                },
+                project_id: {
+                    required: "Please select a project"
+                },
+                camera_id: {
+                    required: "Please select a camera"
+                },
+                tablet_id: {
+                    required: "Please select a tablet"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + 'edit_' + element.attr('name') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('error');
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + 'edit_' + $(element).attr('name') + '_error';
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+            }
+        });
+
+        // Handle Edit Mapping Submission
+        $('#editMappingSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#editMappingForm').valid()) {
+                var formData = new FormData($('#editMappingForm')[0]);
+                var mappingId = $('#edit_mapping_id').val();
+                $.ajax({
+                    url: '{{ route("mappings.update", ":id") }}'.replace(':id', mappingId),
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('editMappingModal');
+                        mappingTable.ajax.reload(null, false);
+                        toastr.success('Mapping updated successfully');
+                        $('#editMappingForm')[0].reset();
+                        $('#editMappingForm select').val(null).trigger('change');
+                        $('.text-red-500').addClass('hidden');
+                        $('select').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating mapping:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + 'edit_' + key + '_error';
+                                $(errorDiv).text(error[0]).removeClass('hidden');
+                                $('#edit_' + key).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to update mapping');
+                        }
+                    }
+                });
+            }
+        });
+
+        // jQuery Validation for Create Trackable Form
+        $('#createTrackableForm').validate({
+            rules: {
+                trackable_name: {
+                    required: true,
+                    minlength: 2
+                },
+                other_name: {
+                    minlength: 2
+                },
+                'linked_objects[]': {
+                    required: true,
+                    minlength: 1
+                }
+            },
+            messages: {
+                trackable_name: {
+                    required: "Please enter a trackable name",
+                    minlength: "Trackable name must be at least 2 characters long"
+                },
+                other_name: {
+                    minlength: "Other name must be at least 2 characters long"
+                },
+                'linked_objects[]': {
+                    required: "Please add at least one linked object",
+                    minlength: "Each linked object must be at least 1 character long"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + element.attr('name').replace(/\[\]/g, '') + '_error';
+                if (element.attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').text(error.text()).removeClass('hidden');
+                    element.closest('.input-group').find('input').addClass('input-error');
+                } else {
+                    $(errorDiv).text(error.text()).removeClass('hidden');
+                    element.addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('name').replace(/\[\]/g, '') + '_error';
+                if ($(element).attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').addClass('hidden').text('');
+                    $(element).closest('.input-group').find('input').removeClass('input-error');
+                } else {
+                    $(errorDiv).addClass('hidden').text('');
+                    $(element).removeClass('input-error');
+                }
+            },
+            // Ensure validation checks all linked object inputs
+            ignore: [],
+            invalidHandler: function(event, validator) {
+                // Ensure linked_objects[] is validated correctly
+                var linkedObjects = $('input[name="linked_objects[]"]');
+                var hasValue = false;
+                linkedObjects.each(function() {
+                    if ($(this).val().trim().length > 0) {
+                        hasValue = true;
+                    }
+                });
+                if (!hasValue) {
+                    $('#linked_objects_error').text('Please add at least one linked object').removeClass('hidden');
+                    linkedObjects.addClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Trackable Submission
+        $('#createTrackableSubmit').on('click', function(e) {
+            e.preventDefault();
+            // Manually validate linked_objects
+            var linkedObjects = $('input[name="linked_objects[]"]');
+            var validLinkedObjects = true;
+            linkedObjects.each(function() {
+                if ($(this).val().trim().length === 0) {
+                    $(this).addClass('input-error');
+                    validLinkedObjects = false;
+                } else {
+                    $(this).removeClass('input-error');
+                }
+            });
+            if (!validLinkedObjects) {
+                $('#linked_objects_error').text('Please fill in all linked objects or remove empty ones').removeClass('hidden');
+            } else {
+                $('#linked_objects_error').addClass('hidden').text('');
+            }
+
+            if ($('#createTrackableForm').valid() && validLinkedObjects) {
+                var formData = new FormData($('#createTrackableForm')[0]);
+                $.ajax({
+                    url: '{{ route("trackables.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createTrackableModal');
+                        trackableTable.ajax.reload(null, false);
+                        toastr.success('Trackable created successfully');
+                        $('#createTrackableForm')[0].reset();
+                        $('#linkedObjectsContainer').html(`
+                            <div class="flex align-middle input-group">
+                                <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Linked Object">
+                                <button type="button" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" onclick="addNewLinkedObjectField('#linkedObjectsContainer', 'linked_objects[]')">
+                                    <img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">
+                                </button>
+                            </div>
+                        `);
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating trackable:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key.replace(/\.\d+/g, '') + '_error';
+                                if (key.startsWith('linked_objects')) {
+                                    $('#linked_objects_error').text(error[0]).removeClass('hidden');
+                                    $('input[name="linked_objects[]"]').addClass('input-error');
+                                } else {
+                                    $(errorDiv).text(error[0]).removeClass('hidden');
+                                    $('#' + key.replace(/\.\d+/g, '')).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create trackable');
+                        }
+                    }
+                });
+            }
+        });
+
+
+
         // Toggle camera fields for Create Equipment modal
         $('#createEquipmentForm input[name="type"]').on('change', function() {
             if ($(this).val() === 'camera') {
@@ -901,6 +1194,19 @@
                 $('#cameraFields').addClass('hidden');
                 $('#stream_link').val('').removeClass('input-error');
                 $('#stream_link_error').addClass('hidden').text('');
+            }
+        });
+
+        // Toggle camera fields for Edit Equipment modal
+        $('#editEquipmentForm input[name="type"]').on('change', function() {
+            if ($(this).val() === 'camera') {
+                $('#editCameraFields').removeClass('hidden');
+                $('#edit_stream_link').val('');
+                $('#edit_stream_link_error').addClass('hidden').text('');
+            } else {
+                $('#editCameraFields').addClass('hidden');
+                $('#edit_stream_link').val('').removeClass('input-error');
+                $('#edit_stream_link_error').addClass('hidden').text('');
             }
         });
 
@@ -913,6 +1219,50 @@
             $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
             toggleModal('createEquipmentModal');
         };
+
+        // Cancel Edit Equipment Modal
+        window.cancelEditEquipmentModal = function() {
+            $('#editEquipmentForm')[0].reset();
+            $('#editCameraFields').removeClass('hidden');
+            $('.text-red-500').addClass('hidden');
+            $('input').removeClass('input-error');
+            toggleModal('editEquipmentModal');
+        };
+
+        // Cancel Create Mapping Modal
+        window.cancelCreateMappingModal = function() {
+            $('#createMappingForm')[0].reset();
+            $('#createMappingForm select').val(null).trigger('change');
+            $('.text-red-500').addClass('hidden');
+            $('select').removeClass('input-error');
+            toggleModal('createMappingModal');
+        };
+
+        // Cancel Edit Mapping Modal
+        window.cancelEditMappingModal = function() {
+            $('#editMappingForm')[0].reset();
+            $('#editMappingForm select').val(null).trigger('change');
+            $('.text-red-500').addClass('hidden');
+            $('select').removeClass('input-error');
+            toggleModal('editMappingModal');
+        };
+
+        // Cancel Create Trackable Modal
+        window.cancelCreateTrackableModal = function() {
+            $('#createTrackableForm')[0].reset();
+            $('#linkedObjectsContainer').html(`
+                <div class="flex align-middle input-group">
+                    <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Linked Object">
+                    <button type="button" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" onclick="addNewLinkedObjectField('#linkedObjectsContainer', 'linked_objects[]')">
+                        <img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">
+                    </button>
+                </div>
+            `);
+            $('.text-red-500').addClass('hidden');
+            $('input').removeClass('input-error');
+            toggleModal('createTrackableModal');
+        };
+
 
 
         window.toggleEquipmentStatus = function(equipmentId) {
@@ -1005,6 +1355,12 @@
                     $('#edit_camera_id').val(response.camera_id);
                     $('#edit_tablet_id').val(response.tablet_id);
                     $('#editMappingForm').attr('action', '{{ url("mappings") }}/' + response.id);
+                    // Clear previous validation errors
+                    $('#editMappingForm').validate().resetForm();
+                    $('.text-red-500').addClass('hidden');
+                    $('#editMappingForm select').removeClass('input-error');
+
+                    // Open the edit modal
                     toggleModal('editMappingModal');
                 },
                 error: function(xhr) {
