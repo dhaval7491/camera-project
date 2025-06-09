@@ -3,7 +3,7 @@
 @section('content')
 <div class="">
     <div class="form-list">
-        <div class="flex justify-between pr-[20px] mr-[5px]">
+        <div class="flex justify-between items-center">
             <div class="py-[10px] px-[25px] mt-[0px] flex">
                 <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
@@ -21,30 +21,30 @@
                     Event Type
                 </button>
             </div>
-            <button
-                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+            <button id="add-equipment-btn"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModal('createEquipmentModal')" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
-            <button
-                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+            <button id="create-mapping-btn"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModal('createMappingModal')" style="height:43px;">
-                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Create Mapping
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Mapping
             </button>
-            <button
-                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+            <button id="add-trackable-btn"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModal('createTrackableModal')" style="height:43px;">
-                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add new
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Trackable
             </button>
-            <button
-                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+            <button id="add-ai-model-btn"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModaladdai()" style="height:43px;">
-                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Ai Model
             </button>
-            <button
-                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+            <button id="add-event-type-btn"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModalevent()" style="height:43px;">
-                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Event
             </button>
         </div>
             <div class="py-[10px] px-[25px] tab-content" id="v-pills-tabContent">
@@ -267,17 +267,7 @@
                                         <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3>
                                     </div>
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
-                                            <ul class="list-inline list-unstyled flex">
-                                                <li class="list-inline-item mr-[15px]">
-                                                    <button
-                                                        class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModaladdai()">
-                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -321,17 +311,7 @@
                                         <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3>
                                     </div>
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
-                                            <ul class="list-inline list-unstyled flex">
-                                                <li class="list-inline-item mr-[15px]">
-                                                    <button
-                                                        class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModalevent()">
-                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -1313,6 +1293,28 @@
 
     let previousTab = null;
 
+    // Toggle action buttons based on active tab
+    function toggleActionButtons(tabId) {
+        $('.tab-action-btn').addClass('hidden');
+        switch (tabId) {
+            case 'equipment':
+                $('#add-equipment-btn').removeClass('hidden');
+                break;
+            case 'mapping':
+                $('#create-mapping-btn').removeClass('hidden');
+                break;
+            case 'trackable':
+                $('#add-trackable-btn').removeClass('hidden');
+                break;
+            case 'ai-model':
+                $('#add-ai-model-btn').removeClass('hidden');
+                break;
+            case 'event-type':
+                $('#add-event-type-btn').removeClass('hidden');
+                break;
+        }
+    }
+
     function openTab(event, tabId) {
         // Hide all tab contents
         document.querySelectorAll('.tab-prop').forEach(tab => tab.classList.add('hidden'));
@@ -1329,6 +1331,9 @@
         // Style clicked tab button
         event.currentTarget.classList.add('border-b-[#437651]', 'border-b-solid', 'border-b-[2px]');
         previousTab = event.currentTarget;
+
+        // Toggle action buttons
+        toggleActionButtons(tabId);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -1340,6 +1345,9 @@
             firstTabContent.classList.remove('hidden');
             firstTabButton.classList.add('border-b-[#437651]', 'border-b-solid', 'border-b-[2px]');
             previousTab = firstTabButton;
+
+            // Show only the equipment button initially
+            toggleActionButtons('equipment');
 
             // Trigger DataTable refresh for the initial tab
             setTimeout(function() {
