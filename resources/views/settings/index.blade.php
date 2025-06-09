@@ -427,9 +427,6 @@
 
         // Track which DataTables have been initialized
         let initializedTables = {
-            equipment: true, // Equipment is initialized by default
-            mapping: false,
-            trackable: false,
             aiModel: false,
             eventType: false
         };
@@ -483,19 +480,7 @@
 
             // Initialize DataTables based on the active tab
             setTimeout(function() {
-                if (tabId === 'equipment' && $.fn.DataTable.isDataTable('#equipments-table')) {
-                    $('#equipments-table').DataTable().columns.adjust().responsive.recalc();
-                } else if (tabId === 'mapping') {
-                    initializeMappingDataTable();
-                    if ($.fn.DataTable.isDataTable('#mappings-table')) {
-                        $('#mappings-table').DataTable().columns.adjust().responsive.recalc();
-                    }
-                } else if (tabId === 'trackable') {
-                    initializeTrackableDataTable();
-                    if ($.fn.DataTable.isDataTable('#trackables-table')) {
-                        $('#trackables-table').DataTable().columns.adjust().responsive.recalc();
-                    }
-                } else if (tabId === 'ai-model' || tabId === 'event-type') {
+               if (tabId === 'ai-model' || tabId === 'event-type') {
                     initializeStaticDataTables();
                     if (tabId === 'ai-model' && $.fn.DataTable.isDataTable('#ai-models-table')) {
                         $('#ai-models-table').DataTable().columns.adjust().responsive.recalc();
