@@ -26,6 +26,26 @@
                 onclick="toggleModal('createEquipmentModal')" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
+            <button
+                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="toggleModal('createMappingModal')" style="height:43px;">
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Create Mapping
+            </button>
+            <button
+                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="toggleModal('createTrackableModal')" style="height:43px;">
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add new
+            </button>
+            <button
+                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="toggleModaladdai()" style="height:43px;">
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
+            </button>
+            <button
+                class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="toggleModalevent()" style="height:43px;">
+                <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add New
+            </button>
         </div>
             <div class="py-[10px] px-[25px] tab-content" id="v-pills-tabContent">
                 <div class="tab-prop hidden" id="equipment">
@@ -33,8 +53,8 @@
                         <div class="form-list">
                             <div class="">
                                 <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Equipment List</h3>
+                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
+                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Equipment List</h3>
                                     </div>
                                     <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
                                         <div class="table-filter-block mt-[0px]">
@@ -96,7 +116,7 @@
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
                                     <div class="relative">
-                                        {!! $equipmentDataTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape', 'id' => 'equipments-table'], true) !!}
+                                        {!! $equipmentTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
                                     </div>
                                 </div>
                             </div>
@@ -108,94 +128,70 @@
                         <div class="form-list">
                             <div class="">
                                 <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Device Mapped - 40</h3>
+                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
+                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Device Mapped - 40</h3>
                                     </div>
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
-                                            <ul class="list-inline list-unstyled flex">
-                                                <li class="list-inline-item mr-[15px]">
-                                                    <button
-                                                        class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModal('createMappingModal')">
-                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Create Mapping
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-filter-block mt-[30px]">
-                                <div class="flex justify-end">
-                                    <p class="flex items-center mr-[8px]">
-                                        <div class="relative flex items-center mr-[8px]">
-                                            <!-- Search Input -->
-                                            <input type="text" id="search-input"
-                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                placeholder="Search...">
+                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
+                                        <div class="table-filter-block mt-[0px]">
+                                            <div class="flex justify-end">
+                                                <p class="flex items-center mr-[8px]">
+                                                    <div class="relative flex items-center mr-[8px]">
+                                                        <!-- Search Input -->
+                                                        <input type="text" id="search-input"
+                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                            placeholder="Search...">
 
-                                            <!-- Search Button -->
-                                            <button id="search-toggle"
-                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                            </button>
+                                                        <!-- Search Button -->
+                                                        <button id="search-toggle"
+                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        </button>
+                                                    </div>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                                        @foreach($companies as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                                        @foreach($projects as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="mapping-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
+                                                        @foreach($plants as $plant)
+                                                        <option value="{{ $plant }}">{{ $plant }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
+                                                        <option value="IPad">IPad</option>
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                        @foreach($statuses as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
-                                            @foreach($companies as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
-                                            @foreach($projects as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="mapping-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                            @foreach($plants as $plant)
-                                            <option value="{{ $plant }}">{{ $plant }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
-                                            <option value="IPad">IPad</option>
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                            @foreach($statuses as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
+                                    </div>
+                                    
                                 </div>
                             </div>
+                           
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
-                                        <table id="mappings-table" class="w-full text-sm text-left">
-                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
-                                                <tr>
-                                                    <th class="text-center"><div class="p-[10px] pb-[25px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] mt-[15px] ml-[20px]" /></div></th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Company Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Project Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-left manrope-medium text-[#344563] font-medium text-[15px]">Plant Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Camera Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Tablet Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Streaming Links</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Status</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[15px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                                    {!! $mappingTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
                                     </div>
                                 </div>
                             </div>
@@ -207,79 +203,55 @@
                         <div class="form-list">
                             <div class="">
                                 <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Trackable - 10</h3>
+                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
+                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Trackable - 10</h3>
                                     </div>
-                                    <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
-                                            <ul class="list-inline list-unstyled flex">
-                                                <li class="list-inline-item mr-[15px]">
-                                                    <button
-                                                        class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
-                                                        onclick="toggleModal('createTrackableModal')">
-                                                        <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add new
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-filter-block mt-[30px]">
-                                <div class="flex justify-end">
-                                    <p class="flex items-center mr-[8px]">
-                                        <div class="relative flex items-center mr-[8px]">
-                                            <!-- Search Input -->
-                                            <input type="text" id="search-input"
-                                                class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                placeholder="Search...">
+                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
+                                        <div class="table-filter-block mt-[0px]">
+                                            <div class="flex justify-end">
+                                                <p class="flex items-center mr-[8px]">
+                                                    <div class="relative flex items-center mr-[8px]">
+                                                        <!-- Search Input -->
+                                                        <input type="text" id="search-input"
+                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                            placeholder="Search...">
 
-                                            <!-- Search Button -->
-                                            <button id="search-toggle"
-                                                class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                            </button>
+                                                        <!-- Search Button -->
+                                                        <button id="search-toggle"
+                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        </button>
+                                                    </div>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
+                                                        @foreach($trackables as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
+                                                        <option value="Type">Type</option>
+                                                    </select>
+                                                </p>
+                                                <p class="flex items-center mr-[8px]">
+                                                    <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                        @foreach($statuses as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
-                                            @foreach($trackables as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
-                                            <option value="Type">Type</option>
-                                        </select>
-                                    </p>
-                                    <p class="flex items-center mr-[8px]">
-                                        <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                            @foreach($statuses as $id => $name)
-                                            <option value="{{ $id }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
+                           
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
-                                        <table id="trackables-table" class="w-full text-sm text-left">
-                                            <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
-                                                <tr>
-                                                    <th class="text-center pl-[10px] pb-[25px]">
-                                                        <div class=""><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
-                                                    </th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Trackable Name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Other name</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Linked Objects</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Status</th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[15px]">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                                            {!! $trackableTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
                                     </div>
                                 </div>
                             </div>
@@ -455,7 +427,9 @@
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-{!! $equipmentDataTable->scripts() !!}
+{!! $equipmentTable->scripts() !!}
+{!! $mappingTable->scripts() !!}
+{!! $trackableTable->scripts() !!}
 <script>
     $(document).ready(function() {
         let mappingTable;
@@ -520,138 +494,6 @@
                     ]
                 });
                 initializedTables.eventType = true;
-            }
-        }
-
-        // Initialize mapping DataTable
-        function initializeMappingDataTable() {
-            if (!initializedTables.mapping && $('#mappings-table').length) {
-                // Load the mapping DataTable via AJAX
-                $.get('{{ route("mappings.index") }}', function(data) {
-                    mappingTable = $('#mappings-table').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: '{{ route("mappings.index") }}',
-                        columns: [{
-                                data: 'checkbox',
-                                name: 'checkbox',
-                                orderable: false,
-                                searchable: false
-                            },
-                            {
-                                data: 'company_name',
-                                name: 'company_name'
-                            },
-                            {
-                                data: 'project_name',
-                                name: 'project_name'
-                            },
-                            {
-                                data: 'plant_name',
-                                name: 'plant_name'
-                            },
-                            {
-                                data: 'camera_name',
-                                name: 'camera_name'
-                            },
-                            {
-                                data: 'tablet_name',
-                                name: 'tablet_name'
-                            },
-                            {
-                                data: 'streaming_links',
-                                name: 'streaming_links'
-                            },
-                            {
-                                data: 'status',
-                                name: 'status'
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            }
-                        ],
-                        responsive: true,
-                        pageLength: 10,
-                        order: [
-                            [1, 'asc']
-                        ],
-                        columnDefs: [{
-                                orderable: false,
-                                targets: [0, 8]
-                            },
-                            {
-                                responsivePriority: 1,
-                                targets: [1, 7]
-                            }
-                        ]
-                    });
-                    initializedTables.mapping = true;
-                }).fail(function() {
-                    console.error('Failed to load mapping data');
-                });
-            }
-        }
-
-        // Initialize trackable DataTable
-        function initializeTrackableDataTable() {
-            if (!initializedTables.trackable && $('#trackables-table').length) {
-                // Load the trackable DataTable via AJAX
-                $.get('{{ route("trackables.index") }}', function(data) {
-                    trackableTable = $('#trackables-table').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: '{{ route("trackables.index") }}',
-                        columns: [{
-                                data: 'checkbox',
-                                name: 'checkbox',
-                                orderable: false,
-                                searchable: false
-                            },
-                            {
-                                data: 'trackable_name',
-                                name: 'trackable_name'
-                            },
-                            {
-                                data: 'other_name',
-                                name: 'other_name'
-                            },
-                            {
-                                data: 'linked_objects',
-                                name: 'linked_objects'
-                            },
-                            {
-                                data: 'status',
-                                name: 'status'
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            }
-                        ],
-                        responsive: true,
-                        pageLength: 10,
-                        order: [
-                            [1, 'asc']
-                        ],
-                        columnDefs: [{
-                                orderable: false,
-                                targets: [0, 5]
-                            },
-                            {
-                                responsivePriority: 1,
-                                targets: [1, 4]
-                            }
-                        ]
-                    });
-                    initializedTables.trackable = true;
-                }).fail(function() {
-                    console.error('Failed to load trackable data');
-                });
             }
         }
 
