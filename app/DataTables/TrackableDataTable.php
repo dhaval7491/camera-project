@@ -108,7 +108,7 @@ class TrackableDataTable extends DataTable
                 ->render('function() { return \'<input type="checkbox" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm">\'; }'),
             Column::make('trackable_name')->title('Trackable Name'),
             Column::make('other_name')->title('Other Name'),
-            Column::make('linked_objects')->title('Linked Objects'),
+            Column::make('linked_objects')->title('Linked Objects')->orderable(false),
             Column::make('status')->title('Status'),
             Column::computed('action')
                   ->exportable(false)
