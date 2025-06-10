@@ -68,6 +68,7 @@ class TrackableDataTable extends DataTable
                         </ul>
                     </div>';
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['checkbox','trackable_name', 'other_name', 'linked_objects', 'status', 'action']);
     }
 

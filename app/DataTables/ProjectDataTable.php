@@ -97,6 +97,7 @@ class ProjectDataTable extends DataTable
             ->editColumn('created_at', function ($project) {
                 return $project->created_at->format('M d - Y');
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['name', 'status', 'action']);
     }
 
@@ -125,7 +126,7 @@ class ProjectDataTable extends DataTable
 
         // Apply status filter
         if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('is_active', array_map(function ($status) {
+            $query->whereIn('projects.is_active', array_map(function ($status) {
                 return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Blocked' ? 2 : $status));
             }, request()->input('statuses')));
         }

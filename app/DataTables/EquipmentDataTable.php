@@ -83,6 +83,7 @@ class EquipmentDataTable extends DataTable
                     </ul>
                 </div>';
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['plant_name', 'equipment_type', 'mapped_to', 'streaming_link', 'status', 'action']);
     }
 

@@ -87,6 +87,7 @@ class CompanyDataTable extends DataTable
             ->editColumn('created_at', function ($company) {
                 return $company->created_at->format('M d - Y');
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['company_name','status', 'people', 'action']);
     }
 

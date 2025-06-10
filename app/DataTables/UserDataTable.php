@@ -69,6 +69,7 @@ class UserDataTable extends DataTable
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->format('F d, Y');
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['name', 'status', 'action'])
             ->setRowId('id');
     }
@@ -85,22 +86,22 @@ class UserDataTable extends DataTable
 
         // Apply user filter
         if (request()->has('user_ids') && !empty(request()->input('user_ids'))) {
-            $query->whereIn('id', request()->input('user_ids'));
+            $query->whereIn('users.id', request()->input('user_ids')); // Qualified id
         }
 
         // Apply company filter
         if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
-            $query->whereIn('company_id', request()->input('company_ids'));
+            $query->whereIn('users.company_id', request()->input('company_ids')); // Qualified company_id
         }
 
         // Apply project filter
         if (request()->has('project_ids') && !empty(request()->input('project_ids'))) {
-            $query->whereIn('project_id', request()->input('project_ids'));
+            $query->whereIn('users.project_id', request()->input('project_ids')); // Qualified project_id
         }
 
         // Apply status filter
         if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('is_active', array_map(function ($status) {
+            $query->whereIn('users.is_active', array_map(function ($status) {
                 return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Block' ? 2 : $status));
             }, request()->input('statuses')));
         }

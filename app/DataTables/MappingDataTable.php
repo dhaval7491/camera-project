@@ -74,6 +74,7 @@ class MappingDataTable extends DataTable
                     </div>
                 </div>';
             })
+            ->orderColumn('status', 'is_active $1')
             ->rawColumns(['checkbox', 'streaming_links', 'status', 'action']);
     }
 
@@ -124,7 +125,7 @@ class MappingDataTable extends DataTable
             Column::make('camera_name')->title('Camera Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('tablet_name')->title('Tablet Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('streaming_links')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false),
+            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false),
         ];
     }

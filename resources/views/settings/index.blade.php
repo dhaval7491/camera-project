@@ -412,8 +412,8 @@
 {!! $trackableTable->scripts() !!}
 <script>
     $(document).ready(function() {
-        let mappingTable;
-        let trackableTable;
+        let mappingTable = $('#mappings-table').DataTable();
+        let trackableTable= $('#trackables-table').DataTable();
         let equipmentTable = $('#equipments-table').DataTable()
         // Initialize Select2 for all filter selects
         $('.filter-select').select2({
