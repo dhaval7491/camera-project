@@ -1,5 +1,5 @@
 <x-modal id="createEquipmentModal" title="Add Equipment" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form method="POST" action="{{ route('equipments.store') }}" enctype="multipart/form-data" class="mt-[10px]">
+    <form id="createEquipmentForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <!-- Equipment Type -->
         <div class="mb-[30px]">
@@ -14,9 +14,7 @@
                     Tablet
                 </label>
             </div>
-            @error('type')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+            <div id="type_error" class="text-red-500 text-sm mt-1 hidden"></div>
         </div>
 
         <!-- Common Fields -->
@@ -28,9 +26,7 @@
             placeholder="Enter Equipment Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
-        @error('equipment_name')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
+        
 
         <x-form-input
             label="Equipment Code"
@@ -40,9 +36,6 @@
             placeholder="#2356523"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
-        @error('equipment_code')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
 
         <x-form-input
             label="Password"
@@ -52,9 +45,6 @@
             placeholder="Enter Password"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
-        @error('password')
-        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-        @enderror
 
         <!-- Camera Specific Field -->
         <div id="cameraFields" class="mb-[30px]">
@@ -66,37 +56,17 @@
                 placeholder="https://www.example.com/api/v1/resources/d"
                 class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
                 label-class="block text-[15px] manrope-regular text-[#000000]" />
-            @error('stream_link')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
         </div>
 
         <div class="text-right mt-[50px] mb-[20px]">
-            <button type="button" onclick="toggleModal('createEquipmentModal')"
+            <button type="button" onclick="cancelCreateEquipmentModal()"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                 Cancel
             </button>
-            <button type="submit"
+            <button type="button" id="createEquipmentSubmit"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#437651] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
                 Create
             </button>
         </div>
     </form>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const radioButtons = document.querySelectorAll('#createEquipmentModal input[name="type"]');
-            const cameraFields = document.getElementById('cameraFields');
-
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'camera') {
-                        cameraFields.classList.remove('hidden');
-                    } else if (this.value === 'tablet') {
-                        cameraFields.classList.add('hidden');
-                    }
-                });
-            });
-        });
-    </script>
 </x-modal>

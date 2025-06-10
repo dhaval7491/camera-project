@@ -1,5 +1,5 @@
 <x-modal id="createTrackableModal" title="Add Trackable" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form method="POST" action="{{ route('trackables.store') }}" id="createTrackableForm" enctype="multipart/form-data">
+    <form id="createTrackableForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <div class="space-y-4">
             <!-- Trackable Name -->
@@ -48,11 +48,11 @@
             </div>
 
             <div class="flex justify-end space-x-3">
-                <button type="button" onclick="toggleModal('createTrackableModal')"
+                <button type="button" onclick="cancelCreateTrackableModal()"
                     class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                     Cancel
                 </button>
-                <button type="submit"
+                <button type="button" id="createTrackableSubmit"
                     class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-[#437651] w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-white mr-[5px] text-[14px] cursor-pointer">
                     Create
                 </button>

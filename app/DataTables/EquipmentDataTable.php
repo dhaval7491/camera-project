@@ -35,7 +35,7 @@ class EquipmentDataTable extends DataTable
             })
             ->addColumn('plant_name', function ($equipment) {
                 $mapping = $equipment->mappingAsCamera ?? $equipment->mappingAsTablet;
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . $mapping && $mapping->project->plant_name ? $mapping->project->plant_name : '-' . '</p>';
+                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . (($mapping && $mapping->project && $mapping->project->plant_name) ? $mapping->project->plant_name : '-') . '</p>';
             })
             // ->editColumn('plant_name', function ($equipment) {
             //     return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? '-') . '</p>';

@@ -191,6 +191,10 @@ table.dataTable tbody th, table.dataTable tbody td {
   max-height: 70vh; /* Prevents video from being too tall on large screens */
 }
 
+table.dataTable {
+  width: 100% !important;
+}
+
 @media (max-width: 768px) {
   .video-container {
       aspect-ratio: 16/9;

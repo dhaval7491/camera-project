@@ -34,6 +34,9 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::resource('trackables', TrackableController::class);
     Route::get('/alerts',[AlertController::class,'index'])->name('alerts.index');
     Route::get('/settings',[SettingController::class,'index'])->name('settings.index');
+    Route::get('/settings/equipments', [SettingController::class, 'equipments'])->name('settings.equipments');
+    Route::get('/settings/mappings', [SettingController::class, 'mappings'])->name('settings.mappings');
+    Route::get('/settings/trackables', [SettingController::class, 'trackables'])->name('settings.trackables');
     Route::get('/account-settings',[SettingController::class,'accountSettings'])->name('account-settings');
     Route::get('/live-stream',[LiveStreamController::class,'index'])->name('streams.index');
     Route::get('/analytics',[AnalyticController::class,'index'])->name('analytics.index');
