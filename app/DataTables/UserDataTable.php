@@ -45,7 +45,7 @@ class UserDataTable extends DataTable
             })
             ->addColumn('action', function ($user) {
                 return '
-                    <ul class="flex justify-center align-items-center">
+                    <ul class="flex justify-start align-items-center">
                         <li class="py-[5px]"><a href="' . route('users.show', $user->id) . '" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
                             <img src="' . asset('admin-theme/assets/images/view.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
@@ -140,13 +140,13 @@ class UserDataTable extends DataTable
             Column::make('name')->title('User Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('access_level')->title('Access Level')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                   ->title('Action')
                   ->exportable(false)
                   ->printable(false)
                 //   ->width(60)
-                  ->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+                  ->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
         ];
     }
 

@@ -57,7 +57,7 @@ class EquipmentDataTable extends DataTable
                     return '
                         <div class="w-72 relative">
                             <span class="truncate block w-full p-2 rounded">' . $equipment->stream_link . '</span>
-                            <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-streaming-link absolute right-0 top-[20px] w-[23px] cursor-pointer" data-link="' . $equipment->stream_link . '">
+                            <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-streaming-link absolute right-0 top-[10px] w-[20px] cursor-pointer" data-link="' . $equipment->stream_link . '">
                         </div>';
                 }
                 return '-';
@@ -158,7 +158,7 @@ class EquipmentDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)
-                ->addClass('text-center'),
+                ->addClass('text-center relative'),
         ];
     }
 
