@@ -711,7 +711,7 @@ text-align: left !important;
     padding-left: 32px !important;
 }
 .all-table thead th.status ,.all-table thead th.action ,.all-table thead th.people{
-    text-align: center !important;
+    text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
     font-size:16px;
