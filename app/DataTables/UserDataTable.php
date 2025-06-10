@@ -32,8 +32,8 @@ class UserDataTable extends DataTable
                         </div>
                     </div>';
             })
-            ->addColumn('company_name', function ($user) {
-                return $user->company ? $user->company->company_name : 'N/A';
+            ->editColumn('company_name', function ($user) {
+                return $user->company_name ?? 'N/A';
             })
             ->editColumn('access_level', function ($user) {
                 return $user->access_level ?? 'N/A';
@@ -78,7 +78,10 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        $query = $model->newQuery()->with(['company', 'project'])->select('users.*');
+        $query = $model->newQuery()
+            ->select('users.*', 'companies.company_name')
+            ->leftJoin('companies', 'users.company_id', '=', 'companies.id')
+            ->with(['company', 'project']);
 
         // Apply user filter
         if (request()->has('user_ids') && !empty(request()->input('user_ids'))) {
@@ -97,7 +100,7 @@ class UserDataTable extends DataTable
 
         // Apply status filter
         if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('is_active', array_map(function($status) {
+            $query->whereIn('is_active', array_map(function ($status) {
                 return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Block' ? 2 : $status));
             }, request()->input('statuses')));
         }
@@ -111,24 +114,24 @@ class UserDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-        ->setTableId('user-table')
-        ->columns($this->getColumns())
-        ->ajax([
-            'url' => route('users.index'), // or any route using this DataTable
-            'type' => 'GET',
-            'data' => 'function(d) {
+            ->setTableId('user-table')
+            ->columns($this->getColumns())
+            ->ajax([
+                'url' => route('users.index'), // or any route using this DataTable
+                'type' => 'GET',
+                'data' => 'function(d) {
                 d.user_ids = $("#user-filter").val();
                 d.company_ids = $("#company-filter").val();
                 d.project_ids = $("#project-filter").val();
                 d.statuses = $("#status-filter").val();
             }',
-        ])
-        ->orderBy(1)
-        ->selectStyleSingle()
-        ->parameters([
-            'dom' => 'Bfrtip',
-            'buttons' => ['excel', 'csv', 'pdf', 'print', 'reset', 'reload'],
-        ]);
+            ])
+            ->orderBy(1)
+            ->selectStyleSingle()
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['excel', 'csv', 'pdf', 'print', 'reset', 'reload'],
+            ]);
     }
 
     /**
@@ -142,11 +145,11 @@ class UserDataTable extends DataTable
             Column::make('access_level')->title('Access Level')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
-                  ->title('Action')
-                  ->exportable(false)
-                  ->printable(false)
+                ->title('Action')
+                ->exportable(false)
+                ->printable(false)
                 //   ->width(60)
-                  ->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+                ->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
         ];
     }
 

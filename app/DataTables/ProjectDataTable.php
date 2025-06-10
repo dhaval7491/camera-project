@@ -25,7 +25,7 @@ class ProjectDataTable extends DataTable
                     $initials .= strtoupper(substr($word, 0, 1));
                     if (strlen($initials) >= 2) break;
                 }
-            
+
                 return '
                     <div class="flex items-center">
                         <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
@@ -39,9 +39,8 @@ class ProjectDataTable extends DataTable
                 $color = $project->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$project->id}\" onclick=\"toggleProjectStatus({$project->id})\">{$status}</button>";
             })
-            ->addColumn('company_name', function ($project) {
-                // Fetch company name from the related company model
-                return $project->company ? $project->company->company_name : 'N/A';
+            ->editColumn('company_name', function ($project) {
+                return $project->company_name ?? 'N/A';
             })
             ->addColumn('action', function ($project) {
                 return '
@@ -66,7 +65,7 @@ class ProjectDataTable extends DataTable
                                 <li class="py-[5px]">
                                     <a href="javascript:void(0);" class="flex text-[#344563] text-[16px] manrope-medium">
                                         <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                        <p onclick="openCreateUserModal(' . $project->company->id . ','. $project->id .')">Add People</p>
+                                        <p onclick="openCreateUserModal(' . $project->company->id . ',' . $project->id . ')">Add People</p>
                                     </a>
                                 </li>
                                 <li class="py-[5px]">
@@ -98,7 +97,7 @@ class ProjectDataTable extends DataTable
             ->editColumn('created_at', function ($project) {
                 return $project->created_at->format('M d - Y');
             })
-            ->rawColumns(['name','status', 'action']);
+            ->rawColumns(['name', 'status', 'action']);
     }
 
     /**
@@ -109,7 +108,10 @@ class ProjectDataTable extends DataTable
      */
     public function query(Project $model)
     {
-        $query = $model->newQuery()->with('company');
+        $query = $model->newQuery()
+            ->select('projects.*', 'companies.company_name')
+            ->leftJoin('companies', 'projects.company_id', '=', 'companies.id')
+            ->with('company');
 
         // Apply company filter
         if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
@@ -123,7 +125,7 @@ class ProjectDataTable extends DataTable
 
         // Apply status filter
         if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('is_active', array_map(function($status) {
+            $query->whereIn('is_active', array_map(function ($status) {
                 return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Blocked' ? 2 : $status));
             }, request()->input('statuses')));
         }
@@ -139,14 +141,14 @@ class ProjectDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('projects-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->parameters([
-                        'dom' => 'Bfrtip',
-                        'buttons' => ['csv', 'excel', 'pdf', 'print'],
-                    ]);
+            ->setTableId('projects-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+            ]);
     }
 
     /**
@@ -158,10 +160,10 @@ class ProjectDataTable extends DataTable
     {
         return [
             'name' => ['title' => 'Project Name', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular',],
-            'company_name' => ['title' => 'Company' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'status' => ['title' => 'Status' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'created_at' => ['title' => 'Created At' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'status' => ['title' => 'Status', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false, 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
         ];
     }
 
