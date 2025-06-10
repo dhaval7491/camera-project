@@ -45,7 +45,7 @@ class ProjectDataTable extends DataTable
             })
             ->addColumn('action', function ($project) {
                 return '
-                    <div class="flex justify-center relative">
+                    <div class="flex justify-start relative">
                         <span>
                             <a href="javascript:void(0);" onclick="showEditModal(' . $project->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
@@ -159,9 +159,9 @@ class ProjectDataTable extends DataTable
         return [
             'name' => ['title' => 'Project Name', 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular',],
             'company_name' => ['title' => 'Company' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'status' => ['title' => 'Status' , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
+            'status' => ['title' => 'Status' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
             'created_at' => ['title' => 'Created At' , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-center text-[#3D3D3D] text-[15px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
         ];
     }
 

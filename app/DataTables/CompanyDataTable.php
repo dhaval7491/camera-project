@@ -46,15 +46,15 @@ class CompanyDataTable extends DataTable
             })
             ->addColumn('action', function ($company) {
                 return '
-                    <div class="flex justify-evenly relative">
+                    <div class="flex justify-start relative">
                         <span>
-                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px]"></a>
+                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
                         <span>
-                            <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] "></a>
+                            <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>
                         </span>
                         <span class="mt-[8px]">
-                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] " onclick="toggleDotDropdown(event, this)"></a>
+                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event, this)"></a>
                         </span>
                         <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
                             <ul>
@@ -144,9 +144,9 @@ class CompanyDataTable extends DataTable
             Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('created_at')->title('Date Created')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('location')->title('Location')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-center'),
+            Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
-            Column::make('action')->title('Action')->addClass('text-center')->orderable(false)->searchable(false),
+            Column::make('action')->title('Action')->addClass('text-left')->orderable(false)->searchable(false),
         ];
     }
 
