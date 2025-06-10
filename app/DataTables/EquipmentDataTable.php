@@ -95,7 +95,7 @@ class EquipmentDataTable extends DataTable
      */
     public function query(Equipment $model)
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select(
                 'equipments.id',
                 'equipments.equipment_name',
@@ -122,6 +122,35 @@ class EquipmentDataTable extends DataTable
                 'mappingAsTablet.company',
                 'mappingAsTablet.project',
             ]);
+
+        // Apply company filter
+        if (request()->has('equipment_company_filter') && !empty(request()->input('equipment_company_filter'))) {
+            $query->whereIn('mapping.company_id', request()->input('equipment_company_filter'));
+        }
+
+        // Apply project filter
+        if (request()->has('equipment_project_filter') && !empty(request()->input('equipment_project_filter'))) {
+            $query->whereIn('mapping.project_id', request()->input('equipment_project_filter'));
+        }
+
+        // Apply equipment filter (filter by equipment_id)
+        if (request()->has('equipment_id_filter') && !empty(request()->input('equipment_id_filter'))) {
+            $query->whereIn('equipments.id', request()->input('equipment_id_filter'));
+        }
+
+        // Apply plant filter
+        if (request()->has('equipment_plant_filter') && !empty(request()->input('equipment_plant_filter'))) {
+            $query->whereIn('projects.plant_name', request()->input('equipment_plant_filter'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('equipments.is_active', array_map(function ($status) {
+                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : $status);
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     /**

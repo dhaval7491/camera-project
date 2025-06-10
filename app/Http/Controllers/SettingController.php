@@ -79,7 +79,7 @@ class SettingController extends Controller
     }
 
     public function equipments(EquipmentDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 
     public function mappings(MappingDataTable $dataTable){

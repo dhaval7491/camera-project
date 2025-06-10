@@ -425,6 +425,46 @@
             width: '100%'
         });
 
+        // Apply filters function
+        function applyFilters() {
+            let companyIds = $('#equipment-company-filter').val() || [];
+            let projectIds = $('#equipment-project-filter').val() || [];
+            let equipmentIds = $('#equipment-equipment-filter').val() || [];
+            let plants = $('#equipment-plant-filter').val() || [];
+            let statuses = $('#equipment-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            equipmentTable.ajax.url('{{ route("settings.equipments") }}?' + $.param({
+                equipment_company_filter: companyIds,
+                equipment_project_filter: projectIds,
+                equipment_id_filter: equipmentIds,
+                equipment_plant_filter: plants,
+                statuses: statuses
+            })).load();
+        }
+
+        // Trigger filter on select2 change
+        $('#equipment-company-filter, #equipment-project-filter, #equipment-equipment-filter, #equipment-plant-filter, #equipment-status-filter').on('change', function() {
+            applyFilters();
+        });
+
+        // Search input handling
+        // $('#search-toggle').on('click', function() {
+        //     let searchInput = $('#search-input');
+        //     if (searchInput.hasClass('w-0')) {
+        //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+        //     } else {
+        //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+        //         equipmentTable.search('').draw(); // Clear search
+        //     }
+        // });
+
+        // $('#search-input').on('keyup', function() {
+        //     equipmentTable.search($(this).val()).draw();
+        // });
+
         // Track which DataTables have been initialized
         let initializedTables = {
             aiModel: false,
