@@ -97,6 +97,9 @@ class ProjectDataTable extends DataTable
             ->editColumn('created_at', function ($project) {
                 return $project->created_at->format('M d - Y');
             })
+            ->filterColumn('company_name', function($query, $keyword) {
+                $query->where('companies.company_name', 'like', "%{$keyword}%");
+            })
             ->orderColumn('status', 'is_active $1')
             ->rawColumns(['name', 'status', 'action']);
     }
@@ -110,9 +113,11 @@ class ProjectDataTable extends DataTable
     public function query(Project $model)
     {
         $query = $model->newQuery()
-            ->select('projects.*', 'companies.company_name')
             ->leftJoin('companies', 'projects.company_id', '=', 'companies.id')
-            ->with('company');
+            ->select([
+                'projects.*',
+                'companies.company_name as company_name',
+            ]);
 
         // Apply company filter
         if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {

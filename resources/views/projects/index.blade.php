@@ -318,11 +318,13 @@ $(document).ready(function() {
         let companyIds = $('#company-filter').val() || [];
         let plants = $('#plant-filter').val() || [];
         let statuses = $('#status-filter').val() || [];
+        let searchTerm = $('#search-input').val() || '';
 
         table.ajax.url('{{ route('projects.data') }}?' + $.param({
             company_ids: companyIds,
             plants: plants,
-            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked')
+            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked'),
+            'search[value]': searchTerm
         })).load();
     }
 
@@ -331,14 +333,20 @@ $(document).ready(function() {
         applyFilters();
     });
 
-    // Search input toggle
-    $('#search-toggle').click(function() {
-        const $input = $('#search-input');
-        if ($input.width() === 0) {
-            $input.css('width', '200px').css('padding', '8px 16px').focus();
+    // Search input handling
+    $('#search-toggle').on('click', function() {
+        let searchInput = $('#search-input');
+        if (searchInput.hasClass('w-0')) {
+            searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
         } else {
-            $input.css('width', '0').css('padding', '0');
+            searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+            table.search('').draw(); // Clear search when closing
         }
+    });
+
+    $('#search-input').on('keyup', function() {
+        let searchTerm = $(this).val();
+        table.search(searchTerm).draw(); // Apply search term
     });
 
     // Toggle dot dropdown for actions

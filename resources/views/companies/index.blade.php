@@ -319,11 +319,21 @@ $(document).ready(function() {
     $('#company-filter, #people-filter, #location-filter, #status-filter').on('change', function() {
         applyFilters();
     });
+    // Search input handling
+    $('#search-toggle').on('click', function() {
+        let searchInput = $('#search-input');
+        if (searchInput.hasClass('w-0')) {
+            searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+        } else {
+            searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+            table.search('').draw(); // Clear search when closing
+        }
+    });
 
-    // Reopen modal if there are validation errors
-    @if($errors -> any())
-    toggleModal('createCompanyModal');
-    @endif
+    $('#search-input').on('keyup', function() {
+        let searchTerm = $(this).val();
+        table.search(searchTerm).draw(); // Apply search term
+    });
 
     // Toggle dot dropdown for actions
     window.toggleDotDropdown = function(event) {
