@@ -61,6 +61,7 @@ class SettingController extends Controller
             'plants' => Project::distinct()->pluck('plant_name')->toArray(), // Or from Equipment if needed
             'equipments' => Equipment::pluck('equipment_name', 'id')->toArray(),
             'trackables' => Trackable::pluck('trackable_name', 'id')->toArray(),
+            'types' => Trackable::pluck('other_name')->toArray(),
             'cameras' => Equipment::where('type', 'camera')->pluck('equipment_name', 'id')->toArray(),
             'tablets' => Equipment::where('type', 'tablet')->pluck('equipment_name', 'id')->toArray(),
             'statuses' => [
@@ -83,10 +84,10 @@ class SettingController extends Controller
     }
 
     public function mappings(MappingDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 
     public function trackables(TrackableDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 }

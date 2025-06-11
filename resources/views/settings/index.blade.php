@@ -171,7 +171,9 @@
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
                                                     <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
-                                                        <option value="IPad">IPad</option>
+                                                        @foreach($tablets as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
@@ -232,7 +234,9 @@
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
                                                     <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
-                                                        <option value="Type">Type</option>
+                                                        @foreach($types as $type)
+                                                        <option value="{{ $type }}">{{ $type }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
@@ -445,9 +449,55 @@
             })).load();
         }
 
+        // Apply filters for Mapping table
+        function applyMappingFilters() {
+            let companyIds = $('#mapping-company-filter').val() || [];
+            let projectIds = $('#mapping-project-filter').val() || [];
+            let plants = $('#mapping-plant-filter').val() || [];
+            let tabletIds = $('#mapping-tablet-filter').val() || [];
+            let statuses = $('#mapping-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            mappingTable.ajax.url('{{ route("settings.mappings") }}?' + $.param({
+                mapping_company_filter: companyIds,
+                mapping_project_filter: projectIds,
+                mapping_plant_filter: plants,
+                mapping_tablet_filter: tabletIds,
+                statuses: statuses
+            })).load();
+        }
+
+        // Apply filters for Trackable table
+        function applyTrackableFilters() {
+            let trackableIds = $('#trackable-name-filter').val() || [];
+            let typeValues = $('#trackable-type-filter').val() || [];
+            let statuses = $('#trackable-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            trackableTable.ajax.url('{{ route("settings.trackables") }}?' + $.param({
+                trackable_name_filter: trackableIds,
+                trackable_type_filter: typeValues,
+                statuses: statuses
+            })).load();
+        }
+
         // Trigger filter on select2 change
         $('#equipment-company-filter, #equipment-project-filter, #equipment-equipment-filter, #equipment-plant-filter, #equipment-status-filter').on('change', function() {
             applyFilters();
+        });
+
+        // Trigger filter on select2 change for Mapping table
+        $('#mapping-company-filter, #mapping-project-filter, #mapping-plant-filter, #mapping-tablet-filter, #mapping-status-filter').on('change', function() {
+            applyMappingFilters();
+        });
+
+        // Trigger filter on select2 change for Trackable table
+        $('#trackable-name-filter, #trackable-type-filter, #trackable-status-filter').on('change', function() {
+            applyTrackableFilters();
         });
 
         // Search input handling

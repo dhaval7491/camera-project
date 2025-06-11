@@ -80,7 +80,7 @@ class MappingDataTable extends DataTable
 
     public function query(Mapping $model)
     {
-        return $model->newQuery()
+        $query = $model->newQuery()
             ->select(
                 'mapping.*',
                 'companies.company_name',
@@ -95,6 +95,34 @@ class MappingDataTable extends DataTable
             ->leftJoin('equipments as camera_equipment', 'mapping.camera_id', '=', 'camera_equipment.id')
             ->leftJoin('equipments as tablet_equipment', 'mapping.tablet_id', '=', 'tablet_equipment.id')
             ->with(['company', 'project']);
+        // Apply company filter
+        if (request()->has('mapping_company_filter') && !empty(request()->input('mapping_company_filter'))) {
+            $query->whereIn('mapping.company_id', request()->input('mapping_company_filter'));
+        }
+
+        // Apply project filter
+        if (request()->has('mapping_project_filter') && !empty(request()->input('mapping_project_filter'))) {
+            $query->whereIn('mapping.project_id', request()->input('mapping_project_filter'));
+        }
+
+        // Apply plant filter
+        if (request()->has('mapping_plant_filter') && !empty(request()->input('mapping_plant_filter'))) {
+            $query->whereIn('projects.plant_name', request()->input('mapping_plant_filter'));
+        }
+
+        // Apply tablet filter (filter by tablet_id)
+        if (request()->has('mapping_tablet_filter') && !empty(request()->input('mapping_tablet_filter'))) {
+            $query->whereIn('mapping.tablet_id', request()->input('mapping_tablet_filter'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('mapping.is_active', array_map(function ($status) {
+                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : $status);
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     public function html()

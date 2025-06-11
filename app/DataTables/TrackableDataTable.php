@@ -30,7 +30,7 @@ class TrackableDataTable extends DataTable
                     </div>';
             })
             ->editColumn('trackable_name', function ($trackable) {
-                return '<a href="' .route('trackables.show', $trackable->id). '"><p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p></a>';
+                return '<a href="' . route('trackables.show', $trackable->id) . '"><p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p></a>';
             })
             ->editColumn('other_name', function ($trackable) {
                 return '<p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->other_name . '</p>';
@@ -69,7 +69,7 @@ class TrackableDataTable extends DataTable
                     </div>';
             })
             ->orderColumn('status', 'is_active $1')
-            ->rawColumns(['checkbox','trackable_name', 'other_name', 'linked_objects', 'status', 'action']);
+            ->rawColumns(['checkbox', 'trackable_name', 'other_name', 'linked_objects', 'status', 'action']);
     }
 
     /**
@@ -77,7 +77,26 @@ class TrackableDataTable extends DataTable
      */
     public function query(Trackable $model): QueryBuilder
     {
-        return $model->newQuery()->with('linkedObjects');
+        $query = $model->newQuery()->with('linkedObjects');
+
+        // Apply trackable name filter
+        if (request()->has('trackable_name_filter') && !empty(request()->input('trackable_name_filter'))) {
+            $query->whereIn('trackables.id', request()->input('trackable_name_filter'));
+        }
+
+        // Apply type filter (other_name)
+        if (request()->has('trackable_type_filter') && !empty(request()->input('trackable_type_filter'))) {
+            $query->whereIn('trackables.other_name', request()->input('trackable_type_filter'));
+        }
+
+        // Apply status filter
+        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
+            $query->whereIn('trackables.is_active', array_map(function ($status) {
+                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : $status);
+            }, request()->input('statuses')));
+        }
+
+        return $query;
     }
 
     /**
@@ -86,14 +105,14 @@ class TrackableDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('trackables-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->parameters([
-                        'dom' => 'Bfrtip',
-                        'buttons' => ['csv', 'excel', 'pdf', 'print'],
-                    ]);
+            ->setTableId('trackables-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->parameters([
+                'dom' => 'Bfrtip',
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+            ]);
     }
 
     /**
@@ -112,10 +131,10 @@ class TrackableDataTable extends DataTable
             Column::make('linked_objects')->title('Linked Objects')->orderable(false),
             Column::make('status')->title('Status'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(200)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(200)
+                ->addClass('text-center'),
         ];
     }
 
