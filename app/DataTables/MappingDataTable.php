@@ -146,7 +146,7 @@ class MappingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('checkbox')->title('')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false),
+            Column::make('checkbox')->title('')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('project_name')->title('Project Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('plant_name')->title('Plant Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
@@ -154,7 +154,7 @@ class MappingDataTable extends DataTable
             Column::make('tablet_name')->title('Tablet Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('streaming_links')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false),
+            Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular relative')->orderable(false)->searchable(false),
         ];
     }
 

@@ -201,7 +201,7 @@ class EquipmentDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)
-                ->addClass('text-center'),
+                ->addClass('text-center relative'),
         ];
     }
 

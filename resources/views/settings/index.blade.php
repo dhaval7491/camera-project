@@ -3,8 +3,8 @@
 @section('content')
 <div class="">
     <div class="form-list">
-        <div class="flex justify-between items-center">
-            <div class="py-[10px] px-[25px] mt-[0px] flex">
+        <div class="flex justify-between items-center px-[25px]">
+            <div class="py-[10px] px-[0px] mt-[0px] flex">
                 <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
                 </button>
