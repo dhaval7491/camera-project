@@ -69,6 +69,9 @@ class UserDataTable extends DataTable
             ->editColumn('created_at', function ($user) {
                 return $user->created_at->format('F d, Y');
             })
+            ->filterColumn('company_name', function($query, $keyword) {
+                $query->where('companies.company_name', 'like', "%{$keyword}%");
+            })
             ->orderColumn('status', 'is_active $1')
             ->rawColumns(['name', 'status', 'action'])
             ->setRowId('id');

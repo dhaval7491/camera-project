@@ -382,6 +382,22 @@ $(document).ready(function() {
         applyFilters();
     });
 
+    // Search input handling
+    // $('#search-toggle').on('click', function() {
+    //     let searchInput = $('#search-input');
+    //     if (searchInput.hasClass('w-0')) {
+    //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+    //     } else {
+    //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+    //         table.search('').draw(); // Clear search when closing
+    //     }
+    // });
+
+    $('#search-input').on('keyup', function() {
+        let searchTerm = $(this).val();
+        table.search(searchTerm).draw(); // Apply search term
+    });
+
     window.toggleUserStatus = function(userId) {
         $.ajax({
             url: '{{ url("users") }}/' + userId + '/toggle-active',
