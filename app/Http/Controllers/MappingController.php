@@ -38,7 +38,10 @@ class MappingController extends Controller
     {
         $data = $request->validated();
         Mapping::create($data);
-        return redirect()->route('settings.index');
+        return response()->json([
+            'success' => true,
+            'message' => 'Mapping created successfully',
+        ]);
     }
 
     /**
