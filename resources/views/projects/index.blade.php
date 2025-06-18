@@ -313,6 +313,112 @@ $(document).ready(function() {
         }
     });
 
+    // jQuery Validation for Create Equipment Form
+    $('#createEquipmentForm').validate({
+            rules: {
+                type: {
+                    required: true
+                },
+                equipment_name: {
+                    required: true,
+                    minlength: 2
+                },
+                equipment_code: {
+                    required: true,
+                    minlength: 6
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                stream_link: {
+                    required: function(element) {
+                        return $('#createEquipmentForm input[name="type"]:checked').val() === 'camera';
+                    },
+                    url: true
+                }
+            },
+            messages: {
+                type: {
+                    required: "Please select an equipment type"
+                },
+                equipment_name: {
+                    required: "Please enter an equipment name",
+                    minlength: "Equipment name must be at least 2 characters long"
+                },
+                equipment_code: {
+                    required: "Please enter an equipment code",
+                    minlength: "Equipment code must be at least 6 characters long"
+                },
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must be at least 8 characters long"
+                },
+                stream_link: {
+                    required: "Please enter a streaming link for camera equipment",
+                    url: "Please enter a valid URL"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + (element.attr('name') === 'type' ? 'type_error' : element.attr('id') + '_error');
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+                if (element.attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + ($(element).attr('name') === 'type' ? 'type_error' : $(element).attr('id') + '_error');
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+                if ($(element).attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().removeClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Equipment Submission
+        $('#createEquipmentSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createEquipmentForm').valid()) {
+                var formData = new FormData($('#createEquipmentForm')[0]);
+                $.ajax({
+                    url: '{{ route("equipments.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createEquipmentModal');
+                        equipmentTable.ajax.reload(null, false);
+                        toastr.success('Equipment created successfully');
+                        $('#createEquipmentForm')[0].reset();
+                        $('#cameraFields').removeClass('hidden');
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                        $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating equipment:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'type' ? 'type_error' : key + '_error');
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                if (key === 'type') {
+                                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                                } else {
+                                    $('#' + key).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create equipment. Please try again.');
+                        }
+                    }
+                });
+            }
+        });
+
     // Apply filters to DataTable
     function applyFilters() {
         let companyIds = $('#company-filter').val() || [];
