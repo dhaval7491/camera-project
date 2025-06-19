@@ -25,21 +25,11 @@ class MappingDataTable extends DataTable
             ->editColumn('project_name', function ($mapping) {
                 return $mapping->project_name ?? 'N/A';
             })
-            ->editColumn('plant_name', function ($mapping) {
-                return $mapping->plant_name ?? 'N/A';
-            })
             ->editColumn('camera_name', function ($mapping) {
                 return $mapping->camera_name ?? 'N/A';
             })
             ->editColumn('tablet_name', function ($mapping) {
                 return $mapping->tablet_name ?? 'N/A';
-            })
-            ->editColumn('streaming_links', function ($mapping) {
-                return '
-                <div class="w-72 relative">
-                    <span class="truncate block w-full p-2 rounded">' . ($mapping->streaming_links ?? '-') . '</span>
-                    <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-icon absolute right-0 top-[20px] w-[23px] cursor-pointer">
-                </div>';
             })
             ->addColumn('status', function ($mapping) {
                 $status = $mapping->is_active ? 'Active' : 'Inactive';
@@ -75,7 +65,7 @@ class MappingDataTable extends DataTable
                 </div>';
             })
             ->orderColumn('status', 'is_active $1')
-            ->rawColumns(['checkbox', 'streaming_links', 'status', 'action']);
+            ->rawColumns(['checkbox', 'status', 'action']);
     }
 
     public function query(Mapping $model)
@@ -85,7 +75,6 @@ class MappingDataTable extends DataTable
                 'mapping.*',
                 'companies.company_name',
                 'projects.name as project_name',
-                'projects.plant_name',
                 'camera_equipment.equipment_name as camera_name',
                 'tablet_equipment.equipment_name as tablet_name',
                 'camera_equipment.stream_link as streaming_links'
@@ -103,11 +92,6 @@ class MappingDataTable extends DataTable
         // Apply project filter
         if (request()->has('mapping_project_filter') && !empty(request()->input('mapping_project_filter'))) {
             $query->whereIn('mapping.project_id', request()->input('mapping_project_filter'));
-        }
-
-        // Apply plant filter
-        if (request()->has('mapping_plant_filter') && !empty(request()->input('mapping_plant_filter'))) {
-            $query->whereIn('projects.plant_name', request()->input('mapping_plant_filter'));
         }
 
         // Apply tablet filter (filter by tablet_id)
@@ -149,10 +133,8 @@ class MappingDataTable extends DataTable
             Column::make('checkbox')->title('')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('project_name')->title('Project Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('plant_name')->title('Plant Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('camera_name')->title('Camera Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('tablet_name')->title('Tablet Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('streaming_links')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular relative')->orderable(false)->searchable(false),
         ];

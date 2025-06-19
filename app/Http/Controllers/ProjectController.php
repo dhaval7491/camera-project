@@ -17,7 +17,6 @@ class ProjectController extends Controller
     {
         return $dataTable->render('projects.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
-            'plants' => Project::distinct()->pluck('plant_name')->toArray(),
             'projects' => Project::pluck('name','id')->toArray(),
             'statuses' => [
                 1 => 'Active',

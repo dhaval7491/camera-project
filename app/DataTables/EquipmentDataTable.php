@@ -31,9 +31,6 @@ class EquipmentDataTable extends DataTable
             ->editColumn('project_name', function ($equipment) {
                 return $equipment->project_name ?? '-';
             })
-            ->editColumn('plant_name', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ($equipment->plant_name ?? '-') . '</p>';
-            })
             ->editColumn('equipment_type', function ($equipment) {
                 return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ucfirst($equipment->equipment_type) . '</p>';
             })
@@ -44,16 +41,6 @@ class EquipmentDataTable extends DataTable
                         . '</p>';
                 }
                 return '<p class="manrope-regular text-black font-normal text-[16px] text-center">-</p>';
-            })
-            ->editColumn('streaming_link', function ($equipment) {
-                if ($equipment->streaming_link) {
-                    return '
-                    <div class="w-72 relative">
-                        <span class="truncate block w-full p-2 rounded">' . $equipment->streaming_link . '</span>
-                        <img src="' . asset('admin-theme/assets/images/copy.png') . '" class="copy-streaming-link absolute right-0 top-[20px] w-[23px] cursor-pointer" data-link="' . $equipment->streaming_link . '">
-                    </div>';
-                }
-                return '-';
             })
             ->addColumn('status', function ($equipment) {
                 $status = $equipment->is_active ? 'Active' : 'Inactive';
@@ -84,7 +71,7 @@ class EquipmentDataTable extends DataTable
                 </div>';
             })
             ->orderColumn('status', 'is_active $1')
-            ->rawColumns(['plant_name', 'equipment_type', 'mapped_to', 'streaming_link', 'status', 'action']);
+            ->rawColumns(['equipment_type', 'mapped_to', 'status', 'action']);
     }
 
     /**
@@ -106,7 +93,6 @@ class EquipmentDataTable extends DataTable
                 'tablet_equipment.equipment_name as mapped_to',
                 'companies.company_name',
                 'projects.name as project_name',
-                'projects.plant_name'
             )
             ->leftJoin('mapping', 'equipments.id', '=', 'mapping.camera_id')
             ->leftJoin('equipments as tablet_equipment', 'mapping.tablet_id', '=', 'tablet_equipment.id')
@@ -136,11 +122,6 @@ class EquipmentDataTable extends DataTable
         // Apply equipment filter (filter by equipment_id)
         if (request()->has('equipment_id_filter') && !empty(request()->input('equipment_id_filter'))) {
             $query->whereIn('equipments.id', request()->input('equipment_id_filter'));
-        }
-
-        // Apply plant filter
-        if (request()->has('equipment_plant_filter') && !empty(request()->input('equipment_plant_filter'))) {
-            $query->whereIn('projects.plant_name', request()->input('equipment_plant_filter'));
         }
 
         // Apply status filter
@@ -192,10 +173,8 @@ class EquipmentDataTable extends DataTable
             Column::make('equipment_code')->title('Equipment Code')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('company_name')->title('Company Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('project_name')->title('Project Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('plant_name')->title('Plant Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('equipment_type')->title('Equipment Type')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('mapped_to')->title('Mapped To')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('streaming_link')->title('Streaming Links')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)

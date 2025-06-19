@@ -30,15 +30,6 @@
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 
-        <x-form-input
-            label="Add Plant"
-            type="text"
-            name="plant_name"
-            id="edit_plant_name"
-            placeholder="Enter Plant Name"
-            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
-
         <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer" onclick="toggleModal('editProjectModal')">
                 Cancel

@@ -95,13 +95,6 @@
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                                        @foreach($plants as $plant)
-                                                        <option value="{{ $plant }}">{{ $plant }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
                                                     <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                                                         @foreach($statuses as $id => $name)
                                                         <option value="{{ $id }}">{{ $name }}</option>
@@ -159,13 +152,6 @@
                                                     <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
                                                         @foreach($projects as $id => $name)
                                                         <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                                        @foreach($plants as $plant)
-                                                        <option value="{{ $plant }}">{{ $plant }}</option>
                                                         @endforeach
                                                     </select>
                                                 </p>
@@ -434,7 +420,6 @@
             let companyIds = $('#equipment-company-filter').val() || [];
             let projectIds = $('#equipment-project-filter').val() || [];
             let equipmentIds = $('#equipment-equipment-filter').val() || [];
-            let plants = $('#equipment-plant-filter').val() || [];
             let statuses = $('#equipment-status-filter').val() || [];
 
             // Map status values to Active/Inactive
@@ -444,7 +429,6 @@
                 equipment_company_filter: companyIds,
                 equipment_project_filter: projectIds,
                 equipment_id_filter: equipmentIds,
-                equipment_plant_filter: plants,
                 statuses: statuses
             })).load();
         }
@@ -453,7 +437,6 @@
         function applyMappingFilters() {
             let companyIds = $('#mapping-company-filter').val() || [];
             let projectIds = $('#mapping-project-filter').val() || [];
-            let plants = $('#mapping-plant-filter').val() || [];
             let tabletIds = $('#mapping-tablet-filter').val() || [];
             let statuses = $('#mapping-status-filter').val() || [];
 
@@ -463,7 +446,6 @@
             mappingTable.ajax.url('{{ route("settings.mappings") }}?' + $.param({
                 mapping_company_filter: companyIds,
                 mapping_project_filter: projectIds,
-                mapping_plant_filter: plants,
                 mapping_tablet_filter: tabletIds,
                 statuses: statuses
             })).load();

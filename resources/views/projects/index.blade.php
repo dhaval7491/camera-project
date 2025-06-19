@@ -51,13 +51,6 @@
                     </select>
                 </p>
                 <p class="flex items-center mr-[8px]">
-                    <select id="plant-filter" multiple class="filter-select w-[80px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant">
-                        @foreach($plants as $plant)
-                            <option value="{{ $plant }}">{{ $plant }}</option>
-                        @endforeach
-                    </select>
-                </p>
-                <p class="flex items-center mr-[8px]">
                     <select id="status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                         @foreach($statuses as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
@@ -157,10 +150,6 @@ $(document).ready(function() {
             location: {
                 required: true,
                 minlength: 2
-            },
-            plant_name: {
-                required: true,
-                minlength: 2
             }
         },
         messages: {
@@ -174,10 +163,6 @@ $(document).ready(function() {
             location: {
                 required: "Please enter a location",
                 minlength: "Location must be at least 2 characters long"
-            },
-            plant_name: {
-                required: "Please enter a plant name",
-                minlength: "Plant name must be at least 2 characters long"
             }
         },
         errorPlacement: function(error, element) {
@@ -205,10 +190,6 @@ $(document).ready(function() {
             location: {
                 required: true,
                 minlength: 2
-            },
-            plant_name: {
-                required: true,
-                minlength: 2
             }
         },
         messages: {
@@ -222,10 +203,6 @@ $(document).ready(function() {
             location: {
                 required: "Please enter a location",
                 minlength: "Location must be at least 2 characters long"
-            },
-            plant_name: {
-                required: "Please enter a plant name",
-                minlength: "Plant name must be at least 2 characters long"
             }
         },
         errorPlacement: function(error, element) {
