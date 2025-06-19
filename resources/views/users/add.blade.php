@@ -79,7 +79,7 @@
             </div>
 
             <!-- Image Upload -->
-            <div class="flex flex-wrap mb-[15px]">
+            <!-- <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="image" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Upload Image</label>
                 </div>
@@ -87,7 +87,7 @@
                     <input type="file" name="image" id="image" class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]">
                     <div id="image_error" class="text-red-500 text-sm hidden"></div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="cancelCreateUserModal()"

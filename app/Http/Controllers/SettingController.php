@@ -57,8 +57,7 @@ class SettingController extends Controller
     ){
         return view('settings.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(),
-            'projects' => Project::pluck('name', 'id')->toArray(),
-            'plants' => Project::distinct()->pluck('plant_name')->toArray(), // Or from Equipment if needed
+            'projects' => Project::pluck('name', 'id')->toArray(),// Or from Equipment if needed
             'equipments' => Equipment::pluck('equipment_name', 'id')->toArray(),
             'trackables' => Trackable::pluck('trackable_name', 'id')->toArray(),
             'types' => Trackable::pluck('other_name')->toArray(),
