@@ -8,9 +8,6 @@
                 name="company_id"
                 id="company_id"
                 :options="$companies" />
-            @error('company_id')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
 
             <x-form-input
                 label="Project Name"
@@ -18,19 +15,6 @@
                 name="project_id"
                 id="project_id"
                 :options="$projects" />
-            @error('project_id')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-
-            <x-form-input
-                label="Camera Name"
-                type="select"
-                name="camera_id"
-                id="camera_id"
-                :options="$cameras" />
-            @error('camera_id')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
 
             <x-form-input
                 label="Tablet Name"
@@ -38,9 +22,13 @@
                 name="tablet_id"
                 id="tablet_id"
                 :options="$tablets" />
-            @error('camera_id')
-            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+
+            <x-form-input
+                label="Camera Name"
+                type="select"
+                name="camera_id"
+                id="camera_id"
+                :options="$cameras" />
 
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="cancelCreateMappingModal()"
