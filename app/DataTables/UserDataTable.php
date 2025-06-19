@@ -49,9 +49,6 @@ class UserDataTable extends DataTable
                         <li class="py-[5px]"><a href="' . route('users.show', $user->id) . '" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
                             <img src="' . asset('admin-theme/assets/images/view.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
-                         <li class="py-[5px]"><a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="toggleModal(\'createProjectModal\', ' . $user->id . ')">
-                            <img src="' . asset('admin-theme/assets/images/project.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain" ></a>
-                        </li>
                         <li class="py-[5px]"><a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $user->id . ')">
                             <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
