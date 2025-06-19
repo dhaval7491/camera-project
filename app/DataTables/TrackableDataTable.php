@@ -106,11 +106,11 @@ class TrackableDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('trackable_name')->title('Trackable Name'),
-            Column::make('other_name')->title('Other Name'),
-            Column::make('linked_objects')->title('Linked Objects'),
-            Column::make('status')->title('Status'),
-            Column::computed('action')
+                Column::make('trackable_name')->title('Trackable Name'),
+                Column::make('other_name')->title('Other Name'),
+                Column::make('linked_objects')->title('Linked Objects'),
+                Column::make('status')->title('Status'),
+                Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->width(200)
