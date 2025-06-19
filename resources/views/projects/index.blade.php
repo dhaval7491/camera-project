@@ -419,6 +419,139 @@ $(document).ready(function() {
             }
         });
 
+
+        // jQuery Validation for Create Trackable Form
+        $('#createTrackableForm').validate({
+            rules: {
+                trackable_name: {
+                    required: true,
+                    minlength: 2
+                },
+                other_name: {
+                    minlength: 2
+                },
+                'linked_objects[]': {
+                    required: true,
+                    minlength: 1
+                }
+            },
+            messages: {
+                trackable_name: {
+                    required: "Please enter a trackable name",
+                    minlength: "Trackable name must be at least 2 characters long"
+                },
+                other_name: {
+                    minlength: "Other name must be at least 2 characters long"
+                },
+                'linked_objects[]': {
+                    required: "Please add at least one linked object",
+                    minlength: "Each linked object must be at least 1 character long"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + element.attr('name').replace(/\[\]/g, '') + '_error';
+                if (element.attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').text(error.text()).removeClass('hidden');
+                    element.closest('.input-group').find('input').addClass('input-error');
+                } else {
+                    $(errorDiv).text(error.text()).removeClass('hidden');
+                    element.addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('name').replace(/\[\]/g, '') + '_error';
+                if ($(element).attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').addClass('hidden').text('');
+                    $(element).closest('.input-group').find('input').removeClass('input-error');
+                } else {
+                    $(errorDiv).addClass('hidden').text('');
+                    $(element).removeClass('input-error');
+                }
+            },
+            // Ensure validation checks all linked object inputs
+            ignore: [],
+            invalidHandler: function(event, validator) {
+                // Ensure linked_objects[] is validated correctly
+                var linkedObjects = $('input[name="linked_objects[]"]');
+                var hasValue = false;
+                linkedObjects.each(function() {
+                    if ($(this).val().trim().length > 0) {
+                        hasValue = true;
+                    }
+                });
+                if (!hasValue) {
+                    $('#linked_objects_error').text('Please add at least one linked object').removeClass('hidden');
+                    linkedObjects.addClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Trackable Submission
+        $('#createTrackableSubmit').on('click', function(e) {
+            e.preventDefault();
+            // Manually validate linked_objects
+            var linkedObjects = $('input[name="linked_objects[]"]');
+            var validLinkedObjects = true;
+            linkedObjects.each(function() {
+                if ($(this).val().trim().length === 0) {
+                    $(this).addClass('input-error');
+                    validLinkedObjects = false;
+                } else {
+                    $(this).removeClass('input-error');
+                }
+            });
+            if (!validLinkedObjects) {
+                $('#linked_objects_error').text('Please fill in all linked objects or remove empty ones').removeClass('hidden');
+            } else {
+                $('#linked_objects_error').addClass('hidden').text('');
+            }
+
+            if ($('#createTrackableForm').valid() && validLinkedObjects) {
+                var formData = new FormData($('#createTrackableForm')[0]);
+                $.ajax({
+                    url: '{{ route("trackables.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createTrackableModal');
+                        trackableTable.ajax.reload(null, false);
+                        toastr.success('Trackable created successfully');
+                        $('#createTrackableForm')[0].reset();
+                        $('#linkedObjectsContainer').html(`
+                            <div class="flex align-middle input-group">
+                                <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Linked Object">
+                                <button type="button" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" onclick="addNewLinkedObjectField('#linkedObjectsContainer', 'linked_objects[]')">
+                                    <img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">
+                                </button>
+                            </div>
+                        `);
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating trackable:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key.replace(/\.\d+/g, '') + '_error';
+                                if (key.startsWith('linked_objects')) {
+                                    $('#linked_objects_error').text(error[0]).removeClass('hidden');
+                                    $('input[name="linked_objects[]"]').addClass('input-error');
+                                } else {
+                                    $(errorDiv).text(error[0]).removeClass('hidden');
+                                    $('#' + key.replace(/\.\d+/g, '')).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create trackable');
+                        }
+                    }
+                });
+            }
+        });
+
     // Apply filters to DataTable
     function applyFilters() {
         let companyIds = $('#company-filter').val() || [];
