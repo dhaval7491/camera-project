@@ -268,8 +268,7 @@ $(document).ready(function() {
                 minlength: "Location must be at least 2 characters long"
             },
             access_level: {
-                required: "Please enter an access level",
-                minlength: "Access level must be at least 2 characters long"
+                required: "Please select an access level",
             },
             image: {
                 extension: "Please upload a valid image file (jpg, jpeg, png, gif)"

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Models\Company;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class ProjectController extends Controller
 {
@@ -18,6 +19,7 @@ class ProjectController extends Controller
         return $dataTable->render('projects.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
             'projects' => Project::pluck('name','id')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
                 0 => 'Inactive'

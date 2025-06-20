@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -25,6 +26,7 @@ class UserController extends Controller
             'companies' => Company::pluck('company_name', 'id')->toArray(),
             'projects' => Project::pluck('name', 'id')->toArray(),
             'users' => User::pluck('name', 'id')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
                 0 => 'Inactive'
@@ -53,7 +55,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         // dd($request);
-        Log::info("request",$request->all());
+        Log::info("request", $request->all());
         $data = $request->validated();
 
         // Handle image upload if present
@@ -75,10 +77,18 @@ class UserController extends Controller
             'is_active' => 1,
         ]);
 
-        // Assign default role
+        // Assign default "user" role
         $userRole = Role::where('name', 'user')->first();
         if ($userRole) {
             $user->assignRole($userRole);
+        }
+
+        // ✅ Assign permission from access_level
+        if (!empty($data['access_level'])) {
+            $permission = Permission::where('id', $data['access_level'])->first();
+            if ($permission) {
+                $user->givePermissionTo($permission);
+            }
         }
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
