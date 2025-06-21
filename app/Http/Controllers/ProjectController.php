@@ -46,7 +46,8 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $validated = $request->validated();
-        Project::create($validated);
+        $project = Project::create($validated);
+        $project->companies()->sync($request->companies);
         return redirect()->route('projects.index');
     }
 
@@ -69,7 +70,7 @@ class ProjectController extends Controller
             return response()->json([
                 'id' => $project->id,
                 'name' => $project->name,
-                'company_id' => $project->company_id,
+                'company_ids' => $project->companies->pluck('id')->toArray(),
                 'location' => $project->location,
                 'plant_name' => $project->plant_name,
             ]);
@@ -84,6 +85,7 @@ class ProjectController extends Controller
         $validated = $request->validated();
         $project = Project::findOrFail($id);
         $project->update($validated);
+        $project->companies()->sync($request->companies);
         return redirect()->route('projects.index');
     }
 

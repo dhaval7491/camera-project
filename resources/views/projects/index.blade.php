@@ -138,13 +138,13 @@ $(document).ready(function() {
     });
 
     // jQuery Validation for Create Project Form
-    $('#createProjectForm').validate({
+     $('#createProjectForm').validate({
         rules: {
             name: {
                 required: true,
                 minlength: 2
             },
-            company_id: {
+            companies: {
                 required: true
             },
             location: {
@@ -157,48 +157,8 @@ $(document).ready(function() {
                 required: "Please enter a project name",
                 minlength: "Project name must be at least 2 characters long"
             },
-            company_id: {
-                required: "Please select a company"
-            },
-            location: {
-                required: "Please enter a location",
-                minlength: "Location must be at least 2 characters long"
-            }
-        },
-        errorPlacement: function(error, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).text(error.text()).removeClass('hidden');
-            $(element).addClass('input-error');
-        },
-        success: function(label, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).addClass('hidden');
-            $(element).removeClass('input-error');
-        }
-    });
-
-    // jQuery Validation for Edit Project Form
-    $('#editProjectForm').validate({
-        rules: {
-            name: {
-                required: true,
-                minlength: 2
-            },
-            company_id: {
-                required: true
-            },
-            location: {
-                required: true,
-                minlength: 2
-            }
-        },
-        messages: {
-            name: {
-                required: "Please enter a project name",
-                minlength: "Project name must be at least 2 characters long"
-            },
-            company_id: {
-                required: "Please select a company"
+            companies: {
+                required: "Please select at least one company"
             },
             location: {
                 required: "Please enter a location",
@@ -222,7 +182,11 @@ $(document).ready(function() {
         e.preventDefault();
         if ($('#editProjectForm').valid()) {
             var formData = new FormData($('#editProjectForm')[0]);
+            formData.append('_method', 'PUT');
             var projectId = $('#edit_project_id').val();
+            $('.edit-text').addClass('hidden');
+            $('.edit-spinner').removeClass('hidden');
+            $('#editProjectSubmit').prop('disabled', true);
             $.ajax({
                 url: '{{ url("projects") }}/' + projectId,
                 method: 'POST',
@@ -234,6 +198,7 @@ $(document).ready(function() {
                     table.ajax.reload(null, false);
                     toastr.success('Project updated successfully');
                     $('#editProjectForm')[0].reset();
+                    $('#edit_companies').val(null).trigger('change');
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
                 },
@@ -242,23 +207,31 @@ $(document).ready(function() {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
+                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
                             $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
+                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
                         });
                     } else {
                         toastr.error('Failed to update project. Please try again.');
                     }
+                },
+                complete: function() {
+                    $('.edit-text').removeClass('hidden');
+                    $('.edit-spinner').addClass('hidden');
+                    $('#editProjectSubmit').prop('disabled', false);
                 }
             });
         }
     });
 
-    // Handle Create Project button click
+    // Handle Edit Project button click
     $('#createProjectSubmit').on('click', function(e) {
         e.preventDefault();
         if ($('#createProjectForm').valid()) {
             var formData = new FormData($('#createProjectForm')[0]);
+            $('.create-text').addClass('hidden');
+            $('.create-spinner').removeClass('hidden');
+            $('#createProjectSubmit').prop('disabled', true);
             $.ajax({
                 url: '{{ route('projects.store') }}',
                 method: 'POST',
@@ -270,6 +243,7 @@ $(document).ready(function() {
                     table.ajax.reload(null, false);
                     toastr.success('Project created successfully');
                     $('#createProjectForm')[0].reset();
+                    $('#companies').val(null).trigger('change');
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
                 },
@@ -278,13 +252,18 @@ $(document).ready(function() {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key) + '_error';
+                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key) + '_error';
                             $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key)).addClass('input-error');
+                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key)).addClass('input-error');
                         });
                     } else {
                         toastr.error('Failed to create project. Please try again.');
                     }
+                },
+                complete: function() {
+                    $('.create-text').removeClass('hidden');
+                    $('.create-spinner').addClass('hidden');
+                    $('#createProjectSubmit').prop('disabled', false);
                 }
             });
         }
@@ -599,7 +578,7 @@ $(document).ready(function() {
                 // Populate the edit modal fields
                 $('#edit_project_id').val(response.id);
                 $('#edit_project_name').val(response.name);
-                $('#edit_project_company_id').val(response.company_id);
+                $('#edit_companies').val(response.company_ids).trigger('change');
                 $('#edit_location').val(response.location);
                 $('#edit_plant_name').val(response.plant_name);
                 $('#editProjectForm').attr('action', '{{ url("projects") }}/' + response.id);

@@ -23,9 +23,8 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'company_id' => 'required|exists:companies,id',
-            'user_id' => 'nullable|exists:users,id',
-            'location' => 'required|string|max:255'
+            'companies' => 'required|array',
+            'location' => 'nullable|string'
         ];
     }
 
@@ -36,10 +35,7 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'name.required' => 'The project name is required.',
-            'company_id.required' => 'Please select a company.',
-            'company_id.exists' => 'The selected company does not exist.',
-            'location.required' => 'The location is required.',
-            'plant_name.required' => 'The plant name is required.',
+            'companies.required' => 'Please select at least one company.',
         ];
     }
 }

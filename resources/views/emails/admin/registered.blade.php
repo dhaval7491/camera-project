@@ -6,13 +6,6 @@ You have been successfully registered as the admin for **{{ $companyName }}**.
 
 ---
 
-### 🎯 Admin Panel Access Details:
-
-**Email**: {{ $admin->email }}  
-**Password**: {{ $password }}
-
----
-
 <x-mail::button :url="url('/login')">
 Go to Admin Panel
 </x-mail::button>

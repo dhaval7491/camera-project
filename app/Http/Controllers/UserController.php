@@ -91,6 +91,8 @@ class UserController extends Controller
             }
         }
 
+        $user->projects()->sync($request->projects);
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 

@@ -14,10 +14,11 @@
 
         <x-form-input
             label="Company Name"
-            type="select"
-            name="company_id"
-            id="edit_project_company_id"
+            type="select2"
+            name="companies"
+            id="edit_companies"
             :options="$companies"
+            :multiple="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 
