@@ -7,7 +7,8 @@
 'id' => '',
 'options' => [], // Array to handle select options
 'labelclass' => 'block text-[15px] manrope-regular text-[#000000]', // Added default label class
-'multiple' => false // Added multiple prop for select2
+'multiple' => false, // Added multiple prop for select2
+'readonly' => false
 ])
 
 <div class="flex flex-wrap mb-[15px]">
@@ -76,6 +77,7 @@
             name="{{ $name }}"
             id="{{ $id }}"
             placeholder="{{ $placeholder }}"
+            @if($readonly) readonly @endif
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px] {{ $class }}" />
         <div id="{{ $id }}_error" class="text-red-500 text-sm hidden"></div>
         @endif

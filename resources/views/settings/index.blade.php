@@ -23,7 +23,7 @@
             </div>
             <button id="add-equipment-btn"
                 class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModal('createEquipmentModal')" style="height:43px;">
+                onclick="openCreateEquipmentModal()" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
             <button id="create-mapping-btn"
@@ -573,19 +573,9 @@
                     required: true,
                     minlength: 2
                 },
-                equipment_code: {
-                    required: true,
-                    minlength: 6
-                },
                 password: {
                     required: true,
                     minlength: 8
-                },
-                stream_link: {
-                    required: function(element) {
-                        return $('#createEquipmentForm input[name="type"]:checked').val() === 'camera';
-                    },
-                    url: true
                 }
             },
             messages: {
@@ -596,17 +586,9 @@
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
                 },
-                equipment_code: {
-                    required: "Please enter an equipment code",
-                    minlength: "Equipment code must be at least 6 characters long"
-                },
                 password: {
                     required: "Please enter a password",
                     minlength: "Password must be at least 8 characters long"
-                },
-                stream_link: {
-                    required: "Please enter a streaming link for camera equipment",
-                    url: "Please enter a valid URL"
                 }
             },
             errorPlacement: function(error, element) {
@@ -624,6 +606,49 @@
                 if ($(element).attr('name') === 'type') {
                     $('#createEquipmentForm input[name="type"]').parent().removeClass('input-error');
                 }
+            },
+            ignore: '#equipment_code' // Skip validation for equipment_code
+        });
+
+        // Function to fetch and set equipment code
+        function fetchEquipmentCode(type) {
+            $.ajax({
+                url: '{{ route("equipments.generate-code") }}',
+                method: 'POST',
+                data: {
+                    type: type,
+                    _token: '{{ csrf_token() }}' // Include CSRF token for POST
+                },
+                success: function(response) {
+                    $('#equipment_code').val(response.equipment_code);
+                },
+                error: function(xhr) {
+                    console.error('Error fetching equipment code:', xhr);
+                    toastr.error('Failed to generate equipment code');
+                }
+            });
+        }
+
+        // Open Create Equipment Modal and Fetch Equipment Code
+        window.openCreateEquipmentModal = function() {
+            $('#createEquipmentForm')[0].reset();
+            $('#cameraFields').removeClass('hidden');
+            $('.text-red-500').addClass('hidden');
+            $('input').removeClass('input-error');
+            $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+            fetchEquipmentCode('camera');
+            toggleModal('createEquipmentModal');
+        };
+
+        // Update equipment code when type changes
+        $('#createEquipmentForm input[name="type"]').on('change', function() {
+            fetchEquipmentCode($(this).val());
+            if ($(this).val() === 'camera') {
+                $('#cameraFields').removeClass('hidden');
+            } else {
+                $('#cameraFields').addClass('hidden');
+                $('#stream_link').val('').removeClass('input-error');
+                $('#stream_link_error').addClass('hidden').text('');
             }
         });
 
@@ -632,6 +657,7 @@
             e.preventDefault();
             if ($('#createEquipmentForm').valid()) {
                 var formData = new FormData($('#createEquipmentForm')[0]);
+                // formData.delete('equipment_code'); // Remove client-side code as server generates it
                 $.ajax({
                     url: '{{ route("equipments.store") }}',
                     method: 'POST',
@@ -643,10 +669,10 @@
                         equipmentTable.ajax.reload(null, false);
                         toastr.success('Equipment created successfully');
                         $('#createEquipmentForm')[0].reset();
-                        $('#cameraFields').removeClass('hidden');
                         $('.text-red-500').addClass('hidden');
                         $('input').removeClass('input-error');
                         $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+                        fetchEquipmentCode('camera'); // Reset with new code
                     },
                     error: function(xhr) {
                         console.error('Error creating equipment:', xhr);
@@ -679,10 +705,6 @@
                     required: true,
                     minlength: 2
                 },
-                equipment_code: {
-                    required: true,
-                    minlength: 6
-                },
                 password: {
                     minlength: 8
                 },
@@ -700,10 +722,6 @@
                 equipment_name: {
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
-                },
-                equipment_code: {
-                    required: "Please enter an equipment code",
-                    minlength: "Equipment code must be at least 6 characters long"
                 },
                 password: {
                     minlength: "Password must be at least 8 characters long"
@@ -728,7 +746,8 @@
                 if ($(element).attr('name') === 'type') {
                     $('#editEquipmentForm input[name="type"]').parent().removeClass('input-error');
                 }
-            }
+            },
+            ignore: '#edit_equipment_code' // Skip validation for equipment_code
         });
 
         // Handle Edit Equipment Submission
@@ -1063,32 +1082,6 @@
             }
         });
 
-
-
-        // Toggle camera fields for Create Equipment modal
-        $('#createEquipmentForm input[name="type"]').on('change', function() {
-            if ($(this).val() === 'camera') {
-                $('#cameraFields').removeClass('hidden');
-            } else {
-                $('#cameraFields').addClass('hidden');
-                $('#stream_link').val('').removeClass('input-error');
-                $('#stream_link_error').addClass('hidden').text('');
-            }
-        });
-
-        // Toggle camera fields for Edit Equipment modal
-        $('#editEquipmentForm input[name="type"]').on('change', function() {
-            if ($(this).val() === 'camera') {
-                $('#editCameraFields').removeClass('hidden');
-                $('#edit_stream_link').val('');
-                $('#edit_stream_link_error').addClass('hidden').text('');
-            } else {
-                $('#editCameraFields').addClass('hidden');
-                $('#edit_stream_link').val('').removeClass('input-error');
-                $('#edit_stream_link_error').addClass('hidden').text('');
-            }
-        });
-
         // Cancel Create Equipment Modal
         window.cancelCreateEquipmentModal = function() {
             $('#createEquipmentForm')[0].reset();
@@ -1183,7 +1176,6 @@
                     // Populate the edit modal fields
                     $('#edit_equipment_id').val(response.id);
                     $('#edit_equipment_name').val(response.equipment_name);
-                    $('#edit_stream_link').val(response.stream_link);
                     $('#edit_equipment_code').val(response.equipment_code);
                     $('#editEquipmentForm').attr('action', '{{ url("equipments") }}/' + response.id);
 

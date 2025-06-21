@@ -65,6 +65,8 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::get('/streams/{camera_id}', [LiveStreamController::class, 'show'])->name('streams.show');
+    Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
+    Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
 });
 
 Route::prefix('signaling')->group(function () {

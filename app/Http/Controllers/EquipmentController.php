@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Equipment;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class EquipmentController extends Controller
 {
@@ -25,6 +26,34 @@ class EquipmentController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * Generate a unique equipment code via POST
+     */
+    public function generateEquipmentCode(Request $request)
+    {
+        $request->validate([
+            'type' => ['required', 'in:camera,tablet']
+        ]);
+
+        $type = $request->input('type');
+        $code = $this->generateUniqueEquipmentCode($type);
+        return response()->json(['equipment_code' => $code]);
+    }
+
+    /**
+     * Generate a unique equipment code
+     */
+    private function generateUniqueEquipmentCode($type): string
+    {
+        $prefix = $type === 'camera' ? 'CAM' : 'TAB';
+        do {
+            $number = rand(100, 999);
+            $letters = strtoupper(Str::random(3));
+            $code = "$prefix-$number-$letters";
+        } while (Equipment::where('equipment_code', $code)->exists());
+        return $code;
     }
 
     /**
@@ -59,11 +88,7 @@ class EquipmentController extends Controller
                 'id' => $equipment->id,
                 'type' => $equipment->type,
                 'equipment_name' => $equipment->equipment_name,
-                'stream_link' => $equipment->stream_link,
                 'equipment_code' => $equipment->equipment_code,
-                'company_id' => $equipment->company_id,
-                'project_id' => $equipment->project_id,
-                'plant_name' => $equipment->plant_name,
             ]);
         }
     }
