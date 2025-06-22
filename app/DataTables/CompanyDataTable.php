@@ -20,7 +20,7 @@ class CompanyDataTable extends DataTable
                     $initials .= strtoupper(substr($word, 0, 1));
                     if (strlen($initials) >= 2) break;
                 }
-            
+
                 return '
                     <div class="flex items-center">
                         <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
@@ -35,14 +35,24 @@ class CompanyDataTable extends DataTable
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
             })
             ->addColumn('people', function ($company) {
-                return '
-                    <div class="people-profile flex justify-center">
-                        <img src="' . asset('admin-theme/assets/images/people-1.png') . '" class="w-[30px] h-[30px] object-contain">
-                        <img src="' . asset('admin-theme/assets/images/people-2.png') . '" class="ml-[-10px]">
-                        <img src="' . asset('admin-theme/assets/images/people-3.png') . '" class="ml-[-10px]">
-                        <img src="' . asset('admin-theme/assets/images/people-4.png') . '" class="ml-[-10px]">
-                        <span class="bg-[#437651] text-white w-[30px] h-[30px] rounded-[20px] p-[5px] manrope-medium">2+</span>
-                    </div>';
+                $users = $company->users()->take(5)->get(); // get up to 5 to calculate overflow
+                $count = $users->count();
+
+                $avatars = '';
+                $maxDisplay = 4;
+
+                foreach ($users->take($maxDisplay) as $index => $user) {
+                    $margin = $index === 0 ? '' : 'ml-[-10px]';
+                    $avatarText = strtoupper(substr($user->name, 0, 1)); // fallback
+                    $avatars .= '<div class="w-[30px] h-[30px] rounded-full bg-[#004040] text-white flex items-center justify-center text-sm ' . $margin . '" title="' . e($user->name) . '">' . $avatarText . '</div>';
+                }
+
+                if ($count > $maxDisplay) {
+                    $extra = $count - $maxDisplay;
+                    $avatars .= '<span class="ml-[-10px] bg-[#437651] text-white w-[30px] h-[30px] rounded-full flex items-center justify-center text-sm manrope-medium">+' . $extra . '</span>';
+                }
+
+                return '<div class="people-profile flex justify-center">' . $avatars . '</div>';
             })
             ->addColumn('action', function ($company) {
                 return '
@@ -88,7 +98,7 @@ class CompanyDataTable extends DataTable
                 return $company->created_at->format('M d - Y');
             })
             ->orderColumn('status', 'is_active $1')
-            ->rawColumns(['company_name','status', 'people', 'action']);
+            ->rawColumns(['company_name', 'status', 'people', 'action']);
     }
 
     public function query(Company $model)
@@ -114,7 +124,7 @@ class CompanyDataTable extends DataTable
 
         // Apply status filter
         if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('is_active', array_map(function($status) {
+            $query->whereIn('is_active', array_map(function ($status) {
                 return $status == 'Active' ? 1 : 0;
             }, request()->input('statuses')));
         }

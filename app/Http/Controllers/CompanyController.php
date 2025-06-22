@@ -59,6 +59,7 @@ class CompanyController extends Controller
             'name' => $data['admin_name'],
             'email' => $data['admin_email'],
             'password' => bcrypt($data['admin_password']),
+            'access_level' => 'company'
         ]);
 
         $superadmin_role = Role::where('name', 'superadmin')->first();
@@ -85,7 +86,7 @@ class CompanyController extends Controller
             'location' => $data['location'],
             'admin_id' => $admin->id,
         ]);
-
+        $admin->companies()->syncWithoutDetaching([$company->id]);
         // ✅ Send email to admin
         Mail::to($admin->email)->send(new AdminRegisteredMail(
             $admin,

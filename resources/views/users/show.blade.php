@@ -31,9 +31,9 @@
                         <img src="{{ $user->profile_image ?? asset('admin-theme/assets/images/profile-dummy.png') }}" class="w-[80%] mx-auto object-contain rounded-full">
                     </div>
                     <div class="w-full bg-[#4cbc9a65] rounded-full h-2.5 mt-[20px]">
-                        <div class="bg-[#78BF41] h-2.5 rounded-full" style="width: {{ $user->progress ?? 45 }}%"></div>
+                        <div class="bg-[#78BF41] h-2.5 rounded-full" style="width:45"></div>
                     </div>
-                    <p class="manrope-regular text-[13px] text-[#78BF41] mt-[5px]">In progress {{ $user->progress ?? 80 }}%</p>
+                    <p class="manrope-regular text-[13px] text-[#78BF41] mt-[5px]">In progress%</p>
                 </div>
                 <div class="lg:w-8/9 w-full pl-[15px] pr-[10px]">
                     <h3 class="manrope-regular text-[16px] ml-[5px]">{{ $user->name }}</h3>
