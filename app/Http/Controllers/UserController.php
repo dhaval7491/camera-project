@@ -103,8 +103,11 @@ class UserController extends Controller
     public function show(User $user)
     {
         $companies = Company::pluck('company_name', 'id')->toArray();
-        $projects = Project::select('id', 'name')->where('user_id', $user->id)->get();
-        return view('users.show', compact('user', 'companies', 'projects'));
+        $projects = $user->projects()->get(); // Fetch projects via pivot table
+        $companies = $user->companies()->get();
+        $projectNames = $projects->pluck('name')->join(', '); // Comma-separated project names
+        $companyNames = $companies->pluck('company_name')->join(', '); 
+        return view('users.show', compact('user', 'companies', 'projects', 'projectNames', 'companyNames'));
     }
 
     /**
