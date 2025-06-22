@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -19,26 +20,67 @@ class UserDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))
-            ->editColumn('name', function ($user) {
-                return '
-                    <div class="flex">
-                        <div class="mr-[15px]">
-                            <img class="w-[40px] object-contain" src="' . ($user->image ? asset('storage/' . $user->image) : asset('admin-theme/assets/images/user-img.png')) . '">
-                        </div>
-                        <div class="text-left">
-                            <h5 class="manrope-regular text-black text-[16px]">' . $user->name . '</h5>
-                            <p class="manrope-regular text-[#7A86A1] text-[14px]">' . $user->email . '</p>
-                        </div>
-                    </div>';
+        return datatables()
+            ->eloquent($query)
+            ->filter(function ($query) {
+                // Global search
+                if ($keyword = request('search.value')) {
+                    $keyword = strtolower($keyword);
+
+                    $query->where(function ($q) use ($keyword) {
+                        $q->whereRaw('LOWER(users.name) LIKE ?', ["%{$keyword}%"])
+                            ->orWhereRaw('LOWER(users.email) LIKE ?', ["%{$keyword}%"])
+                            ->orWhereRaw("EXISTS (
+                              SELECT 1 FROM company_user cu
+                              JOIN companies c ON c.id = cu.company_id
+                              WHERE cu.user_id = users.id
+                              AND LOWER(c.company_name) LIKE ?
+                          )", ["%{$keyword}%"])
+                            ->orWhereRaw("EXISTS (
+                              SELECT 1 FROM company_user cu
+                              WHERE cu.user_id = users.id
+                              AND LOWER(users.access_level) LIKE ?
+                          )", ["%{$keyword}%"]);
+                    });
+                }
+
+                // User filter
+                if (request()->has('user_ids') && !empty(request('user_ids'))) {
+                    $query->whereIn('users.id', request('user_ids'));
+                }
+
+                // Company filter
+                if (request()->has('company_ids') && !empty(request('company_ids'))) {
+                    $query->whereIn('company_user.company_id', request('company_ids'));
+                }
+
+                // Project filter
+                if (request()->has('project_ids') && !empty(request('project_ids'))) {
+                    $query->whereRaw("EXISTS (
+                        SELECT 1 FROM project_user pu
+                        WHERE pu.user_id = users.id
+                        AND pu.project_id IN (" . implode(',', request('project_ids')) . ")
+                    )");
+                }
+
+                // Status filter
+                if (request()->has('statuses') && !empty(request('statuses'))) {
+                    $mappedStatuses = array_map(function ($status) {
+                        return match (strtolower($status)) {
+                            'active' => 1,
+                            'inactive' => 0,
+                            'block' => 2,
+                            default => $status
+                        };
+                    }, request('statuses'));
+
+                    $query->whereIn('users.is_active', $mappedStatuses);
+                }
             })
-            ->editColumn('company_name', function ($user) {
-                return $user->company_name ?? 'N/A';
-            })
-            ->editColumn('access_level', function ($user) {
-                return $user->access_level ?? 'N/A';
-            })
-            ->addColumn('status', function ($user) {
+            ->editColumn('company_name', fn($user) => $user->company_name ?? 'N/A')
+            ->editColumn('access_level', fn($user) => $user->access_level ?? 'N/A')
+            ->editColumn('created_at', fn($user) => $user->created_at->format('M d, Y'))
+            ->editcolumn('is_active', function ($user) {
                 $status = $user->is_active ? 'Active' : 'Inactive';
                 $color = $user->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
@@ -63,15 +105,8 @@ class UserDataTable extends DataTable
                         </li>
                     </ul>';
             })
-            ->editColumn('created_at', function ($user) {
-                return $user->created_at->format('F d, Y');
-            })
-            ->filterColumn('company_name', function($query, $keyword) {
-                $query->where('companies.company_name', 'like', "%{$keyword}%");
-            })
-            ->orderColumn('status', 'is_active $1')
-            ->rawColumns(['name', 'status', 'action'])
-            ->setRowId('id');
+           ->rawColumns(['is_active', 'action'])
+           ->addIndexColumn();
     }
 
     /**
@@ -79,34 +114,22 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        $query = $model->newQuery()
-            ->select('users.*', 'companies.company_name')
-            ->leftJoin('companies', 'users.company_id', '=', 'companies.id')
-            ->with(['company', 'project']);
-
-        // Apply user filter
-        if (request()->has('user_ids') && !empty(request()->input('user_ids'))) {
-            $query->whereIn('users.id', request()->input('user_ids')); // Qualified id
-        }
-
-        // Apply company filter
-        if (request()->has('company_ids') && !empty(request()->input('company_ids'))) {
-            $query->whereIn('users.company_id', request()->input('company_ids')); // Qualified company_id
-        }
-
-        // Apply project filter
-        if (request()->has('project_ids') && !empty(request()->input('project_ids'))) {
-            $query->whereIn('users.project_id', request()->input('project_ids')); // Qualified project_id
-        }
-
-        // Apply status filter
-        if (request()->has('statuses') && !empty(request()->input('statuses'))) {
-            $query->whereIn('users.is_active', array_map(function ($status) {
-                return $status == 'Active' ? 1 : ($status == 'Inactive' ? 0 : ($status == 'Block' ? 2 : $status));
-            }, request()->input('statuses')));
-        }
-
-        return $query;
+        return $model->newQuery()
+            ->leftJoin('company_user', 'users.id', '=', 'company_user.user_id')
+            ->leftJoin('companies', 'company_user.company_id', '=', 'companies.id')
+            ->select([
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.is_active',
+                'users.created_at',
+                'users.access_level',
+                DB::raw("(SELECT GROUP_CONCAT(c.company_name SEPARATOR ', ')
+              FROM company_user cu
+              JOIN companies c ON c.id = cu.company_id
+              WHERE cu.user_id = users.id) as company_name")
+            ])
+           ->groupBy('users.id', 'users.name', 'users.email', 'users.is_active', 'users.created_at', 'users.access_level');
     }
 
     /**
@@ -115,23 +138,14 @@ class UserDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->setTableId('user-table')
+            ->setTableId('users-table')
             ->columns($this->getColumns())
-            ->ajax([
-                'url' => route('users.index'), // or any route using this DataTable
-                'type' => 'GET',
-                'data' => 'function(d) {
-                d.user_ids = $("#user-filter").val();
-                d.company_ids = $("#company-filter").val();
-                d.project_ids = $("#project-filter").val();
-                d.statuses = $("#status-filter").val();
-            }',
-            ])
+            ->minifiedAjax()
             ->orderBy(1)
-            ->selectStyleSingle()
             ->parameters([
                 'dom' => 'Bfrtip',
-                'buttons' => ['excel', 'csv', 'pdf', 'print', 'reset', 'reload'],
+                'buttons' => ['csv', 'excel', 'pdf', 'print'],
+                'searchDelay' => 500,
             ]);
     }
 
@@ -141,16 +155,13 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('name')->title('User Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('access_level')->title('Access Level')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::computed('action')
-                ->title('Action')
-                ->exportable(false)
-                ->printable(false)
-                //   ->width(60)
-                ->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            'name' => ['title' => 'Name', 'searchable' => true],
+            'email' => ['title' => 'Email', 'searchable' => true],
+            'company_name' => ['title' => 'Company', 'searchable' => false],
+            'access_level' => ['title' => 'Access Level', 'searchable' => false],
+            'is_active' => ['title' => 'Status', 'searchable' => false],
+            'created_at' => ['title' => 'Created At', 'searchable' => true],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false],
         ];
     }
 

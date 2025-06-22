@@ -137,7 +137,7 @@
 {!! $dataTable->scripts() !!}
 <script>
 $(document).ready(function() {
-    let table = $('#user-table').DataTable();
+    let table = $('#users-table').DataTable();
 
     // Initialize Select2
     $('.filter-select').select2({
