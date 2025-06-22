@@ -20,4 +20,9 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_user');
     }
+
+    public function trackables()
+    {
+        return $this->belongsToMany(Trackable::class, 'project_trackable')->withTimestamps();
+    }
 }

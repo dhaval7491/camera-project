@@ -26,6 +26,7 @@ class UserController extends Controller
             'companies' => Company::pluck('company_name', 'id')->toArray(),
             'projects' => Project::pluck('name', 'id')->toArray(),
             'users' => User::pluck('name', 'id')->toArray(),
+            'user_counts' => User::count(),
             'permissions' => Permission::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',

@@ -6,6 +6,7 @@ use App\DataTables\ProjectDataTable;
 use App\Http\Requests\StoreProjectRequest;
 use App\Models\Company;
 use App\Models\Project;
+use App\Models\Trackable;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
@@ -56,8 +57,10 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $trackables = Company::pluck('company_name', 'id')->toArray();
-        return view('projects.show', compact('trackables'));
+        $project = Project::with('companies')->findOrFail($id);
+        $companyNames = $project->companies->pluck('company_name')->join(', ');
+        $trackables = $project->trackables()->get(); 
+        return view('projects.show', compact('project', 'companyNames','trackables'));
     }
 
     /**

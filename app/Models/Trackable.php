@@ -17,4 +17,9 @@ class Trackable extends Model
     {
         return $this->hasMany(LinkedObject::class);
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_trackable')->withTimestamps();
+    }
 }
