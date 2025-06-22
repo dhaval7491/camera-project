@@ -1135,8 +1135,6 @@
             toggleModal('createTrackableModal');
         };
 
-
-
         window.toggleEquipmentStatus = function(equipmentId) {
             $.ajax({
                 url: '{{ url("equipments") }}/' + equipmentId + '/toggle-active',
@@ -1155,17 +1153,6 @@
                 }
             });
         };
-
-        // Copy streaming link to clipboard
-        $(document).on('click', '.copy-streaming-link', function() {
-            let url = $(this).data('link');
-            navigator.clipboard.writeText(url).then(() => {
-                alert('Link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                alert('Failed to copy link');
-            });
-        });
 
         // Fetch equipment data and populate edit modal
         window.showEditModal = function(equipmentId) {
@@ -1337,6 +1324,43 @@
                     }
                 }
             });
+        });
+
+         $('#company_id').on('change', function() {
+            var companyId = $(this).val();
+            var $projectSelect = $('#project_id');
+
+            // Clear existing options and reinitialize Select2
+            $projectSelect.empty().trigger('change');
+
+            if (companyId) {
+                // Fetch related projects via AJAX
+                $.ajax({
+                    url: '{{ route("mappings.get-projects") }}',
+                    method: 'POST',
+                    data: {
+                        company_id: companyId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success && response.projects) {
+                            // Populate project dropdown
+                            $.each(response.projects, function(id, name) {
+                                var option = new Option(name, id, false, false);
+                                $projectSelect.append(option);
+                            });
+                            // Reinitialize Select2
+                            $projectSelect.trigger('change');
+                        } else {
+                            toastr.error('No projects found for this company');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching projects:', xhr);
+                        toastr.error('Failed to load projects');
+                    }
+                });
+            }
         });
     });
 

@@ -14,7 +14,7 @@
                 type="select"
                 name="project_id"
                 id="project_id"
-                :options="$projects" />
+                :options="[]" />
 
             <x-form-input
                 label="Tablet Name"

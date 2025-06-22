@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Equipment;
 use App\Models\Mapping;
 use App\Models\Project;
+use Illuminate\Http\Request;
 
 class MappingController extends Controller
 {
@@ -96,6 +97,26 @@ class MappingController extends Controller
             'success' => true,
             'message' => 'Mapping status updated successfully',
             'status' => $mapping->is_active
+        ]);
+    }
+
+    /**
+     * Get projects associated with a company via AJAX.
+     */
+    public function getProjects(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id'
+        ]);
+
+        $companyId = $request->input('company_id');
+        $projects = Project::whereHas('companies', function ($query) use ($companyId) {
+            $query->where('company_project.company_id', $companyId);
+        })->pluck('name', 'id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'projects' => $projects
         ]);
     }
 }
