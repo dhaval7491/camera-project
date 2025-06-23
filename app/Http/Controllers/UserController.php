@@ -108,11 +108,13 @@ class UserController extends Controller
     public function show(User $user)
     {
         $companies = Company::pluck('company_name', 'id')->toArray();
-        $projects = $user->projects()->get(); // Fetch projects via pivot table
-        $companies = $user->companies()->get();
-        $projectNames = $projects->pluck('name')->join(', '); // Comma-separated project names
-        $companyNames = $companies->pluck('company_name')->join(', '); 
-        return view('users.show', compact('user', 'companies', 'projects', 'projectNames', 'companyNames'));
+        $projects = Project::pluck('name', 'id')->toArray();
+        $uprojects = $user->projects()->get(); // Fetch projects via pivot table
+        $ucompanies = $user->companies()->get();
+        $projectNames = $uprojects->pluck('name')->join(', '); // Comma-separated project names
+        $companyNames = $ucompanies->pluck('company_name')->join(', '); 
+        $permissions = Permission::pluck('name', 'id')->toArray();
+        return view('users.show', compact('user', 'companies','projects','ucompanies', 'uprojects', 'projectNames', 'companyNames', 'permissions'));
     }
 
     /**
@@ -125,8 +127,8 @@ class UserController extends Controller
                 'id' => $user->id,
                 'user_name' => $user->name,
                 'email' => $user->email,
-                'company_id' => $user->company_id,
-                'project_id' => $user->project_id,
+                'company_id' => $user->companies->pluck('id')->toArray(),
+                'project_id' => $user->projects->pluck('id')->toArray(),
                 'location' => $user->location,
                 'access_level' => $user->access_level,
                 'profile_img' => $user->profile_img ? Storage::disk('s3')->url($user->image) : null,

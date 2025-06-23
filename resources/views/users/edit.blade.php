@@ -75,7 +75,12 @@
                     <label for="edit_access_level" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Access Level</label>
                 </div>
                 <div class="lg:w-4/6 w-full">
-                    <input type="text" name="access_level" id="edit_access_level" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]" placeholder="Enter access level">
+                    <select name="access_level" id="edit_access_level" class="h-[44px] w-full border-[1px] rounded-[14px] border-[#EBEBEB] bg-white p-[7px] text-[#7A86A1] text-[14px]">
+                        <option value="">Select Access Level</option>
+                        @foreach ($permissions as $id => $permission)
+                        <option value="{{ $permission }}">{{ ucfirst($permission) }}</option>
+                        @endforeach
+                    </select>
                     <div id="edit_access_level_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>

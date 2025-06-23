@@ -88,7 +88,7 @@
         <div class="profile-project mt-[40px] pl-[3px] pr-[3px]">
             <h3 class="manrope-semibold text-[18px] text-[#3D3D3D] mb-[20px]">Projects List</h3>
             <div class="grid grid-cols-6 gap-4">
-                @forelse($projects as $project)
+                @forelse($uprojects as $project)
                 <div class="flex alert-shadow items-center p-[20px]">
                     <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-[24px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">{{ strtoupper(substr($project->name, 0, 2)) }}</p>
                     <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">{{ $project->name }}</p>
@@ -191,6 +191,111 @@
                 }
             });
         };
+
+        // jQuery Validation for Edit User Form
+        $('#editUserForm').validate({
+            rules: {
+                user_name: {
+                    required: true,
+                    minlength: 2
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                company_id: {
+                    required: true
+                },
+                project_id: {
+                    required: true
+                },
+                location: {
+                    required: true,
+                    minlength: 2
+                },
+                access_level: {
+                    required: true,
+                },
+                image: {
+                    extension: "jpg|jpeg|png|gif"
+                }
+            },
+            messages: {
+                user_name: {
+                    required: "Please enter a user name",
+                    minlength: "User name must be at least 2 characters long"
+                },
+                email: {
+                    required: "Please enter an email",
+                    email: "Please enter a valid email address"
+                },
+                companies: {
+                    required: "Please select a company"
+                },
+                projects: {
+                    required: "Please select a project"
+                },
+                location: {
+                    required: "Please enter a location",
+                    minlength: "Location must be at least 2 characters long"
+                },
+                access_level: {
+                    required: "Please select an access level",
+                },
+                image: {
+                    extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                $(element).addClass('input-error');
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).addClass('hidden');
+                $(element).removeClass('input-error');
+            }
+        });
+
+         // Handle Edit User button click
+        $('#editUserSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#editUserForm').valid()) {
+                var formData = new FormData($('#editUserForm')[0]);
+                var userId = $('#edit_user_id').val();
+                $.ajax({
+                    url: '{{ url("users") }}/' + userId,
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('editUserModal');
+                        // table.ajax.reload(null, false);
+                        toastr.success('User updated successfully');
+                        location.reload();
+                        $('#editUserForm')[0].reset();
+                        $('.text-red-500').addClass('hidden');
+                        $('input, select, textarea').removeClass('input-error');
+                        $('#edit_user_image').siblings('div').remove();
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating user:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'user_name' ? 'edit_user_name' : key === 'email' ? 'edit_email' : key === 'company_id' ? 'edit_company_id' : key === 'project_id' ? 'edit_project_id' : key === 'location' ? 'edit_location' : key === 'access_level' ? 'edit_access_level' : key === 'image' ? 'edit_user_image' : key) + '_error';
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                $('#' + (key === 'user_name' ? 'edit_user_name' : key === 'email' ? 'edit_email' : key === 'company_id' ? 'edit_company_id' : key === 'project_id' ? 'edit_project_id' : key === 'location' ? 'edit_location' : key === 'access_level' ? 'edit_access_level' : key === 'image' ? 'edit_user_image' : key)).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to update user. Please try again.');
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>
 @endpush
