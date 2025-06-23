@@ -11,9 +11,7 @@
                 </div>
                 <div class="lg:w-4/6 w-full">
                     <input type="text" name="trackable_name" id="edit_trackable_name" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]" placeholder="Trackable name">
-                    @error('trackable_name')
-                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                    @enderror
+                    <div id="trackable_name_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
 
@@ -24,9 +22,7 @@
                 </div>
                 <div class="lg:w-4/6 w-full">
                     <input type="text" name="other_name" id="edit_other_name" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]" placeholder="Other Name">
-                    @error('other_name')
-                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                    @enderror
+                    <div id="other_name_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
 
@@ -39,9 +35,7 @@
                     <div id="editLinkedObjectsContainer" class="flex flex-col gap-2">
                         <!-- Populated via AJAX -->
                     </div>
-                    @error('linked_objects.*')
-                    <p class="text-red-500 text-sm">{{ $message }}</p>
-                    @enderror
+                    <div id="linked_objects_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
 

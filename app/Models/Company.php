@@ -16,4 +16,14 @@ class Company extends Model
     {
         return $this->belongsTo(User::class, 'admin_id');
     }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'company_project');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'company_user');
+    }
 }

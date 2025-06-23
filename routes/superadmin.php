@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\AnalyticController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment;
 use App\Http\Controllers\EquipmentController;
@@ -23,6 +24,16 @@ Route::get('superadmin',function() {
 
 Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
 Route::post('/superadmin/login',[LoginController::class,'login'])->name('superadmin.login');
+Route::get('password/reset', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+// Handle email submission
+Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Show form to reset password
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// Handle password reset
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::middleware(['superadmin_auth'])->group(function(){
     Route::get('/superadmin/dashboard',[DashboardController::class,'index'])->name('superadmin.dashboard');
     Route::get('/superadmin/logout',[DashboardController::class,'logout'])->name('superadmin.logout');
@@ -54,6 +65,8 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::get('/streams/{camera_id}', [LiveStreamController::class, 'show'])->name('streams.show');
+    Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
+    Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
 });
 
 Route::prefix('signaling')->group(function () {

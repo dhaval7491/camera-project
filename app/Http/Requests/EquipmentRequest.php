@@ -22,18 +22,12 @@ class EquipmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $type = $this->input('type');
 
         return [
             'type' => 'required|string|in:camera,tablet',
             'equipment_name' => 'required|string',
-            'equipment_code' => 'required|string',
+            'equipment_code' => 'required|string|unique:equipments,equipment_code',
             'password' => 'required|string',
-            'stream_link' => [
-                Rule::requiredIf($type === 'camera'),
-                'url',
-                'nullable',
-            ],
         ];
     }
 }

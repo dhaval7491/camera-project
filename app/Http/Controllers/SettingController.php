@@ -57,10 +57,10 @@ class SettingController extends Controller
     ){
         return view('settings.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(),
-            'projects' => Project::pluck('name', 'id')->toArray(),
-            'plants' => Project::distinct()->pluck('plant_name')->toArray(), // Or from Equipment if needed
+            'projects' => Project::pluck('name', 'id')->toArray(),// Or from Equipment if needed
             'equipments' => Equipment::pluck('equipment_name', 'id')->toArray(),
             'trackables' => Trackable::pluck('trackable_name', 'id')->toArray(),
+            'types' => Trackable::pluck('other_name')->toArray(),
             'cameras' => Equipment::where('type', 'camera')->pluck('equipment_name', 'id')->toArray(),
             'tablets' => Equipment::where('type', 'tablet')->pluck('equipment_name', 'id')->toArray(),
             'statuses' => [
@@ -79,14 +79,14 @@ class SettingController extends Controller
     }
 
     public function equipments(EquipmentDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 
     public function mappings(MappingDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 
     public function trackables(TrackableDataTable $dataTable){
-        return $dataTable->render('settings.index');
+        return $dataTable->ajax();
     }
 }

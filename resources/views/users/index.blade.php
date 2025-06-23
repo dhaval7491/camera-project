@@ -7,7 +7,7 @@
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                     <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">
-                        User - {{ $userCount ?? '10' }}
+                        User - {{ $user_counts ?? '10' }}
                     </h3>
                 </div>
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
@@ -137,7 +137,7 @@
 {!! $dataTable->scripts() !!}
 <script>
 $(document).ready(function() {
-    let table = $('#user-table').DataTable();
+    let table = $('#users-table').DataTable();
 
     // Initialize Select2
     $('.filter-select').select2({
@@ -268,8 +268,7 @@ $(document).ready(function() {
                 minlength: "Location must be at least 2 characters long"
             },
             access_level: {
-                required: "Please enter an access level",
-                minlength: "Access level must be at least 2 characters long"
+                required: "Please select an access level",
             },
             image: {
                 extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
@@ -380,6 +379,22 @@ $(document).ready(function() {
     // Trigger filter on select2 change
     $('#user-filter, #company-filter, #project-filter, #status-filter').on('change', function() {
         applyFilters();
+    });
+
+    // Search input handling
+    // $('#search-toggle').on('click', function() {
+    //     let searchInput = $('#search-input');
+    //     if (searchInput.hasClass('w-0')) {
+    //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+    //     } else {
+    //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+    //         table.search('').draw(); // Clear search when closing
+    //     }
+    // });
+
+    $('#search-input').on('keyup', function() {
+        let searchTerm = $(this).val();
+        table.search(searchTerm).draw(); // Apply search term
     });
 
     window.toggleUserStatus = function(userId) {

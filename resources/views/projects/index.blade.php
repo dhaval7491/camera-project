@@ -51,13 +51,6 @@
                     </select>
                 </p>
                 <p class="flex items-center mr-[8px]">
-                    <select id="plant-filter" multiple class="filter-select w-[80px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant">
-                        @foreach($plants as $plant)
-                            <option value="{{ $plant }}">{{ $plant }}</option>
-                        @endforeach
-                    </select>
-                </p>
-                <p class="flex items-center mr-[8px]">
                     <select id="status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                         @foreach($statuses as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
@@ -145,20 +138,16 @@ $(document).ready(function() {
     });
 
     // jQuery Validation for Create Project Form
-    $('#createProjectForm').validate({
+     $('#createProjectForm').validate({
         rules: {
             name: {
                 required: true,
                 minlength: 2
             },
-            company_id: {
+            companies: {
                 required: true
             },
             location: {
-                required: true,
-                minlength: 2
-            },
-            plant_name: {
                 required: true,
                 minlength: 2
             }
@@ -168,64 +157,12 @@ $(document).ready(function() {
                 required: "Please enter a project name",
                 minlength: "Project name must be at least 2 characters long"
             },
-            company_id: {
-                required: "Please select a company"
+            companies: {
+                required: "Please select at least one company"
             },
             location: {
                 required: "Please enter a location",
                 minlength: "Location must be at least 2 characters long"
-            },
-            plant_name: {
-                required: "Please enter a plant name",
-                minlength: "Plant name must be at least 2 characters long"
-            }
-        },
-        errorPlacement: function(error, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).text(error.text()).removeClass('hidden');
-            $(element).addClass('input-error');
-        },
-        success: function(label, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).addClass('hidden');
-            $(element).removeClass('input-error');
-        }
-    });
-
-    // jQuery Validation for Edit Project Form
-    $('#editProjectForm').validate({
-        rules: {
-            name: {
-                required: true,
-                minlength: 2
-            },
-            company_id: {
-                required: true
-            },
-            location: {
-                required: true,
-                minlength: 2
-            },
-            plant_name: {
-                required: true,
-                minlength: 2
-            }
-        },
-        messages: {
-            name: {
-                required: "Please enter a project name",
-                minlength: "Project name must be at least 2 characters long"
-            },
-            company_id: {
-                required: "Please select a company"
-            },
-            location: {
-                required: "Please enter a location",
-                minlength: "Location must be at least 2 characters long"
-            },
-            plant_name: {
-                required: "Please enter a plant name",
-                minlength: "Plant name must be at least 2 characters long"
             }
         },
         errorPlacement: function(error, element) {
@@ -245,7 +182,11 @@ $(document).ready(function() {
         e.preventDefault();
         if ($('#editProjectForm').valid()) {
             var formData = new FormData($('#editProjectForm')[0]);
+            formData.append('_method', 'PUT');
             var projectId = $('#edit_project_id').val();
+            $('.edit-text').addClass('hidden');
+            $('.edit-spinner').removeClass('hidden');
+            $('#editProjectSubmit').prop('disabled', true);
             $.ajax({
                 url: '{{ url("projects") }}/' + projectId,
                 method: 'POST',
@@ -257,6 +198,7 @@ $(document).ready(function() {
                     table.ajax.reload(null, false);
                     toastr.success('Project updated successfully');
                     $('#editProjectForm')[0].reset();
+                    $('#edit_companies').val(null).trigger('change');
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
                 },
@@ -265,23 +207,31 @@ $(document).ready(function() {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
+                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
                             $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'company_id' ? 'edit_project_company_id' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
+                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
                         });
                     } else {
                         toastr.error('Failed to update project. Please try again.');
                     }
+                },
+                complete: function() {
+                    $('.edit-text').removeClass('hidden');
+                    $('.edit-spinner').addClass('hidden');
+                    $('#editProjectSubmit').prop('disabled', false);
                 }
             });
         }
     });
 
-    // Handle Create Project button click
+    // Handle Edit Project button click
     $('#createProjectSubmit').on('click', function(e) {
         e.preventDefault();
         if ($('#createProjectForm').valid()) {
             var formData = new FormData($('#createProjectForm')[0]);
+            $('.create-text').addClass('hidden');
+            $('.create-spinner').removeClass('hidden');
+            $('#createProjectSubmit').prop('disabled', true);
             $.ajax({
                 url: '{{ route('projects.store') }}',
                 method: 'POST',
@@ -293,6 +243,7 @@ $(document).ready(function() {
                     table.ajax.reload(null, false);
                     toastr.success('Project created successfully');
                     $('#createProjectForm')[0].reset();
+                    $('#companies').val(null).trigger('change');
                     $('.text-red-500').addClass('hidden');
                     $('input, select, textarea').removeClass('input-error');
                 },
@@ -301,28 +252,274 @@ $(document).ready(function() {
                     if (xhr.status === 422) {
                         var errors = xhr.responseJSON.errors;
                         $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key) + '_error';
+                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key) + '_error';
                             $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key)).addClass('input-error');
+                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key)).addClass('input-error');
                         });
                     } else {
                         toastr.error('Failed to create project. Please try again.');
                     }
+                },
+                complete: function() {
+                    $('.create-text').removeClass('hidden');
+                    $('.create-spinner').addClass('hidden');
+                    $('#createProjectSubmit').prop('disabled', false);
                 }
             });
         }
     });
+
+    // jQuery Validation for Create Equipment Form
+    $('#createEquipmentForm').validate({
+            rules: {
+                type: {
+                    required: true
+                },
+                equipment_name: {
+                    required: true,
+                    minlength: 2
+                },
+                equipment_code: {
+                    required: true,
+                    minlength: 6
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                stream_link: {
+                    required: function(element) {
+                        return $('#createEquipmentForm input[name="type"]:checked').val() === 'camera';
+                    },
+                    url: true
+                }
+            },
+            messages: {
+                type: {
+                    required: "Please select an equipment type"
+                },
+                equipment_name: {
+                    required: "Please enter an equipment name",
+                    minlength: "Equipment name must be at least 2 characters long"
+                },
+                equipment_code: {
+                    required: "Please enter an equipment code",
+                    minlength: "Equipment code must be at least 6 characters long"
+                },
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must be at least 8 characters long"
+                },
+                stream_link: {
+                    required: "Please enter a streaming link for camera equipment",
+                    url: "Please enter a valid URL"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + (element.attr('name') === 'type' ? 'type_error' : element.attr('id') + '_error');
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+                if (element.attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + ($(element).attr('name') === 'type' ? 'type_error' : $(element).attr('id') + '_error');
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+                if ($(element).attr('name') === 'type') {
+                    $('#createEquipmentForm input[name="type"]').parent().removeClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Equipment Submission
+        $('#createEquipmentSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createEquipmentForm').valid()) {
+                var formData = new FormData($('#createEquipmentForm')[0]);
+                $.ajax({
+                    url: '{{ route("equipments.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createEquipmentModal');
+                        equipmentTable.ajax.reload(null, false);
+                        toastr.success('Equipment created successfully');
+                        $('#createEquipmentForm')[0].reset();
+                        $('#cameraFields').removeClass('hidden');
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                        $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating equipment:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'type' ? 'type_error' : key + '_error');
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                if (key === 'type') {
+                                    $('#createEquipmentForm input[name="type"]').parent().addClass('input-error');
+                                } else {
+                                    $('#' + key).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create equipment. Please try again.');
+                        }
+                    }
+                });
+            }
+        });
+
+
+        // jQuery Validation for Create Trackable Form
+        $('#createTrackableForm').validate({
+            rules: {
+                trackable_name: {
+                    required: true,
+                    minlength: 2
+                },
+                other_name: {
+                    minlength: 2
+                },
+                'linked_objects[]': {
+                    required: true,
+                    minlength: 1
+                }
+            },
+            messages: {
+                trackable_name: {
+                    required: "Please enter a trackable name",
+                    minlength: "Trackable name must be at least 2 characters long"
+                },
+                other_name: {
+                    minlength: "Other name must be at least 2 characters long"
+                },
+                'linked_objects[]': {
+                    required: "Please add at least one linked object",
+                    minlength: "Each linked object must be at least 1 character long"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + element.attr('name').replace(/\[\]/g, '') + '_error';
+                if (element.attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').text(error.text()).removeClass('hidden');
+                    element.closest('.input-group').find('input').addClass('input-error');
+                } else {
+                    $(errorDiv).text(error.text()).removeClass('hidden');
+                    element.addClass('input-error');
+                }
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('name').replace(/\[\]/g, '') + '_error';
+                if ($(element).attr('name') === 'linked_objects[]') {
+                    $('#linked_objects_error').addClass('hidden').text('');
+                    $(element).closest('.input-group').find('input').removeClass('input-error');
+                } else {
+                    $(errorDiv).addClass('hidden').text('');
+                    $(element).removeClass('input-error');
+                }
+            },
+            // Ensure validation checks all linked object inputs
+            ignore: [],
+            invalidHandler: function(event, validator) {
+                // Ensure linked_objects[] is validated correctly
+                var linkedObjects = $('input[name="linked_objects[]"]');
+                var hasValue = false;
+                linkedObjects.each(function() {
+                    if ($(this).val().trim().length > 0) {
+                        hasValue = true;
+                    }
+                });
+                if (!hasValue) {
+                    $('#linked_objects_error').text('Please add at least one linked object').removeClass('hidden');
+                    linkedObjects.addClass('input-error');
+                }
+            }
+        });
+
+        // Handle Create Trackable Submission
+        $('#createTrackableSubmit').on('click', function(e) {
+            e.preventDefault();
+            // Manually validate linked_objects
+            var linkedObjects = $('input[name="linked_objects[]"]');
+            var validLinkedObjects = true;
+            linkedObjects.each(function() {
+                if ($(this).val().trim().length === 0) {
+                    $(this).addClass('input-error');
+                    validLinkedObjects = false;
+                } else {
+                    $(this).removeClass('input-error');
+                }
+            });
+            if (!validLinkedObjects) {
+                $('#linked_objects_error').text('Please fill in all linked objects or remove empty ones').removeClass('hidden');
+            } else {
+                $('#linked_objects_error').addClass('hidden').text('');
+            }
+
+            if ($('#createTrackableForm').valid() && validLinkedObjects) {
+                var formData = new FormData($('#createTrackableForm')[0]);
+                $.ajax({
+                    url: '{{ route("trackables.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createTrackableModal');
+                        trackableTable.ajax.reload(null, false);
+                        toastr.success('Trackable created successfully');
+                        $('#createTrackableForm')[0].reset();
+                        $('#linkedObjectsContainer').html(`
+                            <div class="flex align-middle input-group">
+                                <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Linked Object">
+                                <button type="button" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" onclick="addNewLinkedObjectField('#linkedObjectsContainer', 'linked_objects[]')">
+                                    <img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">
+                                </button>
+                            </div>
+                        `);
+                        $('.text-red-500').addClass('hidden');
+                        $('input').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating trackable:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key.replace(/\.\d+/g, '') + '_error';
+                                if (key.startsWith('linked_objects')) {
+                                    $('#linked_objects_error').text(error[0]).removeClass('hidden');
+                                    $('input[name="linked_objects[]"]').addClass('input-error');
+                                } else {
+                                    $(errorDiv).text(error[0]).removeClass('hidden');
+                                    $('#' + key.replace(/\.\d+/g, '')).addClass('input-error');
+                                }
+                            });
+                        } else {
+                            toastr.error('Failed to create trackable');
+                        }
+                    }
+                });
+            }
+        });
 
     // Apply filters to DataTable
     function applyFilters() {
         let companyIds = $('#company-filter').val() || [];
         let plants = $('#plant-filter').val() || [];
         let statuses = $('#status-filter').val() || [];
+        let searchTerm = $('#search-input').val() || '';
 
         table.ajax.url('{{ route('projects.data') }}?' + $.param({
             company_ids: companyIds,
             plants: plants,
-            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked')
+            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked'),
+            'search[value]': searchTerm
         })).load();
     }
 
@@ -331,14 +528,20 @@ $(document).ready(function() {
         applyFilters();
     });
 
-    // Search input toggle
-    $('#search-toggle').click(function() {
-        const $input = $('#search-input');
-        if ($input.width() === 0) {
-            $input.css('width', '200px').css('padding', '8px 16px').focus();
-        } else {
-            $input.css('width', '0').css('padding', '0');
-        }
+    // Search input handling
+    // $('#search-toggle').on('click', function() {
+    //     let searchInput = $('#search-input');
+    //     if (searchInput.hasClass('w-0')) {
+    //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+    //     } else {
+    //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+    //         table.search('').draw(); // Clear search when closing
+    //     }
+    // });
+
+    $('#search-input').on('keyup', function() {
+        let searchTerm = $(this).val();
+        table.search(searchTerm).draw(); // Apply search term
     });
 
     // Toggle dot dropdown for actions
@@ -375,7 +578,7 @@ $(document).ready(function() {
                 // Populate the edit modal fields
                 $('#edit_project_id').val(response.id);
                 $('#edit_project_name').val(response.name);
-                $('#edit_project_company_id').val(response.company_id);
+                $('#edit_companies').val(response.company_ids).trigger('change');
                 $('#edit_location').val(response.location);
                 $('#edit_plant_name').val(response.plant_name);
                 $('#editProjectForm').attr('action', '{{ url("projects") }}/' + response.id);

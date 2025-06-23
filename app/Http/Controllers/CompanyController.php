@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use App\DataTables\CompanyDataTable;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Mail\AdminRegisteredMail;
 use App\Models\Project;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Mail;
 
 class CompanyController extends Controller
 {
@@ -19,11 +22,12 @@ class CompanyController extends Controller
      */
     public function index(CompanyDataTable $dataTable)
     {
-        
+
         return $dataTable->render('companies.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(),
             'projects' => Project::pluck('name', 'id')->toArray(),
             'locations' => Company::distinct()->pluck('location')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
             'people' => User::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
@@ -55,11 +59,18 @@ class CompanyController extends Controller
             'name' => $data['admin_name'],
             'email' => $data['admin_email'],
             'password' => bcrypt($data['admin_password']),
+            'access_level' => 'company'
         ]);
 
         $superadmin_role = Role::where('name', 'superadmin')->first();
         if ($superadmin_role) {
             $admin->assignRole($superadmin_role);
+        }
+
+        // ✅ Assign default permission (ID = 1)
+        $permission = Permission::find(1);
+        if ($permission) {
+            $admin->givePermissionTo($permission);
         }
 
         if ($request->hasFile('logo')) {
@@ -75,6 +86,13 @@ class CompanyController extends Controller
             'location' => $data['location'],
             'admin_id' => $admin->id,
         ]);
+        $admin->companies()->syncWithoutDetaching([$company->id]);
+        // ✅ Send email to admin
+        Mail::to($admin->email)->send(new AdminRegisteredMail(
+            $admin,
+            $data['admin_password'],
+            $company->company_name
+        ));
 
         return redirect()->route('companies.index');
     }

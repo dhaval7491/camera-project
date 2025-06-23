@@ -3,40 +3,27 @@
 @section('content')
 <div class="p-6 lg:p-8">
     <div class="form-list">
-        <div class="table-filter">
-            <p class="inline-block manrope-medium text-[15px] px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
-                <a href="{{ url()->previous() }}">&lt; Back</a>
-            </p>
-        </div>
         <div class="profile-detail alert-shadow pt-[20px] pr-[25px] pb-[1px] pl-[20px] mt-[10px]">
             <div class="flex justify-between pl-[5px] pr-[5px]">
                 <h4 class="manrope-medium text-[18px]">Personal Detail</h4>
                 <div class="flex">
                     <button class="bg-[#f1f3f5] manrope-medium text-[14px] text-[#3D3D3D] py-[10px] px-[25px] rounded-[10px]" onclick="showEditModal('{{$user->id}}')">Edit Profile</button>
                     <form action="{{route('users.destroy', $user->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                        @csrf()
+                        @csrf
                         @method('DELETE')
-                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]  ml-[20px]">
+                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px] ml-[20px]">
                             <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[20px] mr-[11px] object-contain">
                         </button>
                     </form>
-                    <!-- <a href="#" onclick="return confirm('Are you sure you want to delete this user?');">
-                        <img src="{{ asset('admin-theme/assets/images/profile-delete.png') }}" class="w-[20px] mt-[7px] ml-[20px]">
-                    </a> -->
                 </div>
             </div>
             <div class="flex flex-wrap mb-[30px]">
                 <div class="lg:w-1/9 w-full pl-[5px] pr-[15px] border-r-[#e4e4e4] border-r-[1px] border-r-solid">
                     <div class="profile">
-                        <img src="{{ $user->profile_image ?? asset('admin-theme/assets/images/profile-dummy.png') }}" class="w-[80%] mx-auto object-contain rounded-full">
+                        <img src="{{ $user->profile_img ? Storage::disk('s3')->url($user->profile_img) : asset('admin-theme/assets/images/profile-dummy.png') }}" class="w-[80%] mx-auto object-contain rounded-full">
                     </div>
-                    <div class="w-full bg-[#4cbc9a65] rounded-full h-2.5 mt-[20px]">
-                        <div class="bg-[#78BF41] h-2.5 rounded-full" style="width: {{ $user->progress ?? 45 }}%"></div>
-                    </div>
-                    <p class="manrope-regular text-[13px] text-[#78BF41] mt-[5px]">In progress {{ $user->progress ?? 80 }}%</p>
                 </div>
                 <div class="lg:w-8/9 w-full pl-[15px] pr-[10px]">
-                    <h3 class="manrope-regular text-[16px] ml-[5px]">{{ $user->name }}</h3>
                     <div class="flex flex-wrap mb-[30px]">
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
                             <div class="profile-detail">
@@ -49,7 +36,7 @@
                                     <span class="manrope-regular text-[16px] text-[#969696]">#{{ $user->id }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">User Name:</span>
+                                    <span class="w-[37%] inline-block">Username:</span>
                                     <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->username ?? $user->name }}</span>
                                 </p>
                             </div>
@@ -59,10 +46,6 @@
                                 <p class="pt-[10px]">
                                     <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Location:</span>
                                     <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->location ?? 'N/A' }}</span>
-                                </p>
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Gender:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->gender ?? 'N/A' }}</span>
                                 </p>
                                 <p class="pt-[10px]">
                                     <span class="w-[37%] inline-block">Mail ID:</span>
@@ -90,11 +73,11 @@
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
                                     <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Company Name:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->company->company_name ?? 'N/A' }}</span>
+                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames ?: 'N/A' }}</span>
                                 </p>
                                 <p class="pt-[10px]">
                                     <span class="w-[37%] inline-block">Project Name:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->project->name ?? 'N/A' }}</span>
+                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $projectNames ?: 'N/A' }}</span>
                                 </p>
                             </div>
                         </div>
@@ -105,18 +88,22 @@
         <div class="profile-project mt-[40px] pl-[3px] pr-[3px]">
             <h3 class="manrope-semibold text-[18px] text-[#3D3D3D] mb-[20px]">Projects List</h3>
             <div class="grid grid-cols-6 gap-4">
-            @foreach($projects as $project)
+                @forelse($projects as $project)
                 <div class="flex alert-shadow items-center p-[20px]">
-                    <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA]  text-[24px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">LB</p>
+                    <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-[24px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">{{ strtoupper(substr($project->name, 0, 2)) }}</p>
                     <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">{{ $project->name }}</p>
                 </div>
-            @endforeach    
+                @empty
+                <div class="col-span-6 p-[20px] text-center manrope-regular text-[#969696]">
+                    No projects assigned.
+                </div>
+                @endforelse
             </div>
         </div>
     </div>
 </div>
 
-<!-- Edit User Modal (Assumed to exist or needs to be created) -->
+<!-- Edit User Modal -->
 @include('users.edit')
 @endsection
 
@@ -191,8 +178,8 @@
                     $('#edit_location').val(response.location);
                     $('#edit_access_level').val(response.access_level);
                     $('#editUserForm').attr('action', '{{ url("users") }}/' + response.id);
-                    if (response.image) {
-                        $('#edit_user_image').after(`<div><img src="${response.image}" alt="Current Image" class="w-32 h-32 object-contain"></div>`);
+                    if (response.profile_img) {
+                        $('#edit_user_image').after(`<div><img src="${response.profile_img}" alt="Current Image" class="w-32 h-32 object-contain"></div>`);
                     }
 
                     // Open the edit modal
@@ -204,7 +191,6 @@
                 }
             });
         };
-
     });
 </script>
 @endpush

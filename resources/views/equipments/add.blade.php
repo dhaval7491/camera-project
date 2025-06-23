@@ -34,6 +34,7 @@
             name="equipment_code"
             id="equipment_code"
             placeholder="#2356523"
+            :readonly="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 
@@ -45,18 +46,6 @@
             placeholder="Enter Password"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
-
-        <!-- Camera Specific Field -->
-        <div id="cameraFields" class="mb-[30px]">
-            <x-form-input
-                label="Streaming Link"
-                type="url"
-                name="stream_link"
-                id="stream_link"
-                placeholder="https://www.example.com/api/v1/resources/d"
-                class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-                label-class="block text-[15px] manrope-regular text-[#000000]" />
-        </div>
 
         <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="cancelCreateEquipmentModal()"

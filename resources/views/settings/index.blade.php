@@ -23,7 +23,7 @@
             </div>
             <button id="add-equipment-btn"
                 class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModal('createEquipmentModal')" style="height:43px;">
+                onclick="openCreateEquipmentModal()" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
             <button id="create-mapping-btn"
@@ -95,13 +95,6 @@
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                                        @foreach($plants as $plant)
-                                                        <option value="{{ $plant }}">{{ $plant }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
                                                     <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                                                         @foreach($statuses as $id => $name)
                                                         <option value="{{ $id }}">{{ $name }}</option>
@@ -163,15 +156,10 @@
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-plant-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Plant Name">
-                                                        @foreach($plants as $plant)
-                                                        <option value="{{ $plant }}">{{ $plant }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
                                                     <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
-                                                        <option value="IPad">IPad</option>
+                                                        @foreach($tablets as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
@@ -232,7 +220,9 @@
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
                                                     <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
-                                                        <option value="Type">Type</option>
+                                                        @foreach($types as $type)
+                                                        <option value="{{ $type }}">{{ $type }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </p>
                                                 <p class="flex items-center mr-[8px]">
@@ -412,8 +402,8 @@
 {!! $trackableTable->scripts() !!}
 <script>
     $(document).ready(function() {
-        let mappingTable;
-        let trackableTable;
+        let mappingTable = $('#mappings-table').DataTable();
+        let trackableTable= $('#trackables-table').DataTable();
         let equipmentTable = $('#equipments-table').DataTable()
         // Initialize Select2 for all filter selects
         $('.filter-select').select2({
@@ -424,6 +414,88 @@
             closeOnSelect: false,
             width: '100%'
         });
+
+        // Apply filters function
+        function applyFilters() {
+            let companyIds = $('#equipment-company-filter').val() || [];
+            let projectIds = $('#equipment-project-filter').val() || [];
+            let equipmentIds = $('#equipment-equipment-filter').val() || [];
+            let statuses = $('#equipment-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            equipmentTable.ajax.url('{{ route("settings.equipments") }}?' + $.param({
+                equipment_company_filter: companyIds,
+                equipment_project_filter: projectIds,
+                equipment_id_filter: equipmentIds,
+                statuses: statuses
+            })).load();
+        }
+
+        // Apply filters for Mapping table
+        function applyMappingFilters() {
+            let companyIds = $('#mapping-company-filter').val() || [];
+            let projectIds = $('#mapping-project-filter').val() || [];
+            let tabletIds = $('#mapping-tablet-filter').val() || [];
+            let statuses = $('#mapping-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            mappingTable.ajax.url('{{ route("settings.mappings") }}?' + $.param({
+                mapping_company_filter: companyIds,
+                mapping_project_filter: projectIds,
+                mapping_tablet_filter: tabletIds,
+                statuses: statuses
+            })).load();
+        }
+
+        // Apply filters for Trackable table
+        function applyTrackableFilters() {
+            let trackableIds = $('#trackable-name-filter').val() || [];
+            let typeValues = $('#trackable-type-filter').val() || [];
+            let statuses = $('#trackable-status-filter').val() || [];
+
+            // Map status values to Active/Inactive
+            statuses = statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : status);
+
+            trackableTable.ajax.url('{{ route("settings.trackables") }}?' + $.param({
+                trackable_name_filter: trackableIds,
+                trackable_type_filter: typeValues,
+                statuses: statuses
+            })).load();
+        }
+
+        // Trigger filter on select2 change
+        $('#equipment-company-filter, #equipment-project-filter, #equipment-equipment-filter, #equipment-plant-filter, #equipment-status-filter').on('change', function() {
+            applyFilters();
+        });
+
+        // Trigger filter on select2 change for Mapping table
+        $('#mapping-company-filter, #mapping-project-filter, #mapping-plant-filter, #mapping-tablet-filter, #mapping-status-filter').on('change', function() {
+            applyMappingFilters();
+        });
+
+        // Trigger filter on select2 change for Trackable table
+        $('#trackable-name-filter, #trackable-type-filter, #trackable-status-filter').on('change', function() {
+            applyTrackableFilters();
+        });
+
+        // Search input handling
+        // $('#search-toggle').on('click', function() {
+        //     let searchInput = $('#search-input');
+        //     if (searchInput.hasClass('w-0')) {
+        //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+        //     } else {
+        //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+        //         equipmentTable.search('').draw(); // Clear search
+        //     }
+        // });
+
+        // $('#search-input').on('keyup', function() {
+        //     equipmentTable.search($(this).val()).draw();
+        // });
 
         // Track which DataTables have been initialized
         let initializedTables = {
@@ -501,19 +573,9 @@
                     required: true,
                     minlength: 2
                 },
-                equipment_code: {
-                    required: true,
-                    minlength: 6
-                },
                 password: {
                     required: true,
                     minlength: 8
-                },
-                stream_link: {
-                    required: function(element) {
-                        return $('#createEquipmentForm input[name="type"]:checked').val() === 'camera';
-                    },
-                    url: true
                 }
             },
             messages: {
@@ -524,17 +586,9 @@
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
                 },
-                equipment_code: {
-                    required: "Please enter an equipment code",
-                    minlength: "Equipment code must be at least 6 characters long"
-                },
                 password: {
                     required: "Please enter a password",
                     minlength: "Password must be at least 8 characters long"
-                },
-                stream_link: {
-                    required: "Please enter a streaming link for camera equipment",
-                    url: "Please enter a valid URL"
                 }
             },
             errorPlacement: function(error, element) {
@@ -552,6 +606,49 @@
                 if ($(element).attr('name') === 'type') {
                     $('#createEquipmentForm input[name="type"]').parent().removeClass('input-error');
                 }
+            },
+            ignore: '#equipment_code' // Skip validation for equipment_code
+        });
+
+        // Function to fetch and set equipment code
+        function fetchEquipmentCode(type) {
+            $.ajax({
+                url: '{{ route("equipments.generate-code") }}',
+                method: 'POST',
+                data: {
+                    type: type,
+                    _token: '{{ csrf_token() }}' // Include CSRF token for POST
+                },
+                success: function(response) {
+                    $('#equipment_code').val(response.equipment_code);
+                },
+                error: function(xhr) {
+                    console.error('Error fetching equipment code:', xhr);
+                    toastr.error('Failed to generate equipment code');
+                }
+            });
+        }
+
+        // Open Create Equipment Modal and Fetch Equipment Code
+        window.openCreateEquipmentModal = function() {
+            $('#createEquipmentForm')[0].reset();
+            $('#cameraFields').removeClass('hidden');
+            $('.text-red-500').addClass('hidden');
+            $('input').removeClass('input-error');
+            $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+            fetchEquipmentCode('camera');
+            toggleModal('createEquipmentModal');
+        };
+
+        // Update equipment code when type changes
+        $('#createEquipmentForm input[name="type"]').on('change', function() {
+            fetchEquipmentCode($(this).val());
+            if ($(this).val() === 'camera') {
+                $('#cameraFields').removeClass('hidden');
+            } else {
+                $('#cameraFields').addClass('hidden');
+                $('#stream_link').val('').removeClass('input-error');
+                $('#stream_link_error').addClass('hidden').text('');
             }
         });
 
@@ -560,6 +657,7 @@
             e.preventDefault();
             if ($('#createEquipmentForm').valid()) {
                 var formData = new FormData($('#createEquipmentForm')[0]);
+                // formData.delete('equipment_code'); // Remove client-side code as server generates it
                 $.ajax({
                     url: '{{ route("equipments.store") }}',
                     method: 'POST',
@@ -571,10 +669,10 @@
                         equipmentTable.ajax.reload(null, false);
                         toastr.success('Equipment created successfully');
                         $('#createEquipmentForm')[0].reset();
-                        $('#cameraFields').removeClass('hidden');
                         $('.text-red-500').addClass('hidden');
                         $('input').removeClass('input-error');
                         $('#createEquipmentForm input[name="type"][value="camera"]').prop('checked', true);
+                        fetchEquipmentCode('camera'); // Reset with new code
                     },
                     error: function(xhr) {
                         console.error('Error creating equipment:', xhr);
@@ -607,10 +705,6 @@
                     required: true,
                     minlength: 2
                 },
-                equipment_code: {
-                    required: true,
-                    minlength: 6
-                },
                 password: {
                     minlength: 8
                 },
@@ -628,10 +722,6 @@
                 equipment_name: {
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
-                },
-                equipment_code: {
-                    required: "Please enter an equipment code",
-                    minlength: "Equipment code must be at least 6 characters long"
                 },
                 password: {
                     minlength: "Password must be at least 8 characters long"
@@ -656,7 +746,8 @@
                 if ($(element).attr('name') === 'type') {
                     $('#editEquipmentForm input[name="type"]').parent().removeClass('input-error');
                 }
-            }
+            },
+            ignore: '#edit_equipment_code' // Skip validation for equipment_code
         });
 
         // Handle Edit Equipment Submission
@@ -991,32 +1082,6 @@
             }
         });
 
-
-
-        // Toggle camera fields for Create Equipment modal
-        $('#createEquipmentForm input[name="type"]').on('change', function() {
-            if ($(this).val() === 'camera') {
-                $('#cameraFields').removeClass('hidden');
-            } else {
-                $('#cameraFields').addClass('hidden');
-                $('#stream_link').val('').removeClass('input-error');
-                $('#stream_link_error').addClass('hidden').text('');
-            }
-        });
-
-        // Toggle camera fields for Edit Equipment modal
-        $('#editEquipmentForm input[name="type"]').on('change', function() {
-            if ($(this).val() === 'camera') {
-                $('#editCameraFields').removeClass('hidden');
-                $('#edit_stream_link').val('');
-                $('#edit_stream_link_error').addClass('hidden').text('');
-            } else {
-                $('#editCameraFields').addClass('hidden');
-                $('#edit_stream_link').val('').removeClass('input-error');
-                $('#edit_stream_link_error').addClass('hidden').text('');
-            }
-        });
-
         // Cancel Create Equipment Modal
         window.cancelCreateEquipmentModal = function() {
             $('#createEquipmentForm')[0].reset();
@@ -1070,8 +1135,6 @@
             toggleModal('createTrackableModal');
         };
 
-
-
         window.toggleEquipmentStatus = function(equipmentId) {
             $.ajax({
                 url: '{{ url("equipments") }}/' + equipmentId + '/toggle-active',
@@ -1091,17 +1154,6 @@
             });
         };
 
-        // Copy streaming link to clipboard
-        $(document).on('click', '.copy-streaming-link', function() {
-            let url = $(this).data('link');
-            navigator.clipboard.writeText(url).then(() => {
-                alert('Link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                alert('Failed to copy link');
-            });
-        });
-
         // Fetch equipment data and populate edit modal
         window.showEditModal = function(equipmentId) {
             $.ajax({
@@ -1111,7 +1163,6 @@
                     // Populate the edit modal fields
                     $('#edit_equipment_id').val(response.id);
                     $('#edit_equipment_name').val(response.equipment_name);
-                    $('#edit_stream_link').val(response.stream_link);
                     $('#edit_equipment_code').val(response.equipment_code);
                     $('#editEquipmentForm').attr('action', '{{ url("equipments") }}/' + response.id);
 
@@ -1273,6 +1324,43 @@
                     }
                 }
             });
+        });
+
+         $('#company_id').on('change', function() {
+            var companyId = $(this).val();
+            var $projectSelect = $('#project_id');
+
+            // Clear existing options and reinitialize Select2
+            $projectSelect.empty().trigger('change');
+
+            if (companyId) {
+                // Fetch related projects via AJAX
+                $.ajax({
+                    url: '{{ route("mappings.get-projects") }}',
+                    method: 'POST',
+                    data: {
+                        company_id: companyId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success && response.projects) {
+                            // Populate project dropdown
+                            $.each(response.projects, function(id, name) {
+                                var option = new Option(name, id, false, false);
+                                $projectSelect.append(option);
+                            });
+                            // Reinitialize Select2
+                            $projectSelect.trigger('change');
+                        } else {
+                            toastr.error('No projects found for this company');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching projects:', xhr);
+                        toastr.error('Failed to load projects');
+                    }
+                });
+            }
         });
     });
 

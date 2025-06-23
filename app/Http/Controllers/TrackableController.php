@@ -44,6 +44,10 @@ class TrackableController extends Controller
             }
         }
 
+        if (!empty($data['project_id'])) {
+            $trackable->projects()->attach($data['project_id']);
+        }
+
         return redirect()->route('settings.index');
     }
 

@@ -33,7 +33,7 @@
                     <select name="company_id" id="u_company_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
                         <option value="">Select Company</option>
                         @foreach($companies as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
+                        <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                     <div id="u_company_id_error" class="text-red-500 text-sm hidden"></div>
@@ -49,7 +49,7 @@
                     <select name="project_id" id="u_project_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
                         <option value="">Select Project</option>
                         @foreach($projects as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
+                        <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                     <div id="u_project_id_error" class="text-red-500 text-sm hidden"></div>
@@ -73,13 +73,19 @@
                     <label for="access_level" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Access Level</label>
                 </div>
                 <div class="lg:w-4/6 w-full">
-                    <input type="text" name="access_level" id="access_level" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]" placeholder="Enter access level">
+                    <select name="access_level" id="access_level" class="h-[44px] w-full border-[1px] rounded-[14px] border-[#EBEBEB] bg-white p-[7px] text-[#7A86A1] text-[14px]">
+                        <option value="">Select Access Level</option>
+                        @foreach ($permissions as $id => $permission)
+                        <option value="{{ $permission }}">{{ ucfirst($permission) }}</option>
+                        @endforeach
+                    </select>
+
                     <div id="access_level_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
 
             <!-- Image Upload -->
-            <div class="flex flex-wrap mb-[15px]">
+            <!-- <div class="flex flex-wrap mb-[15px]">
                 <div class="lg:w-2/6 w-full">
                     <label for="image" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Upload Image</label>
                 </div>
@@ -87,7 +93,7 @@
                     <input type="file" name="image" id="image" class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]">
                     <div id="image_error" class="text-red-500 text-sm hidden"></div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="flex justify-end space-x-3">
                 <button type="button" onclick="cancelCreateUserModal()"

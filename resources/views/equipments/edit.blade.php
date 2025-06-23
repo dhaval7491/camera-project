@@ -36,6 +36,7 @@
             name="equipment_code"
             id="edit_equipment_code"
             placeholder="#2356523"
+            :readonly="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
         <div id="equipment_code_error" class="text-red-500 text-sm mt-1 hidden"></div>
@@ -49,19 +50,6 @@
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
         <div id="password_error" class="text-red-500 text-sm mt-1 hidden"></div>
-
-        <!-- Camera Specific Field -->
-        <div id="editCameraFields" class="mb-[30px]">
-            <x-form-input
-                label="Streaming Link"
-                type="url"
-                name="stream_link"
-                id="edit_stream_link"
-                placeholder="https://www.example.com/api/v1/resources/d"
-                class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-                label-class="block text-[15px] manrope-regular text-[#000000]" />
-            <div id="stream_link_error" class="text-red-500 text-sm mt-1 hidden"></div>
-        </div>
 
         <div class="text-right mt-[50px] mb-[20px]]">
             <button type="button" onclick="cancelEditEquipmentModal()"

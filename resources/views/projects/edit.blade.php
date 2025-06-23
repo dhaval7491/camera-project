@@ -14,10 +14,11 @@
 
         <x-form-input
             label="Company Name"
-            type="select"
-            name="company_id"
-            id="edit_project_company_id"
+            type="select2"
+            name="companies"
+            id="edit_companies"
             :options="$companies"
+            :multiple="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 
@@ -27,15 +28,6 @@
             name="location"
             id="edit_location"
             placeholder="Enter location"
-            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
-
-        <x-form-input
-            label="Add Plant"
-            type="text"
-            name="plant_name"
-            id="edit_plant_name"
-            placeholder="Enter Plant Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 

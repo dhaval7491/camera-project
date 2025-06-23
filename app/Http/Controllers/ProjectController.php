@@ -6,7 +6,9 @@ use App\DataTables\ProjectDataTable;
 use App\Http\Requests\StoreProjectRequest;
 use App\Models\Company;
 use App\Models\Project;
+use App\Models\Trackable;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class ProjectController extends Controller
 {
@@ -17,8 +19,8 @@ class ProjectController extends Controller
     {
         return $dataTable->render('projects.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
-            'plants' => Project::distinct()->pluck('plant_name')->toArray(),
             'projects' => Project::pluck('name','id')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
                 0 => 'Inactive'
@@ -45,7 +47,8 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $validated = $request->validated();
-        Project::create($validated);
+        $project = Project::create($validated);
+        $project->companies()->sync($request->companies);
         return redirect()->route('projects.index');
     }
 
@@ -54,8 +57,10 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $trackables = Company::pluck('company_name', 'id')->toArray();
-        return view('projects.show', compact('trackables'));
+        $project = Project::with('companies')->findOrFail($id);
+        $companyNames = $project->companies->pluck('company_name')->join(', ');
+        $trackables = $project->trackables()->get(); 
+        return view('projects.show', compact('project', 'companyNames','trackables'));
     }
 
     /**
@@ -68,7 +73,7 @@ class ProjectController extends Controller
             return response()->json([
                 'id' => $project->id,
                 'name' => $project->name,
-                'company_id' => $project->company_id,
+                'company_ids' => $project->companies->pluck('id')->toArray(),
                 'location' => $project->location,
                 'plant_name' => $project->plant_name,
             ]);
@@ -83,6 +88,7 @@ class ProjectController extends Controller
         $validated = $request->validated();
         $project = Project::findOrFail($id);
         $project->update($validated);
+        $project->companies()->sync($request->companies);
         return redirect()->route('projects.index');
     }
 
