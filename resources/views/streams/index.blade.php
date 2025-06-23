@@ -13,9 +13,6 @@
         </div>
     </div>
     <div class="lg:w-5/6 md:w-5/6 mt-[10px] h-full">
-        <p class="inline-block manrope-medium text-[15px] mt-[0px] mb-[15px] mr-[15px] text-[#437651] underline px-[15px]">
-            <a href="{{ url()->previous() }}">&lt; Back</a>
-        </p>
         @foreach($projects as $index => $project)
         <div class="tab-prop pl-[10px] {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}">
             <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">

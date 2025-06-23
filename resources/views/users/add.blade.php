@@ -48,7 +48,9 @@
                 <div class="lg:w-4/6 w-full">
                     <select name="projects" id="u_project_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
                         <option value="">Select Project</option>
-                        
+                        @foreach ($projects as $id => $name)
+                        <option value="{{ $id }}">{{ ucfirst($name) }}</option>
+                        @endforeach
                     </select>
                     <div id="u_project_id_error" class="text-red-500 text-sm hidden"></div>
                 </div>
