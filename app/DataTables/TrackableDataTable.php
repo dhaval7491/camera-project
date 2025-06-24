@@ -112,6 +112,13 @@ class TrackableDataTable extends DataTable
             ->parameters([
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
             ]);
     }
 
@@ -125,16 +132,16 @@ class TrackableDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('trackable_name')->title('Trackable Name'),
-            Column::make('other_name')->title('Other Name'),
-            Column::make('linked_objects')->title('Linked Objects')->orderable(false),
-            Column::make('status')->title('Status'),
+                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular') ->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('trackable_name')->title('Trackable Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('other_name')->title('Other Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('linked_objects')->title('Linked Objects')->orderable(false)->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)
-                ->addClass('text-center'),
+                ->addClass('text-left'),
         ];
     }
 

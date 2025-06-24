@@ -7,12 +7,12 @@
             <div class="flex justify-between pl-[5px] pr-[5px]">
                 <h4 class="manrope-medium text-[18px]">Personal Detail</h4>
                 <div class="flex">
-                    <button class="bg-[#f1f3f5] manrope-medium text-[14px] text-[#3D3D3D] py-[10px] px-[25px] rounded-[10px]" onclick="showEditModal('{{$user->id}}')">Edit Profile</button>
+                    <button class="bg-[#dcdcdc] manrope-medium text-[14px] text-[#3D3D3D] py-[9px] px-[6px] rounded-[3px]" onclick="showEditModal('{{$user->id}}')">Edit Profile</button>
                     <form action="{{route('users.destroy', $user->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px] ml-[20px]">
-                            <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[20px] mr-[11px] object-contain">
+                            <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[15px]  h-[20px] mr-[11px] object-contain">
                         </button>
                     </form>
                 </div>

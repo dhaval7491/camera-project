@@ -38,9 +38,9 @@ class MappingDataTable extends DataTable
             })
             ->addColumn('action', function ($mapping) {
                 return '
-                <div class="flex justify-center relative">
+                <div class="flex justify-start relative">
                     <span>
-                        <a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event, this)"></a>
+                        <a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event, this)"></a>
                     </span>
                     <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
                         <ul>
@@ -115,6 +115,15 @@ class MappingDataTable extends DataTable
             ->setTableId('mappings-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
+            ->parameters([
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
+            ])
             ->dom('Bfrtip')
             ->orderBy(1)
             ->buttons(
@@ -130,13 +139,13 @@ class MappingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('checkbox')->title('')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('camera_name')->title('Camera Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('tablet_name')->title('Tablet Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('action')->title('Action')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular relative')->orderable(false)->searchable(false),
+            Column::make('checkbox')->title('')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('camera_name')->title('Camera Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('tablet_name')->title('Tablet Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('action')->title('Action')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular relative')->orderable(false)->searchable(false),
         ];
     }
 

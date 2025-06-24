@@ -32,15 +32,15 @@ class EquipmentDataTable extends DataTable
                 return $equipment->project_name ?? '-';
             })
             ->editColumn('equipment_type', function ($equipment) {
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">' . ucfirst($equipment->equipment_type) . '</p>';
+                return '<p class="manrope-regular font-normal text-[16px] text-left">' . ucfirst($equipment->equipment_type) . '</p>';
             })
             ->editColumn('mapped_to', function ($equipment) {
                 if ($equipment->equipment_type === 'camera' && $equipment->mappingAsCamera && $equipment->mappingAsCamera->tablet) {
-                    return '<p class="manrope-regular text-black font-normal text-[16px] text-center">'
+                    return '<p class="manrope-regular font-normal text-[16px] text-left">'
                         . $equipment->mappingAsCamera->tablet->equipment_name
                         . '</p>';
                 }
-                return '<p class="manrope-regular text-black font-normal text-[16px] text-center">-</p>';
+                return '<p class="manrope-regular font-normal text-[16px] text-left">-</p>';
             })
             ->addColumn('status', function ($equipment) {
                 $status = $equipment->is_active ? 'Active' : 'Inactive';
@@ -48,7 +48,7 @@ class EquipmentDataTable extends DataTable
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($equipment) {
-                return '<span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
+                return '<span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event)"></a></span>
                 <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
                     <ul>
                         <li class="py-[5px]">
@@ -145,6 +145,15 @@ class EquipmentDataTable extends DataTable
             ->setTableId('equipments-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
+            ->parameters([
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
+            ])
             ->dom('Bfrtip')
             ->orderBy(1)
             ->buttons(
@@ -168,19 +177,19 @@ class EquipmentDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_name')->title('Equipment Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_code')->title('Equipment Code')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_type')->title('Equipment Type')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('mapped_to')->title('Mapped To')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-center color-[#3D3D3D] text-[15px] manrope-regular'),
+                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)
-                ->addClass('text-center relative'),
+                ->addClass('text-left relative'),
         ];
     }
 

@@ -10,19 +10,15 @@
 
     <!-- Modal Container -->
     <div class="{{ $class }}" style="width:550px !important;">
-        
         <!-- Modal Header -->
         <div class="flex justify-between py-[10px] mb-[20px]">
-            <h4 class="manrope-bold font-medium text-[18px] text-black mt-[10px]">
+            <h4 class="manrope-semibold text-[18px] text-black mt-[10px]">
                 {{ $title }}
             </h4>
             <button onclick="toggleModal('{{ $id }}')" class="focus:outline-none">
-                <img src="{{ asset('admin-theme/assets/images/modal-cross.png') }}"
-                     class="border-[1px] rounded-[15px] border-[#EBEBEB] border-solid bg-white p-[11px] w-[36px] cursor-pointer"
-                     alt="Close">
+                <img src="{{ asset('admin-theme/assets/images/modal-cross.png') }}" class="border-[1px] rounded-[15px] border-[#EBEBEB] border-solid bg-white p-[11px] w-[36px] cursor-pointer" alt="Close">
             </button>
         </div>
-
         <!-- Modal Body (Scrollable) -->
         <div class="max-h-[80vh] overflow-y-auto">
             {{ $slot }}
