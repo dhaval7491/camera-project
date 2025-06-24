@@ -8,11 +8,11 @@
             <label class="block text-[15px] manrope-regular text-[#000000]">Equipment Type</label>
             <div class="flex space-x-4 mt-1">
                 <label class="flex items-center">
-                    <input type="radio" name="type" value="camera" class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651] mr-2" id="edit_type_camera">
+                    <input type="radio" name="type" value="camera" class="h-[20px] w-[20px] accent-[#437651] focus:ring-[#437651] mr-[10px]" id="edit_type_camera">
                     Camera
                 </label>
                 <label class="flex items-center">
-                    <input type="radio" name="type" value="tablet" class="h-[20px] w-[20px] text-[#437651] focus:ring-[#437651] mr-2" id="edit_type_tablet">
+                    <input type="radio" name="type" value="tablet" class="h-[20px] w-[20px] accent-[#437651] focus:ring-[#437651] mr-[10px]" id="edit_type_tablet">
                     Tablet
                 </label>
             </div>

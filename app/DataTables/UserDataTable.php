@@ -146,6 +146,13 @@ class UserDataTable extends DataTable
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
                 'searchDelay' => 500,
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
             ]);
     }
 
