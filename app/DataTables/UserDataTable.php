@@ -146,6 +146,13 @@ class UserDataTable extends DataTable
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
                 'searchDelay' => 500,
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
             ]);
     }
 
@@ -155,13 +162,13 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            'name' => ['title' => 'Name', 'searchable' => true],
-            'email' => ['title' => 'Email', 'searchable' => true],
-            'company_name' => ['title' => 'Company', 'searchable' => false],
-            'access_level' => ['title' => 'Access Level', 'searchable' => false],
-            'is_active' => ['title' => 'Status', 'searchable' => false],
-            'created_at' => ['title' => 'Created At', 'searchable' => true],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false],
+            'name' => ['title' => 'Name', 'searchable' => true, 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'email' => ['title' => 'Email', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'access_level' => ['title' => 'Access Level', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
         ];
     }
 

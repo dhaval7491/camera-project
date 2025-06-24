@@ -138,6 +138,15 @@ class CompanyDataTable extends DataTable
             ->setTableId('companies-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
+            ->parameters([
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
+            ])
             ->dom('Bfrtip')
             ->orderBy(1)
             ->buttons(
@@ -148,13 +157,13 @@ class CompanyDataTable extends DataTable
                 Button::make('reload')
             );
     }
-
+    
     protected function getColumns()
     {
         return [
-            Column::make('company_name')->title('Company Name')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('created_at')->title('Date Created')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('location')->title('Location')->addClass('text-left color-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('location')->title('Location')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
             Column::make('action')->title('Action')->addClass('text-left')->orderable(false)->searchable(false),
@@ -166,3 +175,4 @@ class CompanyDataTable extends DataTable
         return 'Company_' . date('YmdHis');
     }
 }
+

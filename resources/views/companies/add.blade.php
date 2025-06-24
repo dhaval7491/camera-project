@@ -56,7 +56,7 @@
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[15px] manrope-regular text-[#000000]" />
 
-        <div class="text-right mt-[50px] mb-[20px]">
+        <div class="text-right mb-[20px] mt-[50px]">
             <button type="button" onclick="toggleModal('createCompanyModal')"
                 class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                 Cancel

@@ -64,7 +64,7 @@
         <div class="form-list-table">
             <div class="mt-[20px]">
                 <div class="relative">
-                    {!! $dataTable->table(['class' => 'all-table table table-bordered table-striped w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400'], true) !!}
+                    {!! $dataTable->table(['class' => 'all-table table table-bordered table-striped w-full text-sm text-left rtl:text-right dark:text-gray-400'], true) !!}
                 </div>
             </div>
         </div>

@@ -130,17 +130,24 @@ class ProjectDataTable extends DataTable
                 'dom' => 'Bfrtip',
                 'buttons' => ['csv', 'excel', 'pdf', 'print'],
                 'searchDelay' => 500,
+                'rowCallback' => 'function(row, data, index) {
+                   if (index % 2 === 1) {
+                        $(row).css("background-color", "#F6F9F7"); // Even rows
+                    } else {
+                        $(row).css("background-color", "#ffffff"); // Odd rows
+                    }
+                }',
             ]);
     }
 
     protected function getColumns()
     {
         return [
-            'name' => ['title' => 'Project Name', 'searchable' => true],
-            'company_name' => ['title' => 'Company', 'searchable' => false],
-            'is_active' => ['title' => 'Status', 'searchable' => true],
-            'created_at' => ['title' => 'Created At', 'searchable' => true],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false],
+            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
         ];
     }
 

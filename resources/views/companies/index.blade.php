@@ -664,4 +664,11 @@ $(document).ready(function () {
     });
 });
 </script>
+<!-- <script>
+$(document).ready(function() {
+    $('#companies-table').DataTable({
+        stripeClasses: ['bg-[#E7EEEA]', 'bg-white'],
+    });
+});
+</script> -->
 @endpush

@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3">
+            <div class="flex justify-end space-x-3 mt-[50px]">
                 <button type="button" onclick="cancelCreateTrackableModal()"
                     class="rounded-[14px] border-[1px] border-[#EBEBEB] border-solid bg-white w-[120px] py-[6px] px-[5px] manrope-medium font-medium text-[#7A86A1] mr-[5px] text-[14px] cursor-pointer">
                     Cancel

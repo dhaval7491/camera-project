@@ -48,9 +48,9 @@
         </div>
     </div>
     <div class="lg:w-5/6 md:w-4/6 mt-[10px]">
-        <p class="inline-block manrope-medium text-[15px] mt-[0px] mb-[10px] mr-[15px] text-[#43765statusText1] underline px-[15px]">
+        <!-- <p class="inline-block manrope-medium text-[15px] mt-[0px] mb-[10px] mr-[15px] text-[#43765statusText1] underline px-[15px]">
             <a href="{{ route('streams.index') }}">Back</a>
-        </p>
+        </p> -->
         @foreach($projects as $index => $project)
         <div class="video-player px-[10px] relative w-full {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
             <div class="video-container relative w-full" style="aspect-ratio: 16/9;">

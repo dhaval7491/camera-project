@@ -314,7 +314,7 @@
                                                     <th class="text-center pl-[10px]">
                                                         <div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
                                                     </th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center color-[#3D3D3D] text-[15px] manrope-regular ">Event Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center text-[#3D3D3D] text-[15px] manrope-regular ">Event Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Condition</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Wind Threshold</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Height Threshold</th>
