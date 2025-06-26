@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('superadmin',function() {
     return view('superadmin.webrtc');
 });
-
+Route::get('/superadmin/reset_password', function() {
+    return view('superadmin.reset_password');
+});
 Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
 Route::post('/superadmin/login',[LoginController::class,'login'])->name('superadmin.login');
 Route::get('password/reset', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
