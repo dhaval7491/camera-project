@@ -30,7 +30,7 @@
                     <label for="company_id" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Company Name</label>
                 </div>
                 <div class="lg:w-4/6 w-full">
-                    <select name="company_id" id="u_company_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
+                    <select name="companies" id="u_company_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
                         <option value="">Select Company</option>
                         @foreach($companies as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
@@ -46,10 +46,10 @@
                     <label for="project_id" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Project Name</label>
                 </div>
                 <div class="lg:w-4/6 w-full">
-                    <select name="project_id" id="u_project_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
+                    <select name="projects" id="u_project_id" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px]">
                         <option value="">Select Project</option>
-                        @foreach($projects as $id => $name)
-                        <option value="{{ $id }}">{{ $name }}</option>
+                        @foreach ($projects as $id => $name)
+                        <option value="{{ $id }}">{{ ucfirst($name) }}</option>
                         @endforeach
                     </select>
                     <div id="u_project_id_error" class="text-red-500 text-sm hidden"></div>

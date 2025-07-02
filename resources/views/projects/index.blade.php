@@ -508,6 +508,110 @@ $(document).ready(function() {
             }
         });
 
+        // jQuery Validation for Create User Form
+    $('#createUserForm').validate({
+        rules: {
+            user_name: {
+                required: true,
+                minlength: 2
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            company_id: {
+                required: true
+            },
+            project_id: {
+                required: true
+            },
+            location: {
+                required: true,
+                minlength: 2
+            },
+            access_level: {
+                required: true,
+            },
+            image: {
+                required: true,
+                extension: "jpg|jpeg|png|gif"
+            }
+        },
+        messages: {
+            user_name: {
+                required: "Please enter a user name",
+                minlength: "User name must be at least 2 characters long"
+            },
+            email: {
+                required: "Please enter an email",
+                email: "Please enter a valid email address"
+            },
+            company_id: {
+                required: "Please select a company"
+            },
+            project_id: {
+                required: "Please select a project"
+            },
+            location: {
+                required: "Please enter a location",
+                minlength: "Location must be at least 2 characters long"
+            },
+            access_level: {
+                required: "Please select an access level",
+            },
+            image: {
+                required: "Please upload an image",
+                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).text(error.text()).removeClass('hidden');
+            $(element).addClass('input-error');
+        },
+        success: function(label, element) {
+            var errorDiv = '#' + $(element).attr('id') + '_error';
+            $(errorDiv).addClass('hidden');
+            $(element).removeClass('input-error');
+        }
+    });
+    
+    // Handle Create User button click
+    $('#createUserSubmit').on('click', function(e) {
+        e.preventDefault();
+        if ($('#createUserForm').valid()) {
+            var formData = new FormData($('#createUserForm')[0]);
+            $.ajax({
+                url: '{{route("users.store")}}',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toggleModal('createUserModal');
+                    table.ajax.reload(null, false);
+                    toastr.success('User created successfully');
+                    $('#createUserForm')[0].reset();
+                    $('.text-red-500').addClass('hidden');
+                    $('input, select, textarea').removeClass('input-error');
+                },
+                error: function(xhr) {
+                    console.error('Error creating user:', xhr);
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            var errorDiv = '#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key) + '_error';
+                            $(errorDiv).text(value[0]).removeClass('hidden');
+                            $('#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key)).addClass('input-error');
+                        });
+                    } else {
+                        toastr.error('Failed to create user. Please try again.');
+                    }
+                }
+            });
+        }
+    });
+
     // Apply filters to DataTable
     function applyFilters() {
         let companyIds = $('#company-filter').val() || [];
@@ -630,11 +734,47 @@ $(document).ready(function() {
     };
 
     // Handle Add User modal with pre-selected project
-    window.openCreateUserModal = function(companyId, projectId) {
+    window.openCreateUserModal = function(projectId) {
         toggleModal('createUserModal');
-        $('#u_company_id').val(companyId);
-        $('#u_project_id').val(projectId);
+        $('#u_project_id').val(projectId).trigger('change');
     };
+
+    $('#u_project_id').on('change', function() {
+            var projectId = $(this).val();
+            var $companySelect = $('#u_company_id');
+
+            // Clear existing options and reinitialize Select2
+            $companySelect.empty().trigger('change');
+
+            if (projectId) {
+                // Fetch related projects via AJAX
+                $.ajax({
+                    url: '{{ route("mappings.get-companies") }}',
+                    method: 'POST',
+                    data: {
+                        project_id: projectId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success && response.companies) {
+                            // Populate project dropdown
+                            $.each(response.companies, function(id, name) {
+                                var option = new Option(name, id, false, false);
+                                $companySelect.append(option);
+                            });
+                            // Reinitialize Select2
+                            $companySelect.trigger('change');
+                        } else {
+                            toastr.error('No companies found for this project');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching companies:', xhr);
+                        toastr.error('Failed to load companies');
+                    }
+                });
+            }
+        });
 });
 </script>
 <script> 

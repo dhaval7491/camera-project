@@ -119,4 +119,24 @@ class MappingController extends Controller
             'projects' => $projects
         ]);
     }
+
+    /**
+     * Get projects associated with a company via AJAX.
+     */
+    public function getCompanies(Request $request)
+    {
+        $request->validate([
+            'project_id' => 'required|exists:projects,id'
+        ]);
+
+        $projectId = $request->input('project_id');
+        $companies = Company::whereHas('projects', function ($query) use ($projectId) {
+            $query->where('company_project.project_id', $projectId);
+        })->pluck('company_name', 'id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'companies' => $companies
+        ]);
+    }
 }

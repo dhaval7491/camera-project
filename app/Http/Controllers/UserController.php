@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\UserDataTable;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\UserRequest;
+use App\Mail\AdminRegisteredMail;
 use App\Models\Company;
 use App\Models\Project;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -60,21 +62,20 @@ class UserController extends Controller
         $data = $request->validated();
 
         // Handle image upload if present
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('user_images', 's3');
-        }
-
+        // $imagePath = null;
+        // if ($request->hasFile('image')) {
+        //     $imagePath = $request->file('image')->store('user_images', 's3');
+        // }
+        $permission = Permission::where('name', $data['access_level'])->first();
+        $password = Str::random(10);
         // Create new user
         $user = User::create([
             'name' => $data['user_name'],
             'email' => $data['email'] ?? null,
-            'password' => bcrypt(Str::random(10)),
-            'company_id' => $data['company_id'],
-            'project_id' => $data['project_id'],
+            'password' => bcrypt($password),
             'location' => $data['location'],
             'access_level' => $data['access_level'],
-            'profile_img' => $imagePath,
+            // 'profile_img' => $imagePath,
             'is_active' => 1,
         ]);
 
@@ -86,14 +87,18 @@ class UserController extends Controller
 
         // ✅ Assign permission from access_level
         if (!empty($data['access_level'])) {
-            $permission = Permission::where('id', $data['access_level'])->first();
             if ($permission) {
                 $user->givePermissionTo($permission);
             }
         }
 
         $user->projects()->sync($request->projects);
-
+        $user->companies()->sync($request->companies);
+         Mail::to($user->email)->send(new AdminRegisteredMail(
+            $user,
+            $password,
+            $user->companies->pluck('company_name')->join(', ')
+        ));
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -103,11 +108,13 @@ class UserController extends Controller
     public function show(User $user)
     {
         $companies = Company::pluck('company_name', 'id')->toArray();
-        $projects = $user->projects()->get(); // Fetch projects via pivot table
-        $companies = $user->companies()->get();
-        $projectNames = $projects->pluck('name')->join(', '); // Comma-separated project names
-        $companyNames = $companies->pluck('company_name')->join(', '); 
-        return view('users.show', compact('user', 'companies', 'projects', 'projectNames', 'companyNames'));
+        $projects = Project::pluck('name', 'id')->toArray();
+        $uprojects = $user->projects()->get(); // Fetch projects via pivot table
+        $ucompanies = $user->companies()->get();
+        $projectNames = $uprojects->pluck('name')->join(', '); // Comma-separated project names
+        $companyNames = $ucompanies->pluck('company_name')->join(', '); 
+        $permissions = Permission::pluck('name', 'id')->toArray();
+        return view('users.show', compact('user', 'companies','projects','ucompanies', 'uprojects', 'projectNames', 'companyNames', 'permissions'));
     }
 
     /**
@@ -120,8 +127,8 @@ class UserController extends Controller
                 'id' => $user->id,
                 'user_name' => $user->name,
                 'email' => $user->email,
-                'company_id' => $user->company_id,
-                'project_id' => $user->project_id,
+                'company_id' => $user->companies->pluck('id')->toArray(),
+                'project_id' => $user->projects->pluck('id')->toArray(),
                 'location' => $user->location,
                 'access_level' => $user->access_level,
                 'profile_img' => $user->profile_img ? Storage::disk('s3')->url($user->image) : null,

@@ -24,8 +24,8 @@ class UserRequest extends FormRequest
         return [
             'user_name'          => 'required|string|max:255',
             'email'         => 'required|email|unique:users,email',
-            'companies'    => 'required|array',
-            'projects'    => 'required|array',
+            'companies'    => 'required',
+            'projects'    => 'required',
             'location'      => 'required|string|max:255',
             'access_level'  => 'required|string|max:255',
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
