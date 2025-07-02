@@ -60,9 +60,6 @@ class CompanyDataTable extends DataTable
                         <span>
                             <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
-                        <span>
-                            <a href="crane.html"><img src="' . asset('admin-theme/assets/images/live.png') . '" class="w-[23px] mr-[20px]"></a>
-                        </span>
                         <span class="mt-[8px]">
                             <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event, this)"></a>
                         </span>

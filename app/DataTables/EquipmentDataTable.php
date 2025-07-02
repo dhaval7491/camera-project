@@ -48,27 +48,23 @@ class EquipmentDataTable extends DataTable
                 return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($equipment) {
-                return '<span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event)"></a></span>
-                <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
-                    <ul>
+                return '
+                <ul class="flex justify-start align-items-center">
                         <li class="py-[5px]">
-                            <a href="javascript:void(0);" onclick="showEditModal(' . $equipment->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                <p>Edit</p>
+                            <a href="javascript:void(0);"  onclick="showEditModal(' . $equipment->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
+                                <img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain">
                             </a>
                         </li>
                         <li class="py-[5px]">
                             <form action="' . route('equipments.destroy', $equipment->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this equipment?\');">
                                 ' . csrf_field() . '
                                 ' . method_field('DELETE') . '
-                                <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="$(this).closest(\'form\').submit();">
-                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                    <p>Delete</p>
-                                </a>
+                                <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
+                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
+                                </button>
                             </form>
                         </li>
-                    </ul>
-                </div>';
+                </ul>';
             })
             ->orderColumn('status', 'is_active $1')
             ->rawColumns(['equipment_type', 'mapped_to', 'status', 'action']);
@@ -189,7 +185,7 @@ class EquipmentDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)
-                ->addClass('text-left relative'),
+                ->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
         ];
     }
 

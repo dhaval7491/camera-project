@@ -38,31 +38,22 @@ class MappingDataTable extends DataTable
             })
             ->addColumn('action', function ($mapping) {
                 return '
-                <div class="flex justify-start relative">
-                    <span>
-                        <a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event, this)"></a>
-                    </span>
-                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
-                        <ul>
-                            <li class="py-[5px]">
-                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditMappingModal(' . $mapping->id . ')">
-                                    <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                    <p>Edit</p>
-                                </a>
-                            </li>
-                            <li class="py-[5px]">
-                                <form action="' . route('mappings.destroy', $mapping->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this mapping?\');">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
-                                    <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
-                                        <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                        <p>Delete</p>
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>';
+                <ul class="flex justify-start align-items-center">
+                        <li class="py-[5px]">
+                            <a href="javascript:void(0);"  onclick="showEditMappingModal(' . $mapping->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
+                                <img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain">
+                            </a>
+                        </li>
+                        <li class="py-[5px]">
+                            <form action="' . route('mappings.destroy', $mapping->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this equipment?\');">
+                                ' . csrf_field() . '
+                                ' . method_field('DELETE') . '
+                                <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
+                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
+                                </button>
+                            </form>
+                        </li>
+                </ul>';
             })
             ->orderColumn('status', 'is_active $1')
             ->rawColumns(['checkbox', 'status', 'action']);

@@ -92,7 +92,7 @@ class UserDataTable extends DataTable
                             <img src="' . asset('admin-theme/assets/images/view.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
                         <li class="py-[5px]"><a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $user->id . ')">
-                            <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
+                            <img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
                         <li class="py-[5px]">
                             <form action="' . route('users.destroy', $user->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this user?\');">
