@@ -31,7 +31,7 @@
                         <h3 class="manrope-bold text-[28px] text-[#374557] mb-[20px]">
                             Reset Password
                         </h3>
-                        <label class="manrope-medium text-[15px] text-[#2C323E] block">
+                        <label class="manrope-medium text-[13px] text-[#2C323E] block">
                             Email Address
                         </label>
                         <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
@@ -39,7 +39,7 @@
                         focus:border-[1px] focus:border-solid focus:outline-none @error('email') border-red-500 @enderror"
                             type="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
 
-                        <label class="manrope-medium text-[15px] text-[#2C323E] block mt-[20px]">
+                        <label class="manrope-medium text-[13px] text-[#2C323E] block mt-[20px]">
                             New Password
                         </label>
                         <div class="relative">
@@ -55,7 +55,7 @@
                                 <i class="fas fa-eye-slash toggle-password absolute right-[10px] top-[20px] text-[#84818A]" id="togglePassword"></i>
                             <!-- </button> -->
                         </div>
-                        <label class="manrope-medium text-[15px] text-[#2C323E] block mt-[20px]">
+                        <label class="manrope-medium text-[13px] text-[#2C323E] block mt-[20px]">
                             Confirm Password
                         </label>
                         <div class="relative">
@@ -77,10 +77,10 @@
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm 
                                 focus:ring-gray-500 checked:bg-gray">
                         <label for="checked-checkbox" class="ms-2 text-[#3D3D3D] 
-                                manrope-medium text-[15px]">Remember me?</label>
+                                manrope-medium text-[13px]">Remember me?</label>
                     </div>
                     <p class="text-right">
-                        <a href="#" class="text-[#3D3D3D] manrope-medium text-[15px]">
+                        <a href="#" class="text-[#3D3D3D] manrope-medium text-[13px]">
                             Forgot Password?
                         </a>
                     </p>

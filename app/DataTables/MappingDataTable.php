@@ -34,18 +34,18 @@ class MappingDataTable extends DataTable
             ->addColumn('status', function ($mapping) {
                 $status = $mapping->is_active ? 'Active' : 'Inactive';
                 $color = $mapping->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$mapping->id}\" onclick=\"toggleMappingStatus({$mapping->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$mapping->id}\" onclick=\"toggleMappingStatus({$mapping->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($mapping) {
                 return '
                 <div class="flex justify-start relative">
                     <span>
-                        <a href="#"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event, this)"></a>
+                        <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event, this)"></a>
                     </span>
                     <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
                         <ul>
                             <li class="py-[5px]">
-                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditMappingModal(' . $mapping->id . ')">
+                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[13px]" onclick="showEditMappingModal(' . $mapping->id . ')">
                                     <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
                                     <p>Edit</p>
                                 </a>
@@ -54,7 +54,7 @@ class MappingDataTable extends DataTable
                                 <form action="' . route('mappings.destroy', $mapping->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this mapping?\');">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
-                                    <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
+                                    <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[13px]">
                                         <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
                                         <p>Delete</p>
                                     </button>
@@ -139,13 +139,13 @@ class MappingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('checkbox')->title('')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('camera_name')->title('Camera Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('tablet_name')->title('Tablet Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('action')->title('Action')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular relative')->orderable(false)->searchable(false),
+            Column::make('checkbox')->title('')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('camera_name')->title('Camera Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('tablet_name')->title('Tablet Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('action')->title('Action')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular relative')->orderable(false)->searchable(false),
         ];
     }
 

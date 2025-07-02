@@ -10,7 +10,7 @@
             id="edit_company_name"
             placeholder="Enter Company Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Upload Logo"
@@ -18,7 +18,7 @@
             name="logo"
             id="edit_company_logo"
             class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Location"
@@ -27,7 +27,7 @@
             id="edit_company_location"
             placeholder="Enter Company Location"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="toggleModal('editCompanyModal')"

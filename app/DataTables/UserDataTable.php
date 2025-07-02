@@ -83,22 +83,22 @@ class UserDataTable extends DataTable
             ->editcolumn('is_active', function ($user) {
                 $status = $user->is_active ? 'Active' : 'Inactive';
                 $color = $user->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($user) {
                 return '
                     <ul class="flex justify-start align-items-center">
-                        <li class="py-[5px]"><a href="' . route('users.show', $user->id) . '" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
+                        <li class="py-[5px]"><a href="' . route('users.show', $user->id) . '" class="flex manrope-regular text-[#344563] font-normal text-[13px]">
                             <img src="' . asset('admin-theme/assets/images/view.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
-                        <li class="py-[5px]"><a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showEditModal(' . $user->id . ')">
-                            <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain"></a>
+                        <li class="py-[5px]"><a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[13px]" onclick="showEditModal(' . $user->id . ')">
+                            <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[0px] w-[20px] mr-[11px] object-contain"></a>
                         </li>
                         <li class="py-[5px]">
                             <form action="' . route('users.destroy', $user->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this user?\');">
                                 ' . csrf_field() . '
                                 ' . method_field('DELETE') . '
-                                <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
+                                <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[13px]">
                                     <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
                                 </button>
                             </form>
@@ -162,13 +162,13 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            'name' => ['title' => 'Name', 'searchable' => true, 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'email' => ['title' => 'Email', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'access_level' => ['title' => 'Access Level', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'is_active' => ['title' => 'Status', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[15px] manrope-regular'],
+            'name' => ['title' => 'Name', 'searchable' => true, 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'email' => ['title' => 'Email', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'access_level' => ['title' => 'Access Level', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
         ];
     }
 

@@ -3,8 +3,8 @@
 @section('content')
 <div class="flex flex-wrap justify-between">
     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">
-            <p class="inline-block manrope-medium text-[15px]  px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
+        <h3 class="manrope-medium text-[#344563] text-[14px] mt-[10px]">
+            <p class="inline-block manrope-medium text-[13px]  px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
                 < Back</p> Trackable
         </h3>
     </div>
@@ -43,7 +43,7 @@
 </div>
 <div class="profile-detail pt-[20px] pb-[1px] mt-[10px]">
     <div class="profile-project pt-[10px] pl-[3px] pr-[3px]">
-        <h3 class="manrope-semibold text-[15px] text-[#3D3D3D] mb-[20px]">Associated Projects</h3>
+        <h3 class="manrope-semibold text-[13px] text-[#3D3D3D] mb-[20px]">Associated Projects</h3>
         <div class="grid grid-cols-6 gap-4">
             <div class="flex alert-shadow items-center p-[20px]">
                 <p class="bg-gradient-to-b from-[#844EBC] to-[#AA55AA]  text-[18px] manrope-semibold text-white rounded-[8px] px-[10px] py-[8px]">LB</p>

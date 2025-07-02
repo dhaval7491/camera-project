@@ -30,27 +30,28 @@ class TrackableDataTable extends DataTable
                     </div>';
             })
             ->editColumn('trackable_name', function ($trackable) {
-                return '<a href="' . route('trackables.show', $trackable->id) . '"><p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->trackable_name . '</p></a>';
+                return '<a href="' . route('trackables.show', $trackable->id) . '"><p class="manrope-regular text-black font-normal text-[13px]">' . $trackable->trackable_name . '</p></a>';
             })
             ->editColumn('other_name', function ($trackable) {
-                return '<p class="manrope-regular text-black font-normal text-[16px]">' . $trackable->other_name . '</p>';
+                return '<p class="manrope-regular text-black font-normal text-[13px]">' . $trackable->other_name . '</p>';
             })
             ->editColumn('linked_objects', function ($trackable) {
                 $objects = $trackable->linkedObjects->pluck('name')->implode(', ');
-                return '<p class="manrope-regular text-black font-normal text-[16px]">' . ($objects ?: 'N/A') . '</p>';
+                return '<p class="manrope-regular text-black font-normal text-[13px]">' . ($objects ?: 'N/A') . '</p>';
             })
             ->editColumn('status', function ($trackable) {
                 $status = $trackable->is_active ? 'Active' : 'Inactive';
                 $color = $trackable->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$trackable->id}\" onclick=\"toggleTrackableStatus({$trackable->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$trackable->id}\" onclick=\"toggleTrackableStatus({$trackable->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($trackable) {
                 return '
-                    <span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/more.png') . '" class="w-[25px] my-0 mx-auto" onclick="toggleDotDropdown(event)"></a></span>
-                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] right-[60px] w-[170px] p-[10px] z-[8]">
+                <div class="flex justify-start relative">
+                    <span><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[25px] my-0" onclick="toggleDotDropdown(event)"></a></span>
+                    <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[50px] left-[-10px] w-[170px] p-[10px] z-[8]">
                         <ul>
                             <li class="py-[5px]">
-                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="showTrackableEditModal(' . $trackable->id . ')">
+                                <a href="javascript:void(0);" class="flex manrope-regular text-[#344563] font-normal text-[13px]" onclick="showTrackableEditModal(' . $trackable->id . ')">
                                     <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] mr-[11px] object-contain">
                                     <p>Edit</p>
                                 </a>
@@ -59,13 +60,14 @@ class TrackableDataTable extends DataTable
                                 <form action="' . route('trackables.destroy', $trackable->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this trackable?\');">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
-                                    <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[15px]" onclick="$(this).closest(\'form\').submit();">
+                                    <a href="#" class="flex manrope-regular text-[#344563] font-normal text-[13px]" onclick="$(this).closest(\'form\').submit();">
                                         <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
                                         <p>Delete</p>
                                     </a>
                                 </form>
                             </li>
                         </ul>
+                    </div>
                     </div>';
             })
             ->orderColumn('status', 'is_active $1')
@@ -132,11 +134,11 @@ class TrackableDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular') ->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('trackable_name')->title('Trackable Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('other_name')->title('Other Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('linked_objects')->title('Linked Objects')->orderable(false)->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular') ->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('trackable_name')->title('Trackable Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('other_name')->title('Other Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('linked_objects')->title('Linked Objects')->orderable(false)->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

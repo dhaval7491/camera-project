@@ -150,7 +150,7 @@ thead{
   border-bottom:2px solid #E9EDF0;
 }
 table.dataTable tbody th, table.dataTable tbody td {
-  padding: 20px 32px;
+  padding: 11px 32px;
 }
 
 .video-box {
@@ -651,10 +651,10 @@ table.dataTable {
 }
 .select2-container--default .select2-search--inline .select2-search__field 
 {
-  padding-top:3px !important;
-  padding-left:10px !important;
+  padding-top: 5px !important;
+  padding-left: 10px !important;
   height: 29px !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-family: manrope-regular !important;
 }
 .select2-container--default .select2-results__option
@@ -707,14 +707,14 @@ text-align: left !important;
     text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
-    font-size:16px;
+    font-size:13px;
     padding-left: 32px !important;
 }
 .all-table thead th.status ,.all-table thead th.action ,.all-table thead th.people{
     text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
-    font-size:16px;
+    font-size:13px;
 }
 #search-input:focus-visible 
 {

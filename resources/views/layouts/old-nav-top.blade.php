@@ -8,7 +8,7 @@
             <img src="{{ asset('admin-theme/assets/images/logo.png')}}" alt="Logo" class="h-8">
         </a> -->
         <div class="relative ml-[110px]">
-            <input type="text" placeholder="Search" class="w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[15px] px-[40px] py-[10px] border-[1px] border-solid border-[#D6D6D6]">
+            <input type="text" placeholder="Search" class="w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[13px] px-[40px] py-[10px] border-[1px] border-solid border-[#D6D6D6]">
             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><img
                     src="{{ asset('admin-theme/assets/images/search-icon.png')}}" class="w-[20px]"></span>
         </div>

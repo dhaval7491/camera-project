@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">
+                    <h3 class="manrope-medium text-[#344563] text-[14px] mt-[10px]">
                         Project
                     </h3>
                 </div>
@@ -15,14 +15,14 @@
                         <ul class="list-inline list-unstyled flex">
                             <li class="list-inline-item mr-[15px]">
                                 <button
-                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModal('createTrackableModal')">
                                     <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]"></span> Create Trackable
                                 </button>
                             </li>
                             <li class="list-inline-item">
                                 <button
-                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white"
+                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModalassigntrackable()">Assign Trackable
                                 </button>
                             </li>
@@ -70,10 +70,10 @@
                         <thead class="bg-[#e6e6e6]">
                             <tr>
                                 <th scope="col" class="px-6 py-3 manrope-medium text-[#3D3D3D] font-medium text-[16px]"></th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Trackable Name</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Other name</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Linked Objects</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[15px]">Status</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Trackable Name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Other name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Linked Objects</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Status</th>
                             </tr>
                         </thead>
                         <tbody>

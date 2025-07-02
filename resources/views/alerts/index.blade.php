@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="w-full flex">
-    <p class="inline-block manrope-medium text-[15px]  px-[0px] mt-[15px] mr-[15px] text-[#437651] underline">
+    <p class="inline-block manrope-medium text-[13px]  px-[0px] mt-[15px] mr-[15px] text-[#437651] underline">
         < Back</p>
 </div>
 <div class="w-[85%]  mt-[20px] mx-auto  p-[10px] h-[80%]">
@@ -82,7 +82,7 @@ async function loadAlerts(type) {
         data.alerts.forEach(alert => {
             const alertHtml = `
                 <div class="px-[0px] py-[25px] relative mb-[20px] border-b-solid border-b-[1px] border-b-[#0000001c]">
-                    <p class="flex justify-between manrope-semibold text-[15px]">
+                    <p class="flex justify-between manrope-semibold text-[13px]">
                         <span class="flex">
                             <img src="{{ asset('admin-theme/assets/images/alert.png') }}" class="w-[35px] mr-[20px] object-contain mt-[-5px]">
                             ${alert.title}
@@ -92,7 +92,7 @@ async function loadAlerts(type) {
                         ${alert.description}
                         <span class="mr-[30px] text-[#7A86A1] manrope-regular text-[13px]">${alert.created_at}</span>
                     </p>
-                    <div class="absolute manrope-medium text-[15px] bottom-[35px] right-[-8px] text-white w-[25px] h-[25px] text-center rounded-[14px] p-[2px] cursor-pointer">
+                    <div class="absolute manrope-medium text-[13px] bottom-[35px] right-[-8px] text-white w-[25px] h-[25px] text-center rounded-[14px] p-[2px] cursor-pointer">
                         <img src="{{ asset('admin-theme/assets/images/delete.png') }}">
                     </div>
                 </div>`;
