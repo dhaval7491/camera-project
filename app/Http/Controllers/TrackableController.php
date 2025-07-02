@@ -34,7 +34,6 @@ class TrackableController extends Controller
         $data = $request->validated();
         $trackable = Trackable::create([
             'trackable_name' => $data['trackable_name'],
-            'project_id' => $data['project_id'] ?? null,
             'other_name' => $data['other_name'],
         ]);
 

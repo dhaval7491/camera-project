@@ -1,4 +1,4 @@
-<x-modal id="createTrackableModal" title="Add Trackable" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
+<x-modal id="createTrackableModal" title="Add Trackable" :onClose="'cancelCreateTrackableModal()'" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form id="createTrackableForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
         @csrf
         <div class="space-y-4">

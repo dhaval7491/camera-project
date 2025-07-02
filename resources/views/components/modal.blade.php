@@ -2,6 +2,7 @@
     'id' => 'modal',
     'title' => 'Modal Title',
     'class' => '',
+    'onClose' => null,
 ])
 
 <div id="{{ $id }}" class="fixed inset-0 z-10 flex items-center justify-center hidden">
@@ -15,7 +16,7 @@
             <h4 class="manrope-semibold text-[15px] text-black mt-[10px]">
                 {{ $title }}
             </h4>
-            <button onclick="toggleModal('{{ $id }}')" class="focus:outline-none">
+            <button onclick="{{ $onClose ?? "toggleModal('$id')" }}" class="focus:outline-none">
                 <img src="{{ asset('admin-theme/assets/images/modal-cross.png') }}" class="border-[1px] rounded-[15px] border-[#EBEBEB] border-solid bg-white p-[11px] w-[36px] cursor-pointer" alt="Close">
             </button>
         </div>

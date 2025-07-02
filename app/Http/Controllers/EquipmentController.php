@@ -100,8 +100,10 @@ class EquipmentController extends Controller
     {
         $data = $request->validated();
         // Hash the password before storing
-        if (isset($data['password'])) {
+        if (!empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']); // Prevent updating password with null
         }
         $equipment->update($data);
         return redirect()->route('settings.index');
