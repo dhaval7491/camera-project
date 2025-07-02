@@ -16,8 +16,8 @@
                             <div class="relative w-[73%] mb-[40px] my-[10px]">
                                 <img src="{{ asset('admin-theme/assets/images/profile-edit.png') }}" class="w-full" alt="Profile Picture">
                                 <label for="file-input"
-                                    class="absolute bottom-[20px] right-[10px] bg-white p-1 rounded-full shadow-md cursor-pointer flex items-center justify-center">
-                                    <img src="{{ asset('admin-theme/assets/images/camera.png') }}" class="w-[30px] h-[30px] object-contain p-[2px]" alt="Upload Icon">
+                                    class="absolute right-[10px] bg-white p-1 rounded-full shadow-md cursor-pointer flex items-center justify-center" style="bottom:10px;">
+                                    <img src="{{ asset('admin-theme/assets/images/camera.png') }}" class="w-[20px] h-[20px] object-contain p-[2px]" alt="Upload Icon">
                                 </label>
                                 <input type="file" id="file-input" name="profile_picture" accept="image/*" class="hidden">
                             </div>
