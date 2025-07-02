@@ -22,12 +22,16 @@ class EquipmentRequest extends FormRequest
      */
     public function rules(): array
     {
-
+        $equipmentId = $this->route('equipment');
         return [
             'type' => 'required|string|in:camera,tablet',
             'equipment_name' => 'required|string',
-            'equipment_code' => 'required|string|unique:equipments,equipment_code',
-            'password' => 'required|string',
+            'equipment_code' => [
+                'required',
+                'string',
+                Rule::unique('equipments', 'equipment_code')->ignore($equipmentId),
+            ],
+            'password' => $this->isMethod('post') ? 'required|string' : 'nullable|string',
         ];
     }
 }
