@@ -3,16 +3,16 @@
 @section('content')
 <div class="p-6 lg:p-8">
     <div class="form-list">
-        <div class="profile-detail alert-shadow pt-[20px] pr-[25px] pb-[1px] pl-[20px] mt-[10px]">
+        <div class="profile-detail alert-shadow pt-[20px] pr-[25px] pb-[1px] pl-[20px] mt-[10px] mr-[10px]">
             <div class="flex justify-between pl-[5px] pr-[5px]">
-                <h4 class="manrope-medium text-[18px]">Personal Detail</h4>
+                <h4 class="manrope-medium text-[14px]">Personal Detail</h4>
                 <div class="flex">
-                    <button class="bg-[#dcdcdc] manrope-medium text-[14px] text-[#3D3D3D] py-[9px] px-[6px] rounded-[3px]" onclick="showEditModal('{{$user->id}}')">Edit Profile</button>
+                    <button class="bg-[#dcdcdc] manrope-medium text-[14px] text-[#3D3D3D] rounded-[3px]" onclick="showEditModal('{{$user->id}}')"><img src="{{asset('admin-theme/assets/images/edit-opt.png')}}" class="w-[25px]  h-[25px] mr-[11px] object-contain"></button>
                     <form action="{{route('users.destroy', $user->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px] ml-[20px]">
-                            <img src="{{asset('admin-theme/assets/images/profile-delete.png')}}" class="w-[15px]  h-[20px] mr-[11px] object-contain">
+                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[13px] ml-[20px]">
+                            <img src="{{asset('admin-theme/assets/images/delete.png')}}" class="w-[25px]  h-[25px] mr-[11px] object-contain">
                         </button>
                     </form>
                 </div>
@@ -28,56 +28,56 @@
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">User Name:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->name }}</span>
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:85px;">User Name:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]" >{{ $user->name }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">User ID:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">#{{ $user->id }}</span>
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:85px;">User ID:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">#{{ $user->id }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Username:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->username ?? $user->name }}</span>
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:85px;">Username:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->username ?? $user->name }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
+                            <div class="profile-detail">
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:70px;">Location:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->location ?? 'N/A' }}</span>
+                                </p>
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:70px;">Mail ID:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
+                            <div class="profile-detail">
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:92px;">Date:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->created_at->format('d.m.Y') }}</span>
+                                </p>
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:92px;">Access Level:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->access_level ?? 'Project' }}</span>
+                                </p>
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:92px;">Status:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->is_active ? 'Active' : 'Inactive' }}</span>
                                 </p>
                             </div>
                         </div>
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px]">
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Location:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->location ?? 'N/A' }}</span>
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:115px;">Company Name:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $companyNames ?: 'N/A' }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Mail ID:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px]">
-                            <div class="profile-detail">
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Date:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->created_at->format('d.m.Y') }}</span>
-                                </p>
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Access Level:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->access_level ?? 'Project' }}</span>
-                                </p>
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Status:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $user->is_active ? 'Active' : 'Inactive' }}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px]">
-                            <div class="profile-detail">
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Company Name:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames ?: 'N/A' }}</span>
-                                </p>
-                                <p class="pt-[10px]">
-                                    <span class="w-[37%] inline-block">Project Name:</span>
-                                    <span class="manrope-regular text-[16px] text-[#969696]">{{ $projectNames ?: 'N/A' }}</span>
+                                    <span class="inline-block manrope-regular text-[14px] text-[#3D3D3D]" style="width:115px;">Project Name:</span>
+                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $projectNames ?: 'N/A' }}</span>
                                 </p>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="profile-project mt-[40px] pl-[3px] pr-[3px]">
-            <h3 class="manrope-semibold text-[18px] text-[#3D3D3D] mb-[20px]">Projects List</h3>
+            <h3 class="manrope-medium text-[14px] text-[#3D3D3D] mb-[20px]">Projects List</h3>
             <div class="grid grid-cols-6 gap-4">
                 @forelse($uprojects as $project)
                 <div class="flex alert-shadow items-center p-[20px]">

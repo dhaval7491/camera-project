@@ -5,9 +5,9 @@
     <div class="lg:w-1/6 md:w-1/6 w-full ">
         <div class="pl-[20px] py-[20px]">
             <select class="manrope-bold text-[22px] text-black w-[90%]">
-                <option class="manrope-medium text-[15px] text-black">London Bridge</option>
-                <option class="manrope-medium text-[15px] text-black">Triton Square</option>
-                <option class="manrope-medium text-[15px] text-black">Powergate Phase 2</option>
+                <option class="manrope-medium text-[13px] text-black">London Bridge</option>
+                <option class="manrope-medium text-[13px] text-black">Triton Square</option>
+                <option class="manrope-medium text-[13px] text-black">Powergate Phase 2</option>
             </select>
             <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll " x-data="{selected:1}">
                 <button type="button" class="manrope-medium text-[17px] w-[95%] mb-[5px] py-[5px] pl-[15px] pr-[10px]" @click="selected !== 1 ? selected = 1 : selected = null">
@@ -19,8 +19,8 @@
                 </button>
                 <div class="relative overflow-hidden transition-all max-h-0 duration-700" x-ref="container1" x-bind:style="selected == 1 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
                     <div class=" pb-[10px]">
-                        <p class="manrope-medium text-[15px] w-[95%]  mb-[5px] px-[20px]" onclick="openTab(event, 'stream1')">camera 01</p>
-                        <p class="manrope-medium text-[15px] w-[95%] mb-[5px]  px-[20px]" onclick="openTab(event, 'stream2')">camera 02</p>
+                        <p class="manrope-medium text-[13px] w-[95%]  mb-[5px] px-[20px]" onclick="openTab(event, 'stream1')">camera 01</p>
+                        <p class="manrope-medium text-[13px] w-[95%] mb-[5px]  px-[20px]" onclick="openTab(event, 'stream2')">camera 02</p>
                     </div>
                 </div>
                 <button type="button" class="manrope-medium text-[17px] w-[95%] mb-[5px] py-[5px] pl-[15px] pr-[10px]" @click="selected !== 2 ? selected = 2 : selected = null">
@@ -32,8 +32,8 @@
                 </button>
                 <div class="relative overflow-hidden transition-all max-h-0 duration-700" x-ref="container2" x-bind:style="selected == 2 ? 'max-height: ' + $refs.container1.scrollHeight + 'px' : ''">
                     <div class="pb-[10px]">
-                        <p class="manrope-medium text-[15px] w-[95%]  mb-[5px]  px-[20px]" onclick="openTab(event, 'stream6')">camera 01</p>
-                        <p class="manrope-medium text-[15px] w-[95%] mb-[5px]  px-[20px]" onclick="openTab(event, 'stream7')">camera 02</p>
+                        <p class="manrope-medium text-[13px] w-[95%]  mb-[5px]  px-[20px]" onclick="openTab(event, 'stream6')">camera 01</p>
+                        <p class="manrope-medium text-[13px] w-[95%] mb-[5px]  px-[20px]" onclick="openTab(event, 'stream7')">camera 02</p>
                     </div>
                 </div>
                 <p class="manrope-medium text-[17px] w-[95%] mb-[5px] py-[5px] pl-[15px] pr-[10px]" onclick="openTab(event, 'stream3')">Lift 02</p>
@@ -46,7 +46,7 @@
         <div class="mb-[20px]">
             <ul class="flex justify-between px-[15px]">
                 <li>
-                    <p class="inline-block manrope-medium text-[15px]  px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
+                    <p class="inline-block manrope-medium text-[13px]  px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
                         < Back</p>
                 </li>
                 <li class="list-inline-item ">

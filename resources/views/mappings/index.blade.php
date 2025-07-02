@@ -6,8 +6,8 @@
         <div class="p-6 lg:p-8">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <h3 class="manrope-medium text-[#344563] text-[18px] mt-[10px]">
-                        <p class="inline-block manrope-medium text-[15px] px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
+                    <h3 class="manrope-medium text-[#344563] text-[14px] mt-[10px]">
+                        <p class="inline-block manrope-medium text-[13px] px-[0px] mt-[10px] mr-[15px] text-[#437651] underline">
                             < Back</p>Device Mapped - 40
                     </h3>
                 </div>

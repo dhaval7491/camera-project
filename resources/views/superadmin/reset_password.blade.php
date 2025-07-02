@@ -14,32 +14,23 @@
         integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="{{asset('admin-theme/assets/css/output.css')}}">
     <link rel="stylesheet" href="{{asset('admin-theme/assets/css/custom-style.css')}}">
+    <link rel="stylesheet" href="{{asset('admin-theme/assets/css/output.css')}}">
 </head>
 
 <body>
     <div class="wrapper bg-[#EFEFEF] fixed w-full h-full">
         <div class="h-screen flex items-center justify-center">
             <div class="grid grid-cols-2 gap-4">
-                <div class="signin-logo">
+                <div class="signin-logo" style="width:500px;">
                     <!-- Logo or image can go here -->
                 </div>
                 <div class="signin-form w-full mx-auto">
                     <form class="" action="{{ route('superadmin.login') }}" method="post">
                         @csrf
                         <h3 class="manrope-bold text-[28px] text-[#374557] mb-[20px]">
-                            Welcome to Guava Smart Cam
+                            Reset Password
                         </h3>
-                        @if ($errors->any())
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-[10px] mb-4" role="alert">
-                            <ul class="list-disc list-inside">
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
                         <label class="manrope-medium text-[13px] text-[#2C323E] block">
                             Email Address
                         </label>
@@ -49,7 +40,23 @@
                             type="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
 
                         <label class="manrope-medium text-[13px] text-[#2C323E] block mt-[20px]">
-                            Password
+                            New Password
+                        </label>
+                        <div class="relative">
+                            <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
+                        manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
+                        focus:border-[1px] focus:border-solid focus:outline-none @error('password') border-red-500 @enderror"
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter Password">
+                            <!-- <button type="button"
+                                class=""> -->
+                                <i class="fas fa-eye-slash toggle-password absolute right-[10px] top-[20px] text-[#84818A]" id="togglePassword"></i>
+                            <!-- </button> -->
+                        </div>
+                        <label class="manrope-medium text-[13px] text-[#2C323E] block mt-[20px]">
+                            Confirm Password
                         </label>
                         <div class="relative">
                             <input
@@ -60,13 +67,11 @@
                                 id="password"
                                 name="password"
                                 placeholder="Enter Password">
-                            <button type="button"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700">
-                                <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
-                            </button>
-                </div>
+                                <i class="fas fa-eye-slash toggle-password absolute right-[10px] top-[20px] text-[#84818A]" id="togglePassword"></i>
+                        </div>
 
-                <div class="grid grid-cols-2 gap-4 mt-[20px]">
+
+                <!-- <div class="grid grid-cols-2 gap-4 mt-[20px]">
                     <div class="flex items-center">
                         <input checked id="checked-checkbox" type="checkbox"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm 
@@ -79,11 +84,11 @@
                             Forgot Password?
                         </a>
                     </p>
-                </div>
+                </div> -->
 
                 <button class="w-full bg-gradient-to-b from-gray-400 to-gray-700 text-white 
                         manrope-medium py-[8px] rounded-[10px] mt-[30px]" type="submit">
-                    Sign In
+                    Reset Password
                 </button>
                 </form>
             </div>

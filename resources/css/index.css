@@ -1,10 +1,9 @@
-@import "tailwindcss";
-@tailwind utilities;
 @tailwind base;
 @tailwind components;
+@tailwind utilities;
 
 .sidebar li.active {
-    @apply bg-[#73b3ff47] border-l-3 border-l-[#0060d1];
+    @apply bg-[#73b3ff47] border-l-[3px] border-l-[#0060d1];
   }
   /* width */
 ::-webkit-scrollbar {

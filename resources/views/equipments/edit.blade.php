@@ -5,7 +5,7 @@
         <input type="hidden" name="id" id="edit_equipment_id">
         <!-- Equipment Type -->
         <div class="mb-[30px]">
-            <label class="block text-[15px] manrope-regular text-[#000000]">Equipment Type</label>
+            <label class="block text-[13px] manrope-regular text-[#000000]">Equipment Type</label>
             <div class="flex space-x-4 mt-1">
                 <label class="flex items-center">
                     <input type="radio" name="type" value="camera" class="h-[20px] w-[20px] accent-[#437651] focus:ring-[#437651] mr-[10px]" id="edit_type_camera">
@@ -27,7 +27,7 @@
             id="edit_equipment_name"
             placeholder="Enter Equipment Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
         <div id="equipment_name_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
         <x-form-input
@@ -38,7 +38,7 @@
             placeholder="#2356523"
             :readonly="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
         <div id="equipment_code_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
         <x-form-input
@@ -48,7 +48,7 @@
             id="edit_password"
             placeholder="Enter Password"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
         <div id="password_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
         <div class="text-right mt-[50px] mb-[20px]]">

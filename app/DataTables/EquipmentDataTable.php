@@ -32,20 +32,20 @@ class EquipmentDataTable extends DataTable
                 return $equipment->project_name ?? '-';
             })
             ->editColumn('equipment_type', function ($equipment) {
-                return '<p class="manrope-regular font-normal text-[16px] text-left">' . ucfirst($equipment->equipment_type) . '</p>';
+                return '<p class="manrope-regular font-normal text-[13px] text-left">' . ucfirst($equipment->equipment_type) . '</p>';
             })
             ->editColumn('mapped_to', function ($equipment) {
                 if ($equipment->equipment_type === 'camera' && $equipment->mappingAsCamera && $equipment->mappingAsCamera->tablet) {
-                    return '<p class="manrope-regular font-normal text-[16px] text-left">'
+                    return '<p class="manrope-regular font-normal text-[13px] text-left">'
                         . $equipment->mappingAsCamera->tablet->equipment_name
                         . '</p>';
                 }
-                return '<p class="manrope-regular font-normal text-[16px] text-left">-</p>';
+                return '<p class="manrope-regular font-normal text-[13px] text-left">-</p>';
             })
             ->addColumn('status', function ($equipment) {
                 $status = $equipment->is_active ? 'Active' : 'Inactive';
                 $color = $equipment->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$equipment->id}\" onclick=\"toggleEquipmentStatus({$equipment->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($equipment) {
                 return '
@@ -173,14 +173,14 @@ class EquipmentDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

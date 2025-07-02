@@ -8,7 +8,7 @@
             id="company_name"
             placeholder="Enter Company Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Upload Logo"
@@ -16,7 +16,7 @@
             name="logo"
             id="logo"
             class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Location"
@@ -25,9 +25,9 @@
             id="location"
             placeholder="Enter Company Location"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
-        <p class="block text-[15px] manrope-medium font-bold text-[#000000] mb-[35px]">Admin Details</p>
+        <p class="block text-[13px] manrope-medium font-bold text-[#000000] mb-[40px] mt-[40px] pb-[5px]">Admin Details</p>
 
         <x-form-input
             label="Admin Name"
@@ -36,7 +36,7 @@
             id="admin_name"
             placeholder="Enter Admin Name"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Admin Mail ID"
@@ -45,7 +45,7 @@
             id="admin_email"
             placeholder="Enter Admin Mail ID"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <x-form-input
             label="Admin Password"
@@ -54,7 +54,7 @@
             id="admin_password"
             placeholder="Enter Password"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[15px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
 
         <div class="text-right mb-[20px] mt-[50px]">
             <button type="button" onclick="toggleModal('createCompanyModal')"

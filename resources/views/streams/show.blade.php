@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class="lg:w-5/6 md:w-4/6 mt-[10px]">
-        <!-- <p class="inline-block manrope-medium text-[15px] mt-[0px] mb-[10px] mr-[15px] text-[#43765statusText1] underline px-[15px]">
+        <!-- <p class="inline-block manrope-medium text-[13px] mt-[0px] mb-[10px] mr-[15px] text-[#43765statusText1] underline px-[15px]">
             <a href="{{ route('streams.index') }}">Back</a>
         </p> -->
         @foreach($projects as $index => $project)
@@ -143,7 +143,7 @@
                                     <div class="video-status status-connecting"></div>
                                 </div>
                             </div>
-                            <p class="manrope-medium bg-[white] text-[15px] inline-block w-full py-[1px] mb-0 text-center">{{ $camera['camera_name'] }}</p>
+                            <p class="manrope-medium bg-[white] text-[13px] inline-block w-full py-[1px] mb-0 text-center">{{ $camera['camera_name'] }}</p>
                         </div>
                     </li>
                     @endforeach

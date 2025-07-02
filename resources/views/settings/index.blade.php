@@ -3,21 +3,21 @@
 @section('content')
 <div class="">
     <div class="form-list">
-        <div class="flex justify-between items-center px-[25px]">
-            <div class="py-[10px] px-[0px] mt-[0px] flex">
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
+        <div class="flex justify-between items-center px-[10px]">
+            <div class="pr-[5px] px-[0px] pl-[0px] mt-[0px] flex">
+                <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
                 </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'mapping')">
+                <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'mapping')">
                     Mapping
                 </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'trackable')">
+                <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'trackable')">
                     Trackable
                 </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'ai-model')">
+                <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'ai-model')">
                     AI Model
                 </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'event-type')">
+                <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'event-type')">
                     Event Type
                 </button>
             </div>
@@ -47,16 +47,33 @@
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Event
             </button>
         </div>
-            <div class="py-[10px] px-[25px] tab-content" id="v-pills-tabContent">
+            <div class="pr-[5px] px-[10px] pl-[0px] mt-[20px] tab-content" id="v-pills-tabContent">
                 <div class="tab-prop hidden" id="equipment">
                     <div class="company-table h-full">
                         <div class="form-list">
                             <div class="">
                                 <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Equipment List</h3>
+                                    <div class="sm:w-3/6 md:w-3/6 lg:w-3/6 w-full flex items-center">
+                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Equipment List</h3> -->
+                                         <!-- <div class="py-[10px] px-[0px] mt-[0px] flex">
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
+                    Equipment
+                </button>
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'mapping')">
+                    Mapping
+                </button>
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'trackable')">
+                    Trackable
+                </button>
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'ai-model')">
+                    AI Model
+                </button>
+                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'event-type')">
+                    Event Type
+                </button>
+            </div> -->
                                     </div>
-                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
+                                    <div class="sm:w-3/6 md:w-3/6 lg:w-3/6 w-full">
                                         <div class="table-filter-block mt-[0px]">
                                             <div class="flex justify-end">
                                                 <p class="flex items-center mr-[8px]">
@@ -122,7 +139,7 @@
                             <div class="">
                                 <div class="flex flex-wrap">
                                     <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Device Mapped - 40</h3>
+                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Device Mapped - 40</h3> -->
                                     </div>
                                     <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
                                         <div class="table-filter-block mt-[0px]">
@@ -192,7 +209,7 @@
                             <div class="">
                                 <div class="flex flex-wrap">
                                     <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px]">Trackable - 10</h3>
+                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Trackable - 10</h3> -->
                                     </div>
                                     <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
                                         <div class="table-filter-block mt-[0px]">
@@ -254,7 +271,7 @@
                             <div class="">
                                 <div class="flex flex-wrap">
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3>
+                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3> -->
                                     </div>
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                                         
@@ -298,7 +315,7 @@
                             <div class="">
                                 <div class="flex flex-wrap">
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3>
+                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px] mt-[17px]">Overall list</h3> -->
                                     </div>
                                     <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                                        
@@ -314,7 +331,7 @@
                                                     <th class="text-center pl-[10px]">
                                                         <div class="pb-[15px]"><input type="checkbox" id="select-people" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0" /></div>
                                                     </th>
-                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center text-[#3D3D3D] text-[15px] manrope-regular ">Event Name</th>
+                                                    <th scope="col" class="px-6 py-3 pb-[25px] text-center text-[#3D3D3D] text-[13px] manrope-regular ">Event Name</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] manrope-medium text-[#344563] font-medium text-[16px] text-center">Condition</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Wind Threshold</th>
                                                     <th scope="col" class="px-6 py-3 pb-[25px] text-center manrope-medium text-[#344563] font-medium text-[16px]">Height Threshold</th>

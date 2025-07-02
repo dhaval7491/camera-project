@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Company;
+use App\Models\Company; 
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -23,8 +23,8 @@ class CompanyDataTable extends DataTable
 
                 return '
                     <div class="flex items-center">
-                        <span class="text-center inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
-                        <div class="text-[#344563] text-[15px] manrope-regular cursor-pointer">
+                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[15px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
+                        <div class="text-[#344563] text-[13px] manrope-regular cursor-pointer">
                             ' . $company->company_name . '
                         </div>
                     </div>';
@@ -32,7 +32,7 @@ class CompanyDataTable extends DataTable
             ->addColumn('status', function ($company) {
                 $status = $company->is_active ? 'Active' : 'Inactive';
                 $color = $company->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-sm font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
             })
             ->addColumn('people', function ($company) {
                 $users = $company->users()->take(5)->get(); // get up to 5 to calculate overflow
@@ -52,27 +52,27 @@ class CompanyDataTable extends DataTable
                     $avatars .= '<span class="ml-[-10px] bg-[#437651] text-white w-[30px] h-[30px] rounded-full flex items-center justify-center text-sm manrope-medium">+' . $extra . '</span>';
                 }
 
-                return '<div class="people-profile flex justify-center">' . $avatars . '</div>';
+                return '<div class="people-profile flex justify-start">' . $avatars . '</div>';
             })
             ->addColumn('action', function ($company) {
                 return '
                     <div class="flex justify-start relative">
                         <span>
-                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="w-[21px] mr-[20px]"></a>
+                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[21px] mr-[20px]"></a>
                         </span>
                         <span class="mt-[8px]">
                             <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event, this)"></a>
                         </span>
-                        <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
+                        <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[10px] w-[170px] p-[10px] z-[8]">
                             <ul>
                                 <li class="py-[5px]">
-                                    <a href="javascript:void(0);" class="flex text-[#344563] text-[16px] manrope-medium">
+                                    <a href="javascript:void(0);" class="flex text-[#344563] text-[13px] manrope-medium">
                                         <img src="' . asset('admin-theme/assets/images/project.png') . '" class="w-[16px] mr-[11px] object-contain">
                                         <p onclick="openCreateProjectModal(' . $company->id . ')">Add Project</p>
                                     </a>
                                 </li>
                                 <li class="py-[5px]">
-                                    <a href="javascript:void(0);" class="flex text-[#344563] text-[16px] manrope-medium">
+                                    <a href="javascript:void(0);" class="flex text-[#344563] text-[13px] manrope-medium">
                                         <img src="' . asset('admin-theme/assets/images/add-people.png') . '" class="w-[16px] mr-[11px] object-contain">
                                         <p onclick="openCreateUserModal(' . $company->id . ')">Add People</p>
                                     </a>
@@ -81,7 +81,7 @@ class CompanyDataTable extends DataTable
                                     <form action="' . route('companies.destroy', $company->id) . '" method="POST" onsubmit="return confirm(\'Are you sure you want to delete this company?\');">
                                         ' . csrf_field() . '
                                         ' . method_field('DELETE') . '
-                                        <button type="submit" class="flex items-center text-[#344563] text-[16px] manrope-medium">
+                                        <button type="submit" class="flex items-center text-[#344563] text-[13px] manrope-medium">
                                             <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
                                             <p>Delete</p>
                                         </button>
@@ -158,9 +158,9 @@ class CompanyDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
-            Column::make('location')->title('Location')->addClass('text-left text-[#3D3D3D] text-[15px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('location')->title('Location')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
             Column::make('action')->title('Action')->addClass('text-left')->orderable(false)->searchable(false),

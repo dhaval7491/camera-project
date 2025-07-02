@@ -12,6 +12,7 @@ Route::get('/', function () {
 Route::get('dashboard', function() {
     return view('superadmin.dashboard');
 });
-
-
+Route::get('reset_password', function() {
+    return view('superadmin.reset_password');
+});
 require __DIR__.'/superadmin.php';
