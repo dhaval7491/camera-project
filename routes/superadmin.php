@@ -35,7 +35,7 @@ Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEma
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
 // Handle password reset
-Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
 Route::middleware(['superadmin_auth'])->group(function(){
     Route::get('/superadmin/dashboard',[DashboardController::class,'index'])->name('superadmin.dashboard');
     Route::get('/superadmin/logout',[DashboardController::class,'logout'])->name('superadmin.logout');
