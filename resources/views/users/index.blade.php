@@ -7,7 +7,8 @@
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                     <h3 class="manrope-medium text-[#344563] text-[14px] mt-[17px]">
-                        User - {{ $user_counts ?? '10' }}
+                        <!-- User - {{ $user_counts ?? '10' }} -->
+                         User
                     </h3>
                 </div>
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">

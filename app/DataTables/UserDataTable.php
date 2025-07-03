@@ -83,7 +83,7 @@ class UserDataTable extends DataTable
             ->editcolumn('is_active', function ($user) {
                 $status = $user->is_active ? 'Active' : 'Inactive';
                 $color = $user->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[11px] font-medium cursor-pointer\" data-id=\"{$user->id}\" onclick=\"toggleUserStatus({$user->id})\">{$status}</button>";
             })
             ->addColumn('action', function ($user) {
                 return '
@@ -162,13 +162,13 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            'name' => ['title' => 'Name', 'searchable' => true, 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'email' => ['title' => 'Email', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'access_level' => ['title' => 'Access Level', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'is_active' => ['title' => 'Status', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'name' => ['title' => 'Name', 'searchable' => true, 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'email' => ['title' => 'Email', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'access_level' => ['title' => 'Access Level', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
         ];
     }
 

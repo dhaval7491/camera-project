@@ -37,16 +37,16 @@ class ProjectDataTable extends DataTable
 
                 return '
                 <div class="flex items-center">
-                    <span class="inline-block w-[47px] h-[47px] mr-[10px] text-[18px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px] text-center">'
+                    <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">'
                     . $initials .
                     '</span>
-                    <div class="text-[#344563] text-[13px] manrope-regular cursor-pointer">' . $project->name . '</div>
+                    <div class="text-[#344563] text-[12px] manrope-regular cursor-pointer">' . $project->name . '</div>
                 </div>';
             })
             ->editColumn('is_active', function ($project) {
                 $status = $project->is_active ? 'Active' : 'Inactive';
                 $color = $project->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$project->id}\" onclick=\"toggleProjectStatus({$project->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[11px] font-medium cursor-pointer\" data-id=\"{$project->id}\" onclick=\"toggleProjectStatus({$project->id})\">{$status}</button>";
             })
             ->editColumn('company_name', fn($project) => $project->company_name ?? 'N/A')
             ->editColumn('created_at', fn($project) => $project->created_at->format('M d - Y'))
@@ -143,11 +143,11 @@ class ProjectDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#3D3D3D] text-[13px] manrope-regular'],
+            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
         ];
     }
 

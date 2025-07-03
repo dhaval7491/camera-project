@@ -35,7 +35,7 @@
                             Email Address
                         </label>
                         <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
-                        manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
+                        manrope-normal placeholder:text-[#c5c5c5] text-[#344563] focus:border-[grey] 
                         focus:border-[1px] focus:border-solid focus:outline-none @error('email') border-red-500 @enderror"
                             type="email" name="email" value="{{ old('email') }}" placeholder="Enter email address">
 
@@ -44,7 +44,7 @@
                         </label>
                         <div class="relative">
                             <input class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
-                        manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
+                        manrope-normal placeholder:text-[#c5c5c5] text-[#344563] focus:border-[grey] 
                         focus:border-[1px] focus:border-solid focus:outline-none @error('password') border-red-500 @enderror"
                                 type="password"
                                 id="password"
@@ -61,7 +61,7 @@
                         <div class="relative">
                             <input
                                 class="rounded-[10px] bg-[#FFFFFF] w-full h-[45px] px-[15px] mt-[10px] 
-                        manrope-normal placeholder:text-[#c5c5c5] text-[#3D3D3D] focus:border-[grey] 
+                        manrope-normal placeholder:text-[#c5c5c5] text-[#344563] focus:border-[grey] 
                         focus:border-[1px] focus:border-solid focus:outline-none @error('password') border-red-500 @enderror"
                                 type="password"
                                 id="password"
@@ -76,11 +76,11 @@
                         <input checked id="checked-checkbox" type="checkbox"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm 
                                 focus:ring-gray-500 checked:bg-gray">
-                        <label for="checked-checkbox" class="ms-2 text-[#3D3D3D] 
+                        <label for="checked-checkbox" class="ms-2 text-[#344563] 
                                 manrope-medium text-[13px]">Remember me?</label>
                     </div>
                     <p class="text-right">
-                        <a href="#" class="text-[#3D3D3D] manrope-medium text-[13px]">
+                        <a href="#" class="text-[#344563] manrope-medium text-[13px]">
                             Forgot Password?
                         </a>
                     </p>

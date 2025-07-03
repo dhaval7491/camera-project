@@ -3,43 +3,43 @@
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('superadmin.dashboard') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('superadmin.dashboard') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/dashboard.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Dashboard</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Dashboard</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('companies.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('companies.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/company.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Company</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Company</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('projects.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('projects.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/project.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Project</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Project</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('streams.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('streams.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/live.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Live Stream</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Live Stream</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('users.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('users.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/users.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Users</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Users</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('analytics.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('analytics.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/analytics.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Analytics</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Analytics</p>
             </a>
         </li>
         <li class="mx-[4px] my-[5px] p-[3px]  hover:bg-[#4376511c]  rounded-r-[5px] {{ request()->routeIs('settings.index') ? 'bg-[#f1f1f1] border-l-[2px] border-l-solid border-l-[#437651]' : 'hover:bg-[#f1f1f1]' }}">
             <a href="{{ route('settings.index') }}" class="border-l-[2px] border-l-solid border-l-transparent">
                 <img src="{{ asset('admin-theme/assets/images/settings.png') }}" class="w-[20px] my-0 mx-auto mb-[2px] mt-[-18px]">
-                <p class="manrope-medium text-[12px] text-[#344563] text-center" style="font-size:10px;">Settings</p>
+                <p class="manrope-medium text-[11px] text-[#344563] text-center" style="font-size:9px;">Settings</p>
             </a>
         </li>
     </ul>

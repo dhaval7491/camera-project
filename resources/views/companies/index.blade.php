@@ -6,18 +6,17 @@
         <div class="">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <h3 class="manrope-medium text-[#344563] text-[14px] mt-[10px]">All Companies</h3>
+                    <h3 class="manrope-medium text-[#344563] text-[13px] mt-[10px]">All Companies</h3>
                 </div>
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
                     <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
                         <ul class="list-inline list-unstyled flex">
                             <li class="list-inline-item mr-[10px]">
                                 <button
-                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
+                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[11px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModal('createCompanyModal')">
-                                    <span class="mr-[10px]">
-                                        <img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]">
-                                    </span> Add New
+                                    <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]"></span> 
+                                    Add New
                                 </button>
                             </li>
                         </ul>

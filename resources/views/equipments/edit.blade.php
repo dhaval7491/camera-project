@@ -4,8 +4,8 @@
         @method('PUT')
         <input type="hidden" name="id" id="edit_equipment_id">
         <!-- Equipment Type -->
-        <div class="mb-[30px]">
-            <label class="block text-[13px] manrope-regular text-[#000000]">Equipment Type</label>
+        <div class="mb-[30px] flex space-x-4">
+            <label class="block text-[13px] manrope-regular text-[#000000]" style="width:30%;">Equipment Type</label>
             <div class="flex space-x-4 mt-1">
                 <label class="flex items-center">
                     <input type="radio" name="type" value="camera" class="h-[20px] w-[20px] accent-[#437651] focus:ring-[#437651] mr-[10px]" id="edit_type_camera">
