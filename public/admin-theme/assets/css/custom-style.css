@@ -148,6 +148,8 @@ table.dataTable>tfoot>tr>th, table.dataTable>tfoot>tr>td{
 thead{
   background-color: #ffffff;
   border-bottom:2px solid #E9EDF0;
+  /* position: fixed;
+  width:100%; */
 }
 table.dataTable tbody th, table.dataTable tbody td {
   padding: 11px 32px;
@@ -707,14 +709,14 @@ text-align: left !important;
     text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
-    font-size:13px;
+    font-size:12px;
     padding-left: 32px !important;
 }
 .all-table thead th.status ,.all-table thead th.action ,.all-table thead th.people{
     text-align: left !important;
     color:#3D3D3D;
     font-family: manrope-regular !important;
-    font-size:13px;
+    font-size:12px;
 }
 #search-input:focus-visible 
 {

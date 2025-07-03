@@ -3,7 +3,7 @@
         @csrf
         <!-- Equipment Type -->
         <div class="mb-[30px] flex space-x-4">
-            <label class="block text-[13px] manrope-regular text-[#000000] mb-[10px]">Equipment Type</label>
+            <label class="block text-[13px] manrope-regular text-[#000000] mb-[10px]" style="width:30%;">Equipment Type</label>
             <div class="flex space-x-4 mb-3 mt-[-5px]">
                 <label class="flex items-center">
                     <input type="radio" name="type" value="camera" checked 

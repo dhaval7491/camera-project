@@ -23,8 +23,8 @@ class CompanyDataTable extends DataTable
 
                 return '
                     <div class="flex items-center">
-                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[15px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
-                        <div class="text-[#344563] text-[13px] manrope-regular cursor-pointer">
+                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
+                        <div class="text-[#344563] text-[12px] manrope-regular cursor-pointer">
                             ' . $company->company_name . '
                         </div>
                     </div>';
@@ -32,7 +32,7 @@ class CompanyDataTable extends DataTable
             ->addColumn('status', function ($company) {
                 $status = $company->is_active ? 'Active' : 'Inactive';
                 $color = $company->is_active ? 'bg-[#047413]' : 'bg-[#F96767]';
-                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[12px] font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
+                return "<button class=\"table-status w-[90px] {$color} text-white rounded-[7px] py-1 px-4 text-[11px] font-medium cursor-pointer\" data-id=\"{$company->id}\" onclick=\"toggleCompanyStatus({$company->id})\">{$status}</button>";
             })
             ->addColumn('people', function ($company) {
                 $users = $company->users()->take(5)->get(); // get up to 5 to calculate overflow
@@ -158,9 +158,9 @@ class CompanyDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
-            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
-            Column::make('location')->title('Location')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
+            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
+            Column::make('location')->title('Location')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
             Column::make('action')->title('Action')->addClass('text-left min-w-[241px]')->orderable(false)->searchable(false),

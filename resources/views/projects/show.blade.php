@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex flex-wrap">
                 <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <h3 class="manrope-medium text-[#344563] text-[14px] mt-[10px]">
+                    <h3 class="manrope-medium text-[#344563] text-[13px] mt-[10px]">
                         Project
                     </h3>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="flex flex-wrap mb-[30px]">
                         <div class="lg:w-2/6 w-full pl-[5px] pr-[5px] pt-[10px]">
                             <div class="profile-detail">
-                                <p class="pt-[0px]"><span class="w-[37%] inline-block manrope-regular text-[16px] text-[#3D3D3D]">Name of project:</span><span class="manrope-regular text-[16px] text-[#969696]">
+                                <p class="pt-[0px]"><span class="w-[37%] inline-block manrope-regular text-[16px] text-[#344563]">Name of project:</span><span class="manrope-regular text-[16px] text-[#969696]">
                                         {{ $project->name }}</span></p>
                                 <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Date Created: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $project->created_at->format('M d - Y') }}</span></p>
                             </div>
@@ -69,11 +69,11 @@
                     <table class="w-full text-sm text-left">
                         <thead class="bg-[#e6e6e6]">
                             <tr>
-                                <th scope="col" class="px-6 py-3 manrope-medium text-[#3D3D3D] font-medium text-[16px]"></th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Trackable Name</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Other name</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Linked Objects</th>
-                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#3D3D3D] font-medium text-[13px]">Status</th>
+                                <th scope="col" class="px-6 py-3 manrope-medium text-[#344563] font-medium text-[16px]"></th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Trackable Name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Other name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Linked Objects</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Status</th>
                             </tr>
                         </thead>
                         <tbody>

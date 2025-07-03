@@ -10,15 +10,15 @@
                 <div class="flex justify-between mt-[40px]">
                     <div class="pt-[30px] w-[150px] h-[150px] bg-[#FFF6F6] text-center">
                         <p class="text-[#84818A] manrope-medium text-[14px] mb-[20px]">Lifting</p>
-                        <h4 class="manrope-semibold text-[20px] text-[#3D3D3D]">50 Hours</h4>
+                        <h4 class="manrope-semibold text-[20px] text-[#344563]">50 Hours</h4>
                     </div>
                     <div class="pt-[30px] w-[150px] h-[150px] bg-[#F2FFF4] text-center">
                         <p class="text-[#84818A] manrope-medium text-[14px] mb-[20px]">Waiting Time</p>
-                        <h4 class="manrope-semibold text-[20px] text-[#3D3D3D]">25 Hours</h4>
+                        <h4 class="manrope-semibold text-[20px] text-[#344563]">25 Hours</h4>
                     </div>
                     <div class="pt-[30px] w-[150px] h-[150px] bg-[#F5F9FF] text-center">
                         <p class="text-[#84818A] manrope-medium text-[14px] mb-[20px]">Idle</p>
-                        <h4 class="manrope-semibold text-[20px] text-[#3D3D3D]">10 Hours</h4>
+                        <h4 class="manrope-semibold text-[20px] text-[#344563]">10 Hours</h4>
                     </div>
                 </div>
             </div>

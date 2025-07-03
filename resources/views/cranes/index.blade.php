@@ -61,9 +61,9 @@
         <div class="tab-prop pl-[10px]" id="stream1">
             <div class="mb-[20px]">
                 <ul class="flex">
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'livestream1')">Live Stream</li>
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'recordings1')">Recordings</li>
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'screenshorts1')">Screenshots</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'livestream1')">Live Stream</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'recordings1')">Recordings</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'screenshorts1')">Screenshots</li>
                 </ul>
             </div>
             <div class="tab-prop1" id="livestream1">
@@ -305,9 +305,9 @@
         <div class="tab-prop pl-[10px] hidden" id="stream2">
             <div class="mb-[20px]">
                 <ul class="flex">
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'livestream2')">Live Stream</li>
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'recordings2')">Recordings</li>
-                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#3D3D3D]" onclick="openTab(event, 'screenshorts2')">Screenshots</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'livestream2')">Live Stream</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'recordings2')">Recordings</li>
+                    <li class="tab-button ml-[10px] px-[10px] py-[5px] manrope-regular text-[20px] text-[#344563]" onclick="openTab(event, 'screenshorts2')">Screenshots</li>
                 </ul>
             </div>
             <div class="tab-prop1" id="livestream2">
