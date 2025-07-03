@@ -41,7 +41,7 @@ class MappingDataTable extends DataTable
                 <ul class="flex justify-start align-items-center">
                         <li class="py-[5px]">
                             <a href="javascript:void(0);"  onclick="showEditMappingModal(' . $mapping->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                <img src="' . asset('admin-theme/assets/images/edit-report.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain">
+                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[4px] w-[20px] mr-[11px] object-contain">
                             </a>
                         </li>
                         <li class="py-[5px]">

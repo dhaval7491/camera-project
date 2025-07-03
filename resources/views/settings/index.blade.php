@@ -22,27 +22,27 @@
                 </button>
             </div>
             <button id="add-equipment-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="openCreateEquipmentModal()" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
             <button id="create-mapping-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModal('createMappingModal')" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Mapping
             </button>
             <button id="add-trackable-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModal('createTrackableModal')" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Trackable
             </button>
             <button id="add-ai-model-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModaladdai()" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Ai Model
             </button>
             <button id="add-event-type-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[14px] border-[1px] border-solid border-[#437651] text-white hidden"
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
                 onclick="toggleModalevent()" style="height:43px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Event
             </button>
@@ -52,81 +52,56 @@
                     <div class="company-table h-full">
                         <div class="form-list">
                             <div class="">
-                                <div class="flex flex-wrap">
-                                    <div class="sm:w-3/6 md:w-3/6 lg:w-3/6 w-full flex items-center">
-                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Equipment List</h3> -->
-                                         <!-- <div class="py-[10px] px-[0px] mt-[0px] flex">
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
-                    Equipment
-                </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'mapping')">
-                    Mapping
-                </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'trackable')">
-                    Trackable
-                </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'ai-model')">
-                    AI Model
-                </button>
-                <button class="tab-button block text-[#323131] manrope-regular text-[16px] py-[5px] ml-[25px] mr-[25px] mb-[5px]" onclick="openTab(event, 'event-type')">
-                    Event Type
-                </button>
-            </div> -->
-                                    </div>
-                                    <div class="sm:w-3/6 md:w-3/6 lg:w-3/6 w-full">
-                                        <div class="table-filter-block mt-[0px]">
-                                            <div class="flex justify-end">
-                                                <p class="flex items-center mr-[8px]">
-                                                    <div class="relative flex items-center mr-[8px]">
-                                                        <!-- Search Input -->
-                                                        <input type="text" id="search-input"
-                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                            placeholder="Search...">
-
-                                                        <!-- Search Button -->
-                                                        <button id="search-toggle"
-                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
-                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                                        </button>
-                                                    </div>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
-                                                        @foreach($companies as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
-                                                        @foreach($projects as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
-                                                        @foreach($equipments as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                                        @foreach($statuses as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                            </div>
+                                <div class="flex flex-wrap justify-end">
+                                    <div class="table-filter-block mt-[0px]">
+                                        <div class="flex justify-end ">
+                                            <p class="flex items-center mr-[8px]">
+                                                <div class="relative flex items-center mr-[8px]">
+                                                    <input type="text" id="search-input"
+                                                        class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                        placeholder="Search...">
+                                                    <button id="search-toggle"
+                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                                    @foreach($companies as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                                    @foreach($projects as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
+                                                    @foreach($equipments as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                    @foreach($statuses as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-list-table">
-                                <div class="mt-[20px]">
-                                    <div class="relative">
-                                        {!! $equipmentTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
+                                <div class="form-list-table">
+                                    <div class="mt-[20px]">
+                                        <div class="relative">
+                                            {!! $equipmentTable->table(['class' => 'all-table table table-bordered table-striped whitespace-nowrape'], true) !!}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -137,59 +112,53 @@
                     <div class="company-table h-full">
                         <div class="form-list">
                             <div class="">
-                                <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
-                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Device Mapped - 40</h3> -->
-                                    </div>
-                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
-                                        <div class="table-filter-block mt-[0px]">
-                                            <div class="flex justify-end">
-                                                <p class="flex items-center mr-[8px]">
-                                                    <div class="relative flex items-center mr-[8px]">
-                                                        <!-- Search Input -->
-                                                        <input type="text" id="search-input"
-                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                            placeholder="Search...">
+                                <div class="flex flex-wrap justify-end">
+                                    <div class="table-filter-block mt-[0px]">
+                                        <div class="flex justify-end ">
+                                            <p class="flex items-center mr-[8px]">
+                                                <div class="relative flex items-center mr-[8px]">
+                                                    <!-- Search Input -->
+                                                    <input type="text" id="search-input"
+                                                        class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                        placeholder="Search...">
 
-                                                        <!-- Search Button -->
-                                                        <button id="search-toggle"
-                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                                        </button>
-                                                    </div>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
-                                                        @foreach($companies as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
-                                                        @foreach($projects as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
-                                                        @foreach($tablets as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                                        @foreach($statuses as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                            </div>
+                                                    <!-- Search Button -->
+                                                    <button id="search-toggle"
+                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
+                                                    @foreach($companies as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
+                                                    @foreach($projects as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
+                                                    @foreach($tablets as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                    @foreach($statuses as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
                                         </div>
-                                    </div>
-                                    
+                                    </div>    
                                 </div>
                             </div>
                            
@@ -207,49 +176,41 @@
                     <div class="company-table h-full">
                         <div class="form-list">
                             <div class="">
-                                <div class="flex flex-wrap">
-                                    <div class="sm:w-6/6 md:w-2/6 lg:w-2/6 w-full flex items-center">
-                                        <!-- <h3 class="manrope-medium text-[#344563] text-[18px]">Trackable - 10</h3> -->
-                                    </div>
-                                    <div class="sm:w-6/6 md:w-4/6 lg:w-4/6 w-full">
-                                        <div class="table-filter-block mt-[0px]">
-                                            <div class="flex justify-end">
-                                                <p class="flex items-center mr-[8px]">
-                                                    <div class="relative flex items-center mr-[8px]">
-                                                        <!-- Search Input -->
-                                                        <input type="text" id="search-input"
-                                                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                                                            placeholder="Search...">
-
-                                                        <!-- Search Button -->
-                                                        <button id="search-toggle"
-                                                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
-                                                        </button>
-                                                    </div>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
-                                                        @foreach($trackables as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
-                                                        @foreach($types as $type)
-                                                        <option value="{{ $type }}">{{ $type }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                                <p class="flex items-center mr-[8px]">
-                                                    <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
-                                                        @foreach($statuses as $id => $name)
-                                                        <option value="{{ $id }}">{{ $name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </p>
-                                            </div>
+                                <div class="flex flex-wrap justify-end">
+                                    <div class="table-filter-block mt-[0px]">
+                                        <div class="flex justify-end">
+                                            <p class="flex items-center mr-[8px]">
+                                                <div class="relative flex items-center mr-[8px]">
+                                                    <input type="text" id="search-input"
+                                                        class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                                                        placeholder="Search...">
+                                                    <button id="search-toggle"
+                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
+                                                    @foreach($trackables as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
+                                                    @foreach($types as $type)
+                                                    <option value="{{ $type }}">{{ $type }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
+                                            <p class="flex items-center mr-[8px]">
+                                                <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
+                                                    @foreach($statuses as $id => $name)
+                                                    <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
