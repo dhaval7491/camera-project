@@ -35,7 +35,7 @@ Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEma
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
 // Handle password reset
-Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::middleware(['superadmin_auth'])->group(function(){
     Route::get('/superadmin/dashboard',[DashboardController::class,'index'])->name('superadmin.dashboard');
     Route::get('/superadmin/logout',[DashboardController::class,'logout'])->name('superadmin.logout');
@@ -65,7 +65,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/mapping/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mapping.toggle-active');
     Route::post('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/streams/{camera_id}', [LiveStreamController::class, 'show'])->name('streams.show');
     Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
     Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
