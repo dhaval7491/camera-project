@@ -247,7 +247,7 @@
                             <div class="form-list-table">
                                 <div class="mt-[20px]">
                                     <div class="relative overflow-x-scroll h-full">
-                                        <table id="ai-models-table" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <table id="ai-models-table" class="all-table w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="all-table border-b-[2px] border-solid border-b-[#E9EDF0]">
                                                 <tr>
                                                     <th class="text-center pl-[10px] pb-[25px]">

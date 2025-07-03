@@ -162,7 +162,7 @@ class ProjectDataTable extends DataTable
             <div class="flex justify-start relative">
                 <span><a href="javascript:void(0);" onclick="showEditModal(' . $project->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[21px] mr-[20px]"></a></span>
                 <span class="mt-[8px]"><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event)"></a></span>
-                <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] right-[60px] w-[170px] p-[10px] z-[8]">
+                <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[-80px] w-[170px] p-[10px] z-[8]">
                     <ul>
                         <li class="py-[5px]">
                             <a href="javascript:void(0);" class="flex manrope-medium text-[#344563] text-[13px]">

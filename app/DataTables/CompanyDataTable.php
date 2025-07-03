@@ -63,7 +63,7 @@ class CompanyDataTable extends DataTable
                         <span class="mt-[8px]">
                             <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event, this)"></a>
                         </span>
-                        <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[10px] w-[170px] p-[10px] z-[8]">
+                        <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[-80px] w-[170px] p-[10px] z-[8]">
                             <ul>
                                 <li class="py-[5px]">
                                     <a href="javascript:void(0);" class="flex text-[#344563] text-[13px] manrope-medium">
@@ -163,7 +163,7 @@ class CompanyDataTable extends DataTable
             Column::make('location')->title('Location')->addClass('text-left text-[#3D3D3D] text-[13px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
-            Column::make('action')->title('Action')->addClass('text-left')->orderable(false)->searchable(false),
+            Column::make('action')->title('Action')->addClass('text-left min-w-[241px]')->orderable(false)->searchable(false),
         ];
     }
 
