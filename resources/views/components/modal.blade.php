@@ -5,7 +5,7 @@
     'onClose' => null,
 ])
 
-<div id="{{ $id }}" class="fixed inset-0 z-10 flex items-center justify-center hidden">
+<div id="{{ $id }}" class="popup-modal fixed inset-0 z-10 flex items-center justify-center hidden">
     <!-- Modal Overlay -->
     <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
 
