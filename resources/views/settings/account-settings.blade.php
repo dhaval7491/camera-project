@@ -45,7 +45,7 @@
         <div class="account-detail pl-[40px] pt-[20px]">
             <h4 class="manrope-semibold font-[16px] text-[#437651]">Change Password</h4>
             <div class="w-[100%]">
-                <form action="{{ route('password.update') }}" method="POST" class="mt-4">
+                <form action="{{ route('profile.password.update') }}" method="POST" class="mt-4">
                     @csrf
                     @method('PUT')
                     <div class="border-l-[6px] border-[#437651] border-solid tab-shadow py-[20px] px-[30px] mb-[30px] mt-[40px]">

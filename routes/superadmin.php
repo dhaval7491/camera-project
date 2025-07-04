@@ -62,10 +62,10 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/projects/{project}/toggle-active', [ProjectController::class, 'toggleActive'])->name('projects.toggle-active');
     Route::post('/equipments/{equipment}/toggle-active', [EquipmentController::class, 'toggleActive'])->name('equipments.toggle-active');
     Route::post('/trackables/{trackable}/toggle-active', [TrackableController::class, 'toggleActive'])->name('trackables.toggle-active');
-    Route::post('/mapping/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
+    Route::post('/mapping/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mapping.toggle-active');
     Route::post('/users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
     Route::post('/mappings/{mapping}/toggle-active', [MappingController::class, 'toggleActive'])->name('mappings.toggle-active');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/streams/{camera_id}', [LiveStreamController::class, 'show'])->name('streams.show');
     Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
     Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
