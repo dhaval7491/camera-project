@@ -48,7 +48,7 @@ class TrackableDataTable extends DataTable
                 return '<ul class="flex justify-start align-items-center">
                         <li class="py-[5px]">
                             <a href="javascript:void(0);"  onclick="showTrackableEditModal(' . $trackable->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[0px] w-[20px] mr-[11px] object-contain">
+                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[0px] w-[16px] h-[16px] mr-[11px] mr-[11px] object-contain">
                             </a>
                         </li>
                         <li class="py-[5px]">
@@ -56,7 +56,7 @@ class TrackableDataTable extends DataTable
                                 ' . csrf_field() . '
                                 ' . method_field('DELETE') . '
                                 <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
-                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
+                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] h-[16px] mr-[11px] object-contain">
                                 </button>
                             </form>
                         </li>

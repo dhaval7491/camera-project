@@ -152,7 +152,7 @@ thead{
   width:100%; */
 }
 table.dataTable tbody th, table.dataTable tbody td {
-  padding: 11px 32px;
+  padding: 6px 32px;
 }
 
 .video-box {
@@ -628,10 +628,10 @@ table.dataTable {
   }
 .table-filter-block  .select2-container--default .select2-selection--multiple
 {
-    height: 40px !important;
+    height: 37px !important;
     border: 1px solid #EBEBEB !important;
     font-family: manrope-medium !important;
-    border-radius: 15px !important;
+    border-radius: 12px !important;
     padding-bottom: 0px !important;
     overflow-y: scroll !important;
     overflow-x: hidden !important;
@@ -770,6 +770,30 @@ text-align: left !important;
     font-family: manrope-regular !important;
     font-size:12px;
 }
+.all-table thead th.status 
+{
+  min-width:150px;
+}
+.all-table thead th.action 
+{
+  min-width:170px !important;
+}
+.all-table thead th.people 
+{
+  min-width:150px
+}
+.all-table thead th.linked
+{
+  min-width:250px
+}
+.all-table thead th.companyName ,.all-table thead th.projectName ,.all-table thead th.company ,.all-table thead th.name ,.all-table thead th.email ,.all-table thead th.equipmentName ,.all-table thead th.mappedto
+{
+  min-width:200px !important;
+}
+.all-table thead th.dateCreated , .all-table thead th.location ,.all-table thead th.created ,.all-table thead th.accesslevel , .all-table thead th.equipmentCode , .all-table thead th.equipmentType
+{
+  min-width:180px !important;
+}
 #search-input:focus-visible 
 {
   border: 1px solid #437651;
@@ -804,3 +828,32 @@ table.dataTable thead>tr>th.sorting:before, table.dataTable thead>tr>th.sorting:
 {
   background-color:#dbe9e0 !important;
 }
+.sidebar-toggle {
+  cursor: pointer;
+}
+.sidebar-mobile
+{
+    z-index: 999;
+    background-color: #fff;
+    display: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.camera-all-tables 
+{
+  margin-left:86px;
+}
+.sidebar-mobile.sidebar-collapsed {
+    display: block;
+    transform: translateX(0);
+    opacity: 1;
+}
+.topbar 
+{
+  position:fixed;
+}
+.filter-resp 
+  {
+      display:none;
+  }

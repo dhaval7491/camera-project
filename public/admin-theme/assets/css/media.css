@@ -24,9 +24,9 @@
 }
 @media (max-width:1600px)
 {
-    .topbar {
+    /* .topbar {
         padding: 15px 5px 8px 74px;
-    }
+    } */
     .form-data-list .nested-list li a {
         font-size: 14px;
     }
@@ -46,7 +46,7 @@
         width: 15px;
     }
     .form-list .form-list-table tbody td {
-        font-size: 13px;
+        font-size: 11px;
     }
     .form-list .form-list-table tbody tr .people-img span img {
         width: 28px;
@@ -130,9 +130,9 @@
 }
 @media (max-width:1360px)
 {
-    .topbar {
+    /* .topbar {
         padding: 15px 5px 8px 58px;
-    }
+    } */
     .form-data-list .nested-list li a {
         font-size: 13px;
     }
@@ -198,12 +198,9 @@
     #form_search {
         font-size: 13px;
     }
-    .sidebar {
-        width: 7%;
-    }
-    .topbar {
+    /* .topbar {
         padding: 0px 5px 0px 68px;
-    }
+    } */
     .dashboard-main-content {
         margin-left: 7%;
     }
@@ -232,14 +229,8 @@
     .createform-tab ul#mymainTab {
         width: 35%;
     }
-    .sidebar {
-        width: 8%;
-    }
     .dashboard-main-content {
         margin-left: 9%;
-    }
-    .topbar {
-        padding: 0px 5px 0px 97px;
     }
 }
 @media (max-width:1025px)
@@ -263,14 +254,21 @@
         display: flex;
         justify-content: right;
     }
-    .topbar {
+    /* .topbar {
         padding: 0px 5px 0px 79px;
+    } */
+}
+@media (min-width:992px) 
+{
+    .sidebar-toggle
+    {
+        display:none;
     }
 }
 @media (max-width:992px)
 {
     .sidebar {
-        width: 8%;
+        width: 100px;
     }
     .sidenav 
     {
@@ -301,9 +299,9 @@
       {
         display:none;
       }
-      .topbar {
+      /* .topbar {
         padding: 2px 5px 0px 0px;
-    }
+    } */
     .add-form-all-opt {
         width: 50%;
     }
@@ -342,6 +340,26 @@
     .form-create-drag {
         width: 30%;
     }
+    .sidebar-toggle
+    {
+        display:block;
+    }
+    .sidebar-desktop 
+    {
+        display:none;
+    }
+    .camera-all-tables
+    {
+        margin-left:20px;
+    }
+    .topbar 
+    {
+        position:relative !important;
+    }
+    .dashboard-body 
+    {
+        padding-top:10px;
+    }
 }
 @media (max-width:820px)
 {
@@ -349,8 +367,30 @@
         width: 48%;
     }
 }
+@media (min-width:767px)
+{
+    .filter-resp 
+    {
+        display:none;
+    }
+}
 @media (max-width:767px)
 {
+        .dashboard-body {
+        padding-top: 30px;
+    }
+    .filter-drop
+    {
+        display:none;
+    }
+    .filter-resp 
+    {
+        display:block;
+    }
+    .top-search 
+    {
+        display:none;
+    }
     .topbar ul li a.back-button
     {
         display:none;

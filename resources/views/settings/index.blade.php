@@ -3,8 +3,8 @@
 @section('content')
 <div class="">
     <div class="form-list">
-        <div class="flex justify-between items-center px-[10px]">
-            <div class="pr-[5px] px-[0px] pl-[0px] mt-[0px] flex">
+        <div class="flex flex-wrap justify-between items-center px-[10px]">
+            <div class="pr-[5px] px-[0px] pl-[0px] mt-[0px] flex flex-nowrap overflow-x-auto">
                 <button class="tab-button block text-[#323131] manrope-regular text-[13px] py-[5px] ml-[0px] mr-[25px] mb-[5px]" onclick="openTab(event, 'equipment')">
                     Equipment
                 </button>
@@ -22,28 +22,28 @@
                 </button>
             </div>
             <button id="add-equipment-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="openCreateEquipmentModal()" style="height:43px;">
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white"
+                onclick="openCreateEquipmentModal()" style="height:36px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Equipment
             </button>
             <button id="create-mapping-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModal('createMappingModal')" style="height:43px;">
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white hidden"
+                onclick="toggleModal('createMappingModal')" style="height:36px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Mapping
             </button>
             <button id="add-trackable-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModal('createTrackableModal')" style="height:43px;">
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white hidden"
+                onclick="toggleModal('createTrackableModal')" style="height:36px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Trackable
             </button>
             <button id="add-ai-model-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModaladdai()" style="height:43px;">
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white hidden"
+                onclick="toggleModaladdai()" style="height:36px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Ai Model
             </button>
             <button id="add-event-type-btn"
-                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white hidden"
-                onclick="toggleModalevent()" style="height:43px;">
+                class="tab-action-btn flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white hidden"
+                onclick="toggleModalevent()" style="height:36px;">
                 <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png')}}" class="w-[15px] mt-[2px]"></span> Add Event
             </button>
         </div>
@@ -61,33 +61,41 @@
                                                         class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
                                                         placeholder="Search...">
                                                     <button id="search-toggle"
-                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
-                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        class="p-[11px] rounded-[14px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
                                                     </button>
                                                 </div>
                                             </p>
                                             <p class="flex items-center mr-[8px]">
+                                                <div class="relative flex items-center mr-[8px] filter-resp">
+                                                    <button id="search-toggle"
+                                                        class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
+                                                        <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="equipment-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                                                     @foreach($companies as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="equipment-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
                                                     @foreach($projects as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="equipment-equipment-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Equipment">
                                                     @foreach($equipments as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="equipment-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                                                     @foreach($statuses as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
@@ -124,33 +132,41 @@
 
                                                     <!-- Search Button -->
                                                     <button id="search-toggle"
-                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        class="p-[11px] rounded-[14px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
                                                     </button>
                                                 </div>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] ">
+                                                <div class="relative flex items-center mr-[8px] filter-resp">
+                                                    <button id="search-toggle"
+                                                        class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
+                                                        <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="mapping-company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                                                     @foreach($companies as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="mapping-project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
                                                     @foreach($projects as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="mapping-tablet-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Tablet">
                                                     @foreach($tablets as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="mapping-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                                                     @foreach($statuses as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
@@ -185,26 +201,34 @@
                                                         class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
                                                         placeholder="Search...">
                                                     <button id="search-toggle"
-                                                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                                                        class="p-[11px] rounded-[14px] border border-[#EBEBEB] ml-2 z-[8] bg-white">
+                                                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
                                                     </button>
                                                 </div>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] ">
+                                                <div class="relative flex items-center mr-[8px] filter-resp">
+                                                    <button id="search-toggle"
+                                                        class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
+                                                        <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
+                                                    </button>
+                                                </div>
+                                            </p>
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="trackable-name-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Name">
                                                     @foreach($trackables as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="trackable-type-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Other name">
                                                     @foreach($types as $type)
                                                     <option value="{{ $type }}">{{ $type }}</option>
                                                     @endforeach
                                                 </select>
                                             </p>
-                                            <p class="flex items-center mr-[8px]">
+                                            <p class="flex items-center mr-[8px] filter-drop">
                                                 <select id="trackable-status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                                                     @foreach($statuses as $id => $name)
                                                     <option value="{{ $id }}">{{ $name }}</option>
@@ -1407,6 +1431,78 @@
                 }
             }, 100);
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#equipment thead th').each(function() {
+            const thText = $(this).text().trim();
+
+            if (thText === 'Status') {
+                $(this).addClass('status');
+            } else if (thText === 'Action') {
+                $(this).addClass('action');
+            } else if (thText === 'Project Name') {
+                $(this).addClass('name');
+            } else if (thText === 'Company Name') {
+                $(this).addClass('company');
+            } else if (thText === 'Equipment Type') {
+                $(this).addClass('equipmentType');
+            } else if (thText === 'Equipment Code') {
+                $(this).addClass('equipmentCode');
+            } else if (thText === 'Equipment Name') {
+                $(this).addClass('equipmentName');
+            } else if (thText === 'Mapped To') {
+                $(this).addClass('mappedto');
+            }
+            // Add more cases as needed
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#mappings-table thead th').each(function() {
+            const thText = $(this).text().trim();
+
+            if (thText === 'Status') {
+                $(this).addClass('status');
+            } else if (thText === 'Action') {
+                $(this).addClass('action');
+            } else if (thText === 'Project Name') {
+                $(this).addClass('name');
+            } else if (thText === 'Company Name') {
+                $(this).addClass('company');
+            } else if (thText === 'Equipment Type') {
+                $(this).addClass('equipmentType');
+            } else if (thText === 'Equipment Code') {
+                $(this).addClass('equipmentCode');
+            } else if (thText === 'Camera Name') {
+                $(this).addClass('equipmentName');
+            } else if (thText === 'Tablet Name') {
+                $(this).addClass('mappedto');
+            }
+            // Add more cases as needed
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#trackables-table thead th').each(function() {
+            const thText = $(this).text().trim();
+
+            if (thText === 'Status') {
+                $(this).addClass('status');
+            } else if (thText === 'Action') {
+                $(this).addClass('action');
+            } else if (thText === 'Trackable Name') {
+                $(this).addClass('name');
+            } else if (thText === 'Other Name') {
+                $(this).addClass('equipmentName');
+            } else if (thText === 'Linked Objects') {
+                $(this).addClass('linked');
+            }
+            // Add more cases as needed
+        });
     });
 </script>
 @endpush

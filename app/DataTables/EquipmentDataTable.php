@@ -52,7 +52,7 @@ class EquipmentDataTable extends DataTable
                 <ul class="flex justify-start align-items-center">
                         <li class="py-[5px]">
                             <a href="javascript:void(0);"  onclick="showEditModal(' . $equipment->id . ')" class="flex manrope-regular text-[#344563] font-normal text-[15px]">
-                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[0px] w-[20px] mr-[11px] object-contain">
+                                <img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="mt-[0px] w-[16px] h-[16px] mr-[11px] object-contain">
                             </a>
                         </li>
                         <li class="py-[5px]">
@@ -60,7 +60,7 @@ class EquipmentDataTable extends DataTable
                                 ' . csrf_field() . '
                                 ' . method_field('DELETE') . '
                                 <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[15px]">
-                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[20px] h-[20px] mr-[11px] object-contain">
+                                    <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] h-[16px] mr-[11px] object-contain">
                                 </button>
                             </form>
                         </li>
@@ -174,13 +174,13 @@ class EquipmentDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false)
                 ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
+            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

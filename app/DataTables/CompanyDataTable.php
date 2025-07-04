@@ -23,8 +23,8 @@ class CompanyDataTable extends DataTable
 
                 return '
                     <div class="flex items-center">
-                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">' . $initials . '</span>
-                        <div class="text-[#344563] text-[12px] manrope-regular cursor-pointer">
+                        <span class="text-center inline-block mr-[10px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">' . $initials . '</span>
+                        <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">
                             ' . $company->company_name . '
                         </div>
                     </div>';
@@ -57,11 +57,11 @@ class CompanyDataTable extends DataTable
             ->addColumn('action', function ($company) {
                 return '
                     <div class="flex justify-start relative">
-                        <span>
-                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[21px] mr-[20px]"></a>
+                        <span class="mr-[15px]">
+                            <a href="javascript:void(0);" onclick="showEditModal(' . $company->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] h-[16px] min-w-[16px]"></a>
                         </span>
-                        <span class="mt-[8px]">
-                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event, this)"></a>
+                        <span class="mt-[8px] mr-[15px]">
+                            <a href="#"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[16px] h-[16px] object-contain min-w-[16px]" onclick="toggleDotDropdown(event, this)"></a>
                         </span>
                         <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[-80px] w-[170px] p-[10px] z-[8]">
                             <ul>
@@ -158,12 +158,12 @@ class CompanyDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
-            Column::make('location')->title('Location')->addClass('text-left text-[#344563] text-[12px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('created_at')->title('Date Created')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('location')->title('Location')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),
             Column::make('people')->title('People')->addClass('text-left'),
-            Column::make('action')->title('Action')->addClass('text-left min-w-[241px]')->orderable(false)->searchable(false),
+            Column::make('action')->title('Action')->addClass('text-left min-w-[250px]')->orderable(false)->searchable(false),
         ];
     }
 

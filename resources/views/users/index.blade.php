@@ -4,19 +4,19 @@
 <div class="p-6 lg:p-8">
     <div class="form-list">
         <div class="">
-            <div class="flex flex-wrap">
-                <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
+            <div class="flex">
+                <div class="sm:w-1/6 md:w-1/6 lg:w-1/6 w-full">
                     <h3 class="manrope-medium text-[#344563] text-[14px] mt-[17px]">
                         <!-- User - {{ $user_counts ?? '10' }} -->
                          User
                     </h3>
                 </div>
-                <div class="sm:w-6/6 md:w-3/6 lg:w-3/6 w-full">
-                    <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
+                <div class="sm:w-5/6 md:w-5/6 lg:w-5/6 w-full">
+                    <div class="table-filter float-right">
                         <ul class="list-inline list-unstyled flex">
                             <li class="list-inline-item mr-[10px]">
                                 <button
-                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
+                                    class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[8px] px-[15px] text-[11px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModal('createUserModal')">
                                     <span class="mr-[10px]">
                                         <img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]">
@@ -42,32 +42,40 @@
                     <!-- Search Button -->
                     <button id="search-toggle"
                         class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]">
+                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
                     </button>
                 </div>
                 </p>
                 <p class="flex items-center mr-[8px]">
+                    <div class="relative flex items-center mr-[8px] filter-resp">
+                        <button id="search-toggle"
+                            class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
+                            <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
+                        </button>
+                    </div>
+                </p>
+                <p class="flex items-center mr-[8px] filter-drop">
                     <select id="user-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="User">
                         @foreach($users as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </p>
-                <p class="flex items-center mr-[8px]">
+                <p class="flex items-center mr-[8px] filter-drop">
                     <select id="company-filter" multiple class="filter-select w-[120px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company">
                         @foreach($companies as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </p>
-                <p class="flex items-center mr-[8px]">
+                <p class="flex items-center mr-[8px] filter-drop">
                     <select id="project-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Project">
                         @foreach($projects as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </p>
-                <p class="flex items-center mr-[8px]">
+                <p class="flex items-center mr-[8px] filter-drop">
                     <select id="status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                         @foreach($statuses as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
@@ -522,15 +530,23 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#user-table thead th').each(function() {
+        $('#users-table thead th').each(function() {
             const thText = $(this).text().trim();
 
             if (thText === 'Status') {
                 $(this).addClass('status');
             } else if (thText === 'Action') {
                 $(this).addClass('action');
-            } else if (thText === 'People') {
-                $(this).addClass('people');
+            } else if (thText === 'Name') {
+                $(this).addClass('name');
+            } else if (thText === 'Company') {
+                $(this).addClass('company');
+            } else if (thText === 'Created At') {
+                $(this).addClass('created');
+            } else if (thText === 'Email') {
+                $(this).addClass('email');
+            } else if (thText === 'Access Level') {
+                $(this).addClass('accesslevel');
             }
             // Add more cases as needed
         });

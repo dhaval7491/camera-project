@@ -4,15 +4,15 @@
 <div class="p-6 lg:p-8">
     <div class="form-list">
         <div class="profile-detail alert-shadow pt-[20px] pr-[25px] pb-[1px] pl-[20px] mt-[10px] mr-[10px]">
-            <div class="flex justify-between pl-[5px] pr-[5px]">
+            <div class="flex justify-between pl-[5px] pr-[5px] mb-[20px]">
                 <h4 class="manrope-medium text-[14px]">Personal Detail</h4>
                 <div class="flex">
-                    <button class="bg-[#dcdcdc] manrope-medium text-[14px] text-[#344563] rounded-[3px]" onclick="showEditModal('{{$user->id}}')"><img src="{{asset('admin-theme/assets/images/edit-opt.png')}}" class="w-[25px]  h-[25px] mr-[11px] object-contain"></button>
+                    <button class="bg-[#dcdcdc] manrope-medium text-[14px] text-[#344563] rounded-[3px]" onclick="showEditModal('{{$user->id}}')"><img src="{{asset('admin-theme/assets/images/edit-opt.png')}}" class="w-[15px]  h-[15px] mr-[11px] object-contain"></button>
                     <form action="{{route('users.destroy', $user->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[13px] ml-[20px]">
-                            <img src="{{asset('admin-theme/assets/images/delete.png')}}" class="w-[25px]  h-[25px] mr-[11px] object-contain">
+                        <button type="submit" class="flex items-center manrope-regular text-[#344563] font-normal text-[13px] ml-[20px] mt-[3px]">
+                            <img src="{{asset('admin-theme/assets/images/delete.png')}}" class="w-[15px]  h-[15px] mr-[11px] object-contain">
                         </button>
                     </form>
                 </div>
@@ -28,56 +28,56 @@
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:85px;">User Name:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]" >{{ $user->name }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:70px;">User Name:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]" >{{ $user->name }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:85px;">User ID:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">#{{ $user->id }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:70px;">User ID:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">#{{ $user->id }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:85px;">Username:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->username ?? $user->name }}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
-                            <div class="profile-detail">
-                                <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:70px;">Location:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->location ?? 'N/A' }}</span>
-                                </p>
-                                <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:70px;">Mail ID:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:70px;">Username:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $user->username ?? $user->name }}</span>
                                 </p>
                             </div>
                         </div>
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:92px;">Date:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->created_at->format('d.m.Y') }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:55px;">Location:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $user->location ?? 'N/A' }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:92px;">Access Level:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->access_level ?? 'Project' }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:55px;">Mail ID:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="lg:w-2/8 w-full pl-[5px] pr-[5px] pt-[10px]">
+                            <div class="profile-detail">
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:80px;">Date:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $user->created_at->format('d.m.Y') }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:92px;">Status:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $user->is_active ? 'Active' : 'Inactive' }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:80px;">Access Level:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $user->access_level ?? 'Project' }}</span>
+                                </p>
+                                <p class="pt-[10px]">
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:80px;">Status:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $user->is_active ? 'Active' : 'Inactive' }}</span>
                                 </p>
                             </div>
                         </div>
                         <div class="lg:w-2/8 w-full pl-[5px] pr-[5px]">
                             <div class="profile-detail">
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:115px;">Company Name:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $companyNames ?: 'N/A' }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:100px;">Company Name:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $companyNames ?: 'N/A' }}</span>
                                 </p>
                                 <p class="pt-[10px]">
-                                    <span class="inline-block manrope-regular text-[14px] text-[#344563]" style="width:115px;">Project Name:</span>
-                                    <span class="manrope-regular text-[14px] text-[#969696]">{{ $projectNames ?: 'N/A' }}</span>
+                                    <span class="inline-block manrope-regular text-[12px] text-[#344563]" style="width:100px;">Project Name:</span>
+                                    <span class="manrope-regular text-[12px] text-[#969696]">{{ $projectNames ?: 'N/A' }}</span>
                                 </p>
                             </div>
                         </div>

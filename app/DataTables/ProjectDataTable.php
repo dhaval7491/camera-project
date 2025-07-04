@@ -37,10 +37,10 @@ class ProjectDataTable extends DataTable
 
                 return '
                 <div class="flex items-center">
-                    <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[10px] px-[10px]">'
+                    <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">'
                     . $initials .
                     '</span>
-                    <div class="text-[#344563] text-[12px] manrope-regular cursor-pointer">' . $project->name . '</div>
+                    <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">' . $project->name . '</div>
                 </div>';
             })
             ->editColumn('is_active', function ($project) {
@@ -143,11 +143,11 @@ class ProjectDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
-            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
-            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
-            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#344563] text-[12px] manrope-regular'],
+            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
         ];
     }
 
@@ -160,8 +160,8 @@ class ProjectDataTable extends DataTable
     {
         return '
             <div class="flex justify-start relative">
-                <span><a href="javascript:void(0);" onclick="showEditModal(' . $project->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[21px] mr-[20px]"></a></span>
-                <span class="mt-[8px]"><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[23px] mr-[20px]" onclick="toggleDotDropdown(event)"></a></span>
+                <span class="mr-[15px]"><a href="javascript:void(0);" onclick="showEditModal(' . $project->id . ')"><img src="' . asset('admin-theme/assets/images/edit-opt.png') . '" class="w-[16px] h-[16px] min-w-[16px]"></a></span>
+                <span class="mt-[8px] mr-[15px]"><a href="javascript:void(0);"><img src="' . asset('admin-theme/assets/images/table-menu.png') . '" class="w-[16px] h-[16px] object-contain min-w-[16px]" onclick="toggleDotDropdown(event)"></a></span>
                 <div class="dot-drop absolute bg-white tab-shadow rounded-md hidden top-[30px] left-[-80px] w-[170px] p-[10px] z-[8]">
                     <ul>
                         <li class="py-[5px]">

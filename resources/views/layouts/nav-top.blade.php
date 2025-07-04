@@ -1,13 +1,16 @@
-<nav class="w-full bg-white py-[15px] pl-[0px] pr-[25px] flex items-center justify-between fixed z-[9]">
+<nav class="w-full bg-white py-[15px] pl-[0px] pr-[25px] flex items-center justify-between topbar  z-[9]">
     <div class="flex items-center space-x-3">
+        <a href="#" class="flex items-center sidebar-toggle" style="padding-left:26px; padding-right:15px;">
+            <img src="{{ asset('admin-theme/assets/images/filter-by.png') }}" alt="Logo" style="width:22px; height:22px; object-fit:contain;">
+        </a>
         <a href="#" class="flex items-center">
             <img src="{{ asset('admin-theme/assets/images/logo.png') }}" alt="Logo" class="w-[80px] h-[80px] object-contain">
         </a>
-        <div class="pl-[30px]">
+        <div class="pl-[0px]">
             <a href="#" class="inline-block manrope-medium text-[13px] mt-[3px] mr-[10px] text-[#437651] underline" style="text-decoration:none;">&lt; Back</a>
         </div>
         <div class="relative">
-            <input type="text" placeholder="Search" class="w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[13px] px-[40px] py-[10px] border-[1px] border-solid border-[#D6D6D6]">
+            <input type="text" placeholder="Search" class="top-search w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[13px] px-[40px] py-[8px] border-[1px] border-solid border-[#D6D6D6]">
             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <img src="{{ asset('admin-theme/assets/images/table-search.png') }}" class="w-[15px]">
             </span>
