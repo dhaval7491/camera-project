@@ -8,7 +8,8 @@
 'options' => [], // Array to handle select options
 'labelclass' => 'block text-[13px] manrope-regular text-[#000000]', // Added default label class
 'multiple' => false, // Added multiple prop for select2
-'readonly' => false
+'readonly' => false,
+'autoComplete' => false,
 ])
 
 <div class="flex flex-wrap mb-[15px]">
@@ -79,6 +80,7 @@
             name="{{ $name }}"
             id="{{ $id }}"
             placeholder="{{ $placeholder }}"
+            @if(!$autoComplete) autocomplete="new-password" @endif
             @if($readonly) readonly @endif
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px] {{ $class }}" />
         <div id="{{ $id }}_error" class="text-red-500 text-sm hidden"></div>

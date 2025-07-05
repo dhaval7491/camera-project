@@ -1,5 +1,5 @@
 <x-modal id="editCompanyModal" title="Edit Company" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
-    <form id="editCompanyForm" method="POST" enctype="multipart/form-data" class="mt-[10px]">
+    <form id="editCompanyForm" method="POST" enctype="multipart/form-data" class="mt-[10px]" autocomplete="off">
         @csrf
         @method('PUT')
         <input type="hidden" name="id" id="edit_company_id">
@@ -28,6 +28,36 @@
             placeholder="Enter Company Location"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[13px] manrope-regular text-[#000000]" />
+        
+        <div class="block text-[13px] manrope-medium font-bold text-[#000000] mb-[40px] mt-[40px] pb-[5px]">Admin Details</div>
+
+        <x-form-input
+            label="Admin Name"
+            type="text"
+            name="admin_name"
+            id="edit_admin_name"
+            placeholder="Enter Admin Name"
+            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
+
+        <x-form-input
+            label="Admin Mail ID"
+            type="email"
+            name="admin_email"
+            id="edit_admin_email"
+            placeholder="Enter Admin Mail ID"
+            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
+
+        <x-form-input
+            label="Admin Password"
+            type="password"
+            name="admin_password"
+            id="edit_admin_password"
+            placeholder="Enter Password"
+            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+            label-class="block text-[13px] manrope-regular text-[#000000]" />
+
 
         <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="toggleModal('editCompanyModal')"

@@ -102,6 +102,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
+        $company->logo = $company->logo ? Storage::disk('s3')->url($company->logo) : null;
         return view('companies.show', ['company' => $company->load('admin')]);
     }
 
@@ -116,7 +117,9 @@ class CompanyController extends Controller
                 'id' => $company->id,
                 'company_name' => $company->company_name,
                 'location' => $company->location,
-                'logo' => Storage::disk('s3')->url($company->logo),
+                'logo' => $company->logo ? Storage::disk('s3')->url($company->logo) : null,
+                'admin_name' => $company->admin->name,
+                'admin_email' => $company->admin->email,
             ]);
         }
         // return view('companies.edit', ['company' => $company]);
@@ -133,8 +136,15 @@ class CompanyController extends Controller
             Storage::delete('public/' . $company->logo);
             $data['logo'] = $request->file('logo')->store('logos', 's3');
         }
-
         $company->update($data);
+        $adminUpdate = [
+            'name' => $data['admin_name'],
+            'email' => $data['admin_email'],
+        ];
+        if ($request->has('admin_password')) {
+            $adminUpdate['password'] = bcrypt($data['admin_password']);
+        }
+        $company->admin->update($adminUpdate);
         return redirect()->route('companies.index');
     }
 

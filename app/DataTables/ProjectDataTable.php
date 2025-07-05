@@ -30,17 +30,16 @@ class ProjectDataTable extends DataTable
                 }
             })
             ->editColumn('name', function ($project) {
-                $initials = collect(explode(' ', $project->name))
-                    ->map(fn($w) => strtoupper(substr($w, 0, 1)))
-                    ->implode('');
-                $initials = substr($initials, 0, 2);
+                $initials = getInitials($project->name);
 
                 return '
-                <div class="flex items-center">
-                    <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">'
-                    . $initials .
-                    '</span>
-                    <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">' . $project->name . '</div>
+                <div >
+                    <a href="' . route('projects.show', $project->id) . '" class="flex items-center">
+                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">'
+                        . $initials .
+                        '</span>
+                        <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">' . $project->name . '</div>
+                    </a>
                 </div>';
             })
             ->editColumn('is_active', function ($project) {
@@ -143,11 +142,11 @@ class ProjectDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name' => ['title' => 'Project Name', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
-            'company_name' => ['title' => 'Company', 'searchable' => false , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
-            'is_active' => ['title' => 'Status', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
-            'created_at' => ['title' => 'Created At', 'searchable' => true , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
-            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false , 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'name' => ['title' => 'Project Name', 'searchable' => true, 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'company_name' => ['title' => 'Company', 'searchable' => false, 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'is_active' => ['title' => 'Status', 'searchable' => true, 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'created_at' => ['title' => 'Created At', 'searchable' => true, 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
+            'action' => ['title' => 'Action', 'orderable' => false, 'searchable' => false, 'className' => 'text-left text-[#344563] text-[11px] manrope-regular'],
         ];
     }
 
