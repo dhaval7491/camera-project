@@ -53,8 +53,8 @@
             <div class="profile-project pt-[10px] pl-[3px] pr-[3px]">
                 <h3 class="manrope-semibold text-[13px] text-[#344563] mb-[20px]">Associated Projects</h3>
                 <div class="grid grid-cols-6 gap-[20px]">
-                    @if ($company->projects->count() == 0)
-                    <p>No projects associated with this company.</p>
+                    @if(optional($company->projects)->count() == 0)
+                        <p>No projects associated with this company.</p>
                     @else
                     @foreach ($company->projects as $project)
                     <div class="flex alert-shadow items-center p-[20px]">
@@ -62,6 +62,7 @@
                         <p class="pl-[10px] manrope-medium text-[16px] text-[#344563]">{{ $project->name }}</p>
                     </div>
                     @endforeach
+                    @endif
                 </div>
             </div>
         </div>
