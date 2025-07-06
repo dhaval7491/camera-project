@@ -71,6 +71,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
     Route::post('/mappings/get-companies', [MappingController::class, 'getCompanies'])->name('mappings.get-companies');
     Route::get('/get-companies', [CompanyController::class, 'getCompanies'])->name('get-companies');
+    Route::get('/get-projects', [ProjectController::class, 'getProjects'])->name('get-projects');
 });
 
 Route::prefix('signaling')->group(function () {

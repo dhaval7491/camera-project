@@ -115,4 +115,14 @@ class ProjectController extends Controller
             'is_active' => $project->is_active
         ]);
     }
+
+    public function getProjects(Request $request)
+    {
+        $projects = Project::pluck('name', 'id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'projects' => $projects
+        ]);
+    }
 }

@@ -30,38 +30,38 @@
         <div class="table-filter-block mt-[20px]">
             <div class="flex justify-end">
                 <p class="flex items-center mr-[8px]">
-                    <div class="relative flex items-center mr-[8px]">
-                        <!-- Search Input -->
-                        <input type="text" id="search-input"
-                            class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
-                            placeholder="Search...">
+                <div class="relative flex items-center mr-[8px]">
+                    <!-- Search Input -->
+                    <input type="text" id="search-input"
+                        class="w-0 p-0 border border-[#EBEBEB] rounded-[11px] absolute right-[19px] z-[8] transition-all duration-300 overflow-hidden bg-white"
+                        placeholder="Search...">
 
-                        <!-- Search Button -->
-                        <button id="search-toggle"
-                            class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
-                            <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
-                        </button>
-                    </div>
+                    <!-- Search Button -->
+                    <button id="search-toggle"
+                        class="p-[11px] rounded-[15px] border border-[#EBEBEB] ml-2 z-[9] bg-white">
+                        <img src="{{ asset('admin-theme/assets/images/table-search.png')}}" class="w-[16px]" style="width:13px;">
+                    </button>
+                </div>
                 </p>
                 <p class="flex items-center mr-[8px] ">
-                    <div class="relative flex items-center mr-[8px] filter-resp">
-                        <button id="search-toggle"
-                            class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
-                            <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
-                        </button>
-                    </div>
+                <div class="relative flex items-center mr-[8px] filter-resp">
+                    <button id="search-toggle"
+                        class="rounded-[14px] border border-[#EBEBEB] z-[8] bg-white" style="padding:12px;">
+                        <img src="{{ asset('admin-theme/assets/images/filter-by.png')}}" class="" style="width:13px;">
+                    </button>
+                </div>
                 </p>
                 <p class="flex items-center mr-[8px] filter-drop">
                     <select id="company-filter" multiple class="filter-select w-[150px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Company Name">
                         @foreach($companies as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
+                        <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </p>
                 <p class="flex items-center mr-[8px] filter-drop">
                     <select id="status-filter" multiple class="filter-select w-[100px] p-2 border border-[#ebebeb] rounded-[10px] manrope-medium text-[#444] text-[14px]" data-placeholder="Status">
                         @foreach($statuses as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
+                        <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </p>
@@ -94,37 +94,42 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-.select2-container--default .select2-selection--multiple {
-    border: 1px solid #ebebeb;
-    border-radius: 10px;
-    padding: 2px;
-    min-height: 34px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__rendered {
-    padding: 0 4px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #f5f5f5;
-    border: 1px solid #ebebeb;
-    border-radius: 4px;
-    padding: 2px 6px;
-    margin: 2px;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    color: #444;
-    margin-right: 4px;
-}
-.select2-container .select2-search--inline .select2-search__field {
-    margin-top: 4px;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    color: #444;
-}
-.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-    color: #444;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-}
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #ebebeb;
+        border-radius: 10px;
+        padding: 2px;
+        min-height: 34px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        padding: 0 4px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #f5f5f5;
+        border: 1px solid #ebebeb;
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin: 2px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: #444;
+        margin-right: 4px;
+    }
+
+    .select2-container .select2-search--inline .select2-search__field {
+        margin-top: 4px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 14px;
+        color: #444;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+        color: #444;
+        font-family: 'Manrope', sans-serif;
+        font-size: 14px;
+    }
 </style>
 @endpush
 
@@ -132,153 +137,153 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {!! $dataTable->scripts() !!}
 <script>
-$(document).ready(function() {
-    let table = $('#projects-table').DataTable();
+    $(document).ready(function() {
+        let table = $('#projects-table').DataTable();
 
-    // Initialize Select2
-    $('.filter-select').select2({
-        placeholder: function() {
-            return $(this).data('placeholder');
-        },
-        allowClear: true,
-        closeOnSelect: false,
-        width: '100%'
-    });
+        // Initialize Select2
+        $('.filter-select').select2({
+            placeholder: function() {
+                return $(this).data('placeholder');
+            },
+            allowClear: true,
+            closeOnSelect: false,
+            width: '100%'
+        });
 
-    // jQuery Validation for Create Project Form
-     $('#createProjectForm').validate({
-        rules: {
-            name: {
-                required: true,
-                minlength: 2
-            },
-            companies: {
-                required: true
-            },
-            location: {
-                required: true,
-                minlength: 2
-            }
-        },
-        messages: {
-            name: {
-                required: "Please enter a project name",
-                minlength: "Project name must be at least 2 characters long"
-            },
-            companies: {
-                required: "Please select at least one company"
-            },
-            location: {
-                required: "Please enter a location",
-                minlength: "Location must be at least 2 characters long"
-            }
-        },
-        errorPlacement: function(error, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).text(error.text()).removeClass('hidden');
-            $(element).addClass('input-error');
-        },
-        success: function(label, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).addClass('hidden');
-            $(element).removeClass('input-error');
-        }
-    });
-
-    // Handle Edit Project button click
-    $('#editProjectSubmit').on('click', function(e) {
-        e.preventDefault();
-        if ($('#editProjectForm').valid()) {
-            var formData = new FormData($('#editProjectForm')[0]);
-            formData.append('_method', 'PUT');
-            var projectId = $('#edit_project_id').val();
-            $('.edit-text').addClass('hidden');
-            $('.edit-spinner').removeClass('hidden');
-            $('#editProjectSubmit').prop('disabled', true);
-            $.ajax({
-                url: '{{ url("projects") }}/' + projectId,
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    toggleModal('editProjectModal');
-                    table.ajax.reload(null, false);
-                    toastr.success('Project updated successfully');
-                    $('#editProjectForm')[0].reset();
-                    $('#edit_companies').val(null).trigger('change');
-                    $('.text-red-500').addClass('hidden');
-                    $('input, select, textarea').removeClass('input-error');
+        // jQuery Validation for Create Project Form
+        $('#createProjectForm').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2
                 },
-                error: function(xhr) {
-                    console.error('Error updating project:', xhr);
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
-                            $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
-                        });
-                    } else {
-                        toastr.error('Failed to update project. Please try again.');
-                    }
+                companies: {
+                    required: true
                 },
-                complete: function() {
-                    $('.edit-text').removeClass('hidden');
-                    $('.edit-spinner').addClass('hidden');
-                    $('#editProjectSubmit').prop('disabled', false);
+                location: {
+                    required: true,
+                    minlength: 2
                 }
-            });
-        }
-    });
-
-    // Handle Edit Project button click
-    $('#createProjectSubmit').on('click', function(e) {
-        e.preventDefault();
-        if ($('#createProjectForm').valid()) {
-            var formData = new FormData($('#createProjectForm')[0]);
-            $('.create-text').addClass('hidden');
-            $('.create-spinner').removeClass('hidden');
-            $('#createProjectSubmit').prop('disabled', true);
-            $.ajax({
-                url: '{{ route('projects.store') }}',
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    toggleModal('createProjectModal');
-                    table.ajax.reload(null, false);
-                    toastr.success('Project created successfully');
-                    $('#createProjectForm')[0].reset();
-                    $('#companies').val(null).trigger('change');
-                    $('.text-red-500').addClass('hidden');
-                    $('input, select, textarea').removeClass('input-error');
+            },
+            messages: {
+                name: {
+                    required: "Please enter a project name",
+                    minlength: "Project name must be at least 2 characters long"
                 },
-                error: function(xhr) {
-                    console.error('Error creating project:', xhr);
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key) + '_error';
-                            $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key)).addClass('input-error');
-                        });
-                    } else {
-                        toastr.error('Failed to create project. Please try again.');
-                    }
+                companies: {
+                    required: "Please select at least one company"
                 },
-                complete: function() {
-                    $('.create-text').removeClass('hidden');
-                    $('.create-spinner').addClass('hidden');
-                    $('#createProjectSubmit').prop('disabled', false);
+                location: {
+                    required: "Please enter a location",
+                    minlength: "Location must be at least 2 characters long"
                 }
-            });
-        }
-    });
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                $(element).addClass('input-error');
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).addClass('hidden');
+                $(element).removeClass('input-error');
+            }
+        });
 
-    // jQuery Validation for Create Equipment Form
-    $('#createEquipmentForm').validate({
+        // Handle Edit Project button click
+        $('#editProjectSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#editProjectForm').valid()) {
+                var formData = new FormData($('#editProjectForm')[0]);
+                formData.append('_method', 'PUT');
+                var projectId = $('#edit_project_id').val();
+                $('.edit-text').addClass('hidden');
+                $('.edit-spinner').removeClass('hidden');
+                $('#editProjectSubmit').prop('disabled', true);
+                $.ajax({
+                    url: '{{ url("projects") }}/' + projectId,
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('editProjectModal');
+                        table.ajax.reload(null, false);
+                        toastr.success('Project updated successfully');
+                        $('#editProjectForm')[0].reset();
+                        $('#edit_companies').val(null).trigger('change');
+                        $('.text-red-500').addClass('hidden');
+                        $('input, select, textarea').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error updating project:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key) + '_error';
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                $('#' + (key === 'name' ? 'edit_project_name' : key === 'companies' ? 'companies' : key === 'location' ? 'edit_location' : key === 'plant_name' ? 'edit_plant_name' : key)).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to update project. Please try again.');
+                        }
+                    },
+                    complete: function() {
+                        $('.edit-text').removeClass('hidden');
+                        $('.edit-spinner').addClass('hidden');
+                        $('#editProjectSubmit').prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        // Handle Edit Project button click
+        $('#createProjectSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createProjectForm').valid()) {
+                var formData = new FormData($('#createProjectForm')[0]);
+                $('.create-text').addClass('hidden');
+                $('.create-spinner').removeClass('hidden');
+                $('#createProjectSubmit').prop('disabled', true);
+                $.ajax({
+                    url: '{{ route('projects.store') }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createProjectModal');
+                        table.ajax.reload(null, false);
+                        toastr.success('Project created successfully');
+                        $('#createProjectForm')[0].reset();
+                        $('#companies').val(null).trigger('change');
+                        $('.text-red-500').addClass('hidden');
+                        $('input, select, textarea').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating project:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key) + '_error';
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                $('#' + (key === 'name' ? 'project_name' : key === 'location' ? 'p_location' : key === 'companies' ? 'companies' : key)).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to create project. Please try again.');
+                        }
+                    },
+                    complete: function() {
+                        $('.create-text').removeClass('hidden');
+                        $('.create-spinner').addClass('hidden');
+                        $('#createProjectSubmit').prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        // jQuery Validation for Create Equipment Form
+        $('#createEquipmentForm').validate({
             rules: {
                 type: {
                     required: true
@@ -517,238 +522,283 @@ $(document).ready(function() {
         });
 
         // jQuery Validation for Create User Form
-    $('#createUserForm').validate({
-        rules: {
-            user_name: {
-                required: true,
-                minlength: 2
+        $('#createUserForm').validate({
+            rules: {
+                user_name: {
+                    required: true,
+                    minlength: 2
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                company_id: {
+                    required: true
+                },
+                project_id: {
+                    required: true
+                },
+                location: {
+                    required: true,
+                    minlength: 2
+                },
+                access_level: {
+                    required: true,
+                },
+                image: {
+                    required: true,
+                    extension: "jpg|jpeg|png|gif"
+                }
             },
-            email: {
-                required: true,
-                email: true
+            messages: {
+                user_name: {
+                    required: "Please enter a user name",
+                    minlength: "User name must be at least 2 characters long"
+                },
+                email: {
+                    required: "Please enter an email",
+                    email: "Please enter a valid email address"
+                },
+                company_id: {
+                    required: "Please select a company"
+                },
+                project_id: {
+                    required: "Please select a project"
+                },
+                location: {
+                    required: "Please enter a location",
+                    minlength: "Location must be at least 2 characters long"
+                },
+                access_level: {
+                    required: "Please select an access level",
+                },
+                image: {
+                    required: "Please upload an image",
+                    extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+                }
             },
-            company_id: {
-                required: true
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                $(element).addClass('input-error');
             },
-            project_id: {
-                required: true
-            },
-            location: {
-                required: true,
-                minlength: 2
-            },
-            access_level: {
-                required: true,
-            },
-            image: {
-                required: true,
-                extension: "jpg|jpeg|png|gif"
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).addClass('hidden');
+                $(element).removeClass('input-error');
             }
-        },
-        messages: {
-            user_name: {
-                required: "Please enter a user name",
-                minlength: "User name must be at least 2 characters long"
-            },
-            email: {
-                required: "Please enter an email",
-                email: "Please enter a valid email address"
-            },
-            company_id: {
-                required: "Please select a company"
-            },
-            project_id: {
-                required: "Please select a project"
-            },
-            location: {
-                required: "Please enter a location",
-                minlength: "Location must be at least 2 characters long"
-            },
-            access_level: {
-                required: "Please select an access level",
-            },
-            image: {
-                required: "Please upload an image",
-                extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
+        });
+
+        // Handle Create User button click
+        $('#createUserSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createUserForm').valid()) {
+                var formData = new FormData($('#createUserForm')[0]);
+                $.ajax({
+                    url: '{{route("users.store")}}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createUserModal');
+                        table.ajax.reload(null, false);
+                        toastr.success('User created successfully');
+                        $('#createUserForm')[0].reset();
+                        $('.text-red-500').addClass('hidden');
+                        $('input, select, textarea').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating user:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                var errorDiv = '#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key) + '_error';
+                                $(errorDiv).text(value[0]).removeClass('hidden');
+                                $('#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key)).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to create user. Please try again.');
+                        }
+                    }
+                });
             }
-        },
-        errorPlacement: function(error, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).text(error.text()).removeClass('hidden');
-            $(element).addClass('input-error');
-        },
-        success: function(label, element) {
-            var errorDiv = '#' + $(element).attr('id') + '_error';
-            $(errorDiv).addClass('hidden');
-            $(element).removeClass('input-error');
+        });
+
+        // Apply filters to DataTable
+        function applyFilters() {
+            let companyIds = $('#company-filter').val() || [];
+            let plants = $('#plant-filter').val() || [];
+            let statuses = $('#status-filter').val() || [];
+            let searchTerm = $('#search-input').val() || '';
+
+            table.ajax.url('{{ route('projects.data') }}?' + $.param({
+                    company_ids: companyIds,
+                    plants: plants,
+                    statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked'),
+                    'search[value]': searchTerm
+                })).load();
         }
-    });
-    
-    // Handle Create User button click
-    $('#createUserSubmit').on('click', function(e) {
-        e.preventDefault();
-        if ($('#createUserForm').valid()) {
-            var formData = new FormData($('#createUserForm')[0]);
+
+        // Trigger filter on select2 change
+        $('#company-filter, #plant-filter, #status-filter').on('change', function() {
+            applyFilters();
+        });
+
+        // Search input handling
+        // $('#search-toggle').on('click', function() {
+        //     let searchInput = $('#search-input');
+        //     if (searchInput.hasClass('w-0')) {
+        //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
+        //     } else {
+        //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
+        //         table.search('').draw(); // Clear search when closing
+        //     }
+        // });
+
+        $('#search-input').on('keyup', function() {
+            let searchTerm = $(this).val();
+            table.search(searchTerm).draw(); // Apply search term
+        });
+
+        // Toggle dot dropdown for actions
+        window.toggleDotDropdown = function(event) {
+            const dropdown = event.target.closest('td').querySelector('.dot-drop');
+            dropdown.classList.toggle('hidden');
+        };
+
+        window.toggleProjectStatus = function(projectId) {
             $.ajax({
-                url: '{{route("users.store")}}',
+                url: '{{ url("projects") }}/' + projectId + '/toggle-active',
                 method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
                 success: function(response) {
-                    toggleModal('createUserModal');
-                    table.ajax.reload(null, false);
-                    toastr.success('User created successfully');
-                    $('#createUserForm')[0].reset();
-                    $('.text-red-500').addClass('hidden');
-                    $('input, select, textarea').removeClass('input-error');
+                    if (response.success) {
+                        table.ajax.reload(null, false);
+                    }
                 },
                 error: function(xhr) {
-                    console.error('Error creating user:', xhr);
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            var errorDiv = '#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key) + '_error';
-                            $(errorDiv).text(value[0]).removeClass('hidden');
-                            $('#' + (key === 'company_id' ? 'u_company_id' : key === 'project_id' ? 'u_project_id' : key === 'location' ? 'u_location' : key)).addClass('input-error');
-                        });
-                    } else {
-                        toastr.error('Failed to create user. Please try again.');
+                    console.error('Error toggling status:', xhr);
+                    alert('Failed to update status');
+                }
+            });
+        };
+
+        // Fetch project data and populate edit modal
+        window.showEditModal = function(projectId) {
+            $.ajax({
+                url: '{{ url("projects") }}/' + projectId + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    // Populate the edit modal fields
+                    $('#edit_project_id').val(response.id);
+                    $('#edit_project_name').val(response.name);
+                    $('#edit_companies').val(response.company_ids).trigger('change');
+                    $('#edit_location').val(response.location);
+                    $('#edit_plant_name').val(response.plant_name);
+                    $('#editProjectForm').attr('action', '{{ url("projects") }}/' + response.id);
+
+                    // Open the edit modal
+                    toggleModal('editProjectModal');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching project data:', xhr);
+                    alert('Failed to load project data');
+                }
+            });
+        };
+
+        // Modified toggleModal to handle projectId for createTrackableModal
+        window.toggleModal = function(modalId, projectId = null) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                // If opening createTrackableModal and projectId is provided, append hidden project_id input
+                if (modalId === 'createTrackableModal' && projectId) {
+                    const form = document.getElementById('createTrackableForm');
+                    // Remove existing project_id input to avoid duplicates
+                    const existingInput = form.querySelector('input[name="project_id"]');
+                    if (existingInput) {
+                        existingInput.remove();
                     }
+                    // Append new hidden input for project_id
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'project_id';
+                    hiddenInput.value = projectId;
+                    form.appendChild(hiddenInput);
+                }
+            }
+        };
+
+        // Map provided modal function names to toggleModal
+        window.toggleModalp = function() {
+            toggleModal('createProjectModal');
+        };
+
+        window.toggleModale = function() {
+            toggleModal('createEquipmentModal');
+        };
+
+        window.toggleModalpeople = function() {
+            toggleModal('createUserModal');
+        };
+
+        // Handle Add User modal with pre-selected project
+        window.openCreateUserModal = function(projectId) {
+            getProjects(projectId);
+            toggleModal('createUserModal');
+        };
+
+        window.cancelCreateUserModal = function() {
+            $('#createUserForm')[0].reset();
+            $('#createUserModal select').val(null).trigger('change');
+            $('.text-red-500').addClass('hidden');
+            $('select').removeClass('input-error');
+            toggleModal('createUserModal');
+        };
+
+        function getProjects(selectedProjectId = null) {
+            var $projectSelect = $('#u_project_id');
+
+            // Clear existing options and reinitialize Select2
+            $projectSelect.empty().trigger('change');
+
+            // Fetch companies via AJAX
+            $.ajax({
+                url: '{{ route("get-projects") }}',
+                method: 'GET',
+                success: function(response) {
+                    if (response.success && response.projects) {
+                        // Populate company dropdown
+                        $.each(response.projects, function(id, name) {
+                            var option = new Option(name, id, false, false);
+                            $projectSelect.append(option);
+                        });
+
+                        // Reinitialize Select2
+                        $projectSelect.trigger('change');
+
+                        // Set the selected company AFTER options are populated
+                        if (selectedProjectId) {
+                            $projectSelect.val(selectedProjectId);
+                            // Manually trigger the project loading instead of relying on change event
+                            loadCompaniesForProject(selectedProjectId);
+                        }
+                    } else {
+                        toastr.error('No projects found');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error fetching projects:', xhr);
+                    toastr.error('Failed to load projects');
                 }
             });
         }
-    });
 
-    // Apply filters to DataTable
-    function applyFilters() {
-        let companyIds = $('#company-filter').val() || [];
-        let plants = $('#plant-filter').val() || [];
-        let statuses = $('#status-filter').val() || [];
-        let searchTerm = $('#search-input').val() || '';
-
-        table.ajax.url('{{ route('projects.data') }}?' + $.param({
-            company_ids: companyIds,
-            plants: plants,
-            statuses: statuses.map(status => status == 1 ? 'Active' : status == 0 ? 'Inactive' : 'Blocked'),
-            'search[value]': searchTerm
-        })).load();
-    }
-
-    // Trigger filter on select2 change
-    $('#company-filter, #plant-filter, #status-filter').on('change', function() {
-        applyFilters();
-    });
-
-    // Search input handling
-    // $('#search-toggle').on('click', function() {
-    //     let searchInput = $('#search-input');
-    //     if (searchInput.hasClass('w-0')) {
-    //         searchInput.removeClass('w-0 p-0').addClass('w-[200px] p-2').focus();
-    //     } else {
-    //         searchInput.val('').removeClass('w-[200px] p-2').addClass('w-0 p-0');
-    //         table.search('').draw(); // Clear search when closing
-    //     }
-    // });
-
-    $('#search-input').on('keyup', function() {
-        let searchTerm = $(this).val();
-        table.search(searchTerm).draw(); // Apply search term
-    });
-
-    // Toggle dot dropdown for actions
-    window.toggleDotDropdown = function(event) {
-        const dropdown = event.target.closest('td').querySelector('.dot-drop');
-        dropdown.classList.toggle('hidden');
-    };
-
-    window.toggleProjectStatus = function(projectId) {
-        $.ajax({
-            url: '{{ url("projects") }}/' + projectId + '/toggle-active',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success) {
-                    table.ajax.reload(null, false);
-                }
-            },
-            error: function(xhr) {
-                console.error('Error toggling status:', xhr);
-                alert('Failed to update status');
-            }
-        });
-    };
-
-    // Fetch project data and populate edit modal
-    window.showEditModal = function(projectId) {
-        $.ajax({
-            url: '{{ url("projects") }}/' + projectId + '/edit',
-            method: 'GET',
-            success: function(response) {
-                // Populate the edit modal fields
-                $('#edit_project_id').val(response.id);
-                $('#edit_project_name').val(response.name);
-                $('#edit_companies').val(response.company_ids).trigger('change');
-                $('#edit_location').val(response.location);
-                $('#edit_plant_name').val(response.plant_name);
-                $('#editProjectForm').attr('action', '{{ url("projects") }}/' + response.id);
-
-                // Open the edit modal
-                toggleModal('editProjectModal');
-            },
-            error: function(xhr) {
-                console.error('Error fetching project data:', xhr);
-                alert('Failed to load project data');
-            }
-        });
-    };
-
-    // Modified toggleModal to handle projectId for createTrackableModal
-    window.toggleModal = function(modalId, projectId = null) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.toggle('hidden');
-            // If opening createTrackableModal and projectId is provided, append hidden project_id input
-            if (modalId === 'createTrackableModal' && projectId) {
-                const form = document.getElementById('createTrackableForm');
-                // Remove existing project_id input to avoid duplicates
-                const existingInput = form.querySelector('input[name="project_id"]');
-                if (existingInput) {
-                    existingInput.remove();
-                }
-                // Append new hidden input for project_id
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'project_id';
-                hiddenInput.value = projectId;
-                form.appendChild(hiddenInput);
-            }
-        }
-    };
-
-    // Map provided modal function names to toggleModal
-    window.toggleModalp = function() {
-        toggleModal('createProjectModal');
-    };
-
-    window.toggleModale = function() {
-        toggleModal('createEquipmentModal');
-    };
-
-    window.toggleModalpeople = function() {
-        toggleModal('createUserModal');
-    };
-
-    // Handle Add User modal with pre-selected project
-    window.openCreateUserModal = function(projectId) {
-        toggleModal('createUserModal');
-        $('#u_project_id').val(projectId).trigger('change');
-    };
-
-    $('#u_project_id').on('change', function() {
-            var projectId = $(this).val();
+        function loadCompaniesForProject(projectId) {
             var $companySelect = $('#u_company_id');
 
             // Clear existing options and reinitialize Select2
@@ -782,29 +832,32 @@ $(document).ready(function() {
                     }
                 });
             }
-        });
-});
-</script>
-<script> 
-$(document).ready(function () {
-    $('#projects-table thead th').each(function () {
-        const thText = $(this).text().trim();
+        }
 
-        if (thText === 'Status') {
-            $(this).addClass('status');
-        } else if (thText === 'Action') {
-            $(this).addClass('action');
-        } else if (thText === 'People') {
-            $(this).addClass('people');
-        } else if (thText === 'Project Name') {
-            $(this).addClass('projectName');
-        } else if (thText === 'Company') {
-            $(this).addClass('company');
-        } else if (thText === 'Created At') {
-            $(this).addClass('created');
-        } 
-        // Add more cases as needed
+         
+
     });
-});
+</script>
+<script>
+    $(document).ready(function() {
+        $('#projects-table thead th').each(function() {
+            const thText = $(this).text().trim();
+
+            if (thText === 'Status') {
+                $(this).addClass('status');
+            } else if (thText === 'Action') {
+                $(this).addClass('action');
+            } else if (thText === 'People') {
+                $(this).addClass('people');
+            } else if (thText === 'Project Name') {
+                $(this).addClass('projectName');
+            } else if (thText === 'Company') {
+                $(this).addClass('company');
+            } else if (thText === 'Created At') {
+                $(this).addClass('created');
+            }
+            // Add more cases as needed
+        });
+    });
 </script>
 @endpush
