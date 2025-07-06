@@ -961,10 +961,6 @@
                 },
                 other_name: {
                     minlength: 2
-                },
-                'linked_objects[]': {
-                    required: true,
-                    minlength: 1
                 }
             },
             messages: {
@@ -974,71 +970,76 @@
                 },
                 other_name: {
                     minlength: "Other name must be at least 2 characters long"
-                },
-                'linked_objects[]': {
-                    required: "Please add at least one linked object",
-                    minlength: "Each linked object must be at least 1 character long"
                 }
             },
             errorPlacement: function(error, element) {
                 var errorDiv = '#' + element.attr('name').replace(/\[\]/g, '') + '_error';
-                if (element.attr('name') === 'linked_objects[]') {
-                    $('#linked_objects_error').text(error.text()).removeClass('hidden');
-                    element.closest('.input-group').find('input').addClass('input-error');
-                } else {
-                    $(errorDiv).text(error.text()).removeClass('hidden');
-                    element.addClass('input-error');
-                }
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
             },
             success: function(label, element) {
                 var errorDiv = '#' + $(element).attr('name').replace(/\[\]/g, '') + '_error';
-                if ($(element).attr('name') === 'linked_objects[]') {
-                    $('#linked_objects_error').addClass('hidden').text('');
-                    $(element).closest('.input-group').find('input').removeClass('input-error');
-                } else {
-                    $(errorDiv).addClass('hidden').text('');
-                    $(element).removeClass('input-error');
-                }
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
             },
-            // Ensure validation checks all linked object inputs
             ignore: [],
-            invalidHandler: function(event, validator) {
-                // Ensure linked_objects[] is validated correctly
-                var linkedObjects = $('input[name="linked_objects[]"]');
-                var hasValue = false;
-                linkedObjects.each(function() {
-                    if ($(this).val().trim().length > 0) {
-                        hasValue = true;
-                    }
-                });
-                if (!hasValue) {
-                    $('#linked_objects_error').text('Please add at least one linked object').removeClass('hidden');
-                    linkedObjects.addClass('input-error');
+            submitHandler: function(form) {
+                // Custom validation for linked objects
+                if (!validateLinkedObjects()) {
+                    return false;
                 }
+                
+                // If validation passes, submit the form
+                // Add your form submission logic here
+                console.log('Form is valid and ready to submit');
+                return false; // Remove this line when you add actual submission
             }
         });
 
+        // Custom validation function for linked objects
+        function validateLinkedObjects() {
+            var linkedObjects = $('input[name="linked_objects[]"]');
+            var hasValue = false;
+            
+            // Check if at least one linked object has a non-empty value
+            linkedObjects.each(function() {
+                if ($(this).val().trim().length > 0) {
+                    hasValue = true;
+                    return false; // Break out of loop
+                }
+            });
+            
+            if (!hasValue) {
+                $('#linked_objects_error').text('Please add at least one linked object').removeClass('hidden');
+                linkedObjects.addClass('input-error');
+                return false;
+            } else {
+                $('#linked_objects_error').addClass('hidden').text('');
+                linkedObjects.removeClass('input-error');
+                return true;
+            }
+        }
         // Handle Create Trackable Submission
         $('#createTrackableSubmit').on('click', function(e) {
             e.preventDefault();
             // Manually validate linked_objects
-            var linkedObjects = $('input[name="linked_objects[]"]');
-            var validLinkedObjects = true;
-            linkedObjects.each(function() {
-                if ($(this).val().trim().length === 0) {
-                    $(this).addClass('input-error');
-                    validLinkedObjects = false;
-                } else {
-                    $(this).removeClass('input-error');
-                }
-            });
-            if (!validLinkedObjects) {
-                $('#linked_objects_error').text('Please fill in all linked objects or remove empty ones').removeClass('hidden');
-            } else {
-                $('#linked_objects_error').addClass('hidden').text('');
-            }
+            // var linkedObjects = $('input[name="linked_objects[]"]');
+            // var validLinkedObjects = true;
+            // linkedObjects.each(function() {
+            //     if ($(this).val().trim().length === 0) {
+            //         $(this).addClass('input-error');
+            //         validLinkedObjects = false;
+            //     } else {
+            //         $(this).removeClass('input-error');
+            //     }
+            // });
+            // if (!validLinkedObjects) {
+            //     $('#linked_objects_error').text('Please fill in all linked objects or remove empty ones').removeClass('hidden');
+            // } else {
+            //     $('#linked_objects_error').addClass('hidden').text('');
+            // }
 
-            if ($('#createTrackableForm').valid() && validLinkedObjects) {
+            if ($('#createTrackableForm').valid() && validateLinkedObjects()) {
                 var formData = new FormData($('#createTrackableForm')[0]);
                 $.ajax({
                     url: '{{ route("trackables.store") }}',
@@ -1262,11 +1263,33 @@
                     $('#edit_status').text(response.status).removeClass('bg-[#047413] bg-[#F96767]').addClass(response.status === 'Active' ? 'bg-[#047413]' : 'bg-[#F96767]');
                     $('#editTrackableForm').attr('action', '{{ url("trackables") }}/' + response.id);
 
-                    // Populate linked objects
+                    // Populate linked objects container
                     let container = $('#editLinkedObjectsContainer');
                     container.empty();
+
+                    // Add blank input with Add button at the top
+                    let initialDiv = $('<div>').addClass('flex align-middle input-group');
+                    let initialInput = $('<input>')
+                        .attr('type', 'text')
+                        .attr('name', 'linked_objects[]')
+                        .addClass('h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]')
+                        .attr('placeholder', 'Enter Type')
+                        .on('input', function() { checkInput(this); });
+                    let addButton = $('<button>')
+                        .attr('id', 'addLinkedObject')
+                        .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
+                        .html('<img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">')
+                        .prop('disabled', true)
+                        .on('click', function(event) {
+                            event.preventDefault();
+                            addNewField(this);
+                        });
+                    initialDiv.append(initialInput).append(addButton);
+                    container.append(initialDiv);
+
+                    // Add existing linked objects with Delete buttons
                     if (response.linked_objects && response.linked_objects.length > 0) {
-                        response.linked_objects.forEach(function(object, index) {
+                        response.linked_objects.forEach(function(object) {
                             let div = $('<div>').addClass('flex align-middle input-group');
                             let input = $('<input>')
                                 .attr('type', 'text')
@@ -1274,18 +1297,16 @@
                                 .val(object)
                                 .addClass('h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]')
                                 .attr('placeholder', 'Enter Linked Object');
-                            let button = $('<button>')
-                                .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
-                                .html('<img src="{{ asset('admin-theme/assets/images/delete.png ') }}" class="w-[20px] h-[20px]" alt="Delete">')
+                            let deleteButton = $('<button>')
+                                .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center remove-linked-object')
+                                .html('<img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] h-[20px]" alt="Delete">')
                                 .on('click', function() {
                                     div.remove();
                                 });
-                            div.append(input).append(button);
+                            div.append(input).append(deleteButton);
                             container.append(div);
                         });
                     }
-                    // Add one empty input field
-                    addNewLinkedObjectField('#editLinkedObjectsContainer', 'linked_objects[]');
 
                     // Open the edit modal
                     toggleModal('editTrackableModal');
@@ -1309,11 +1330,12 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    if (response.success) {
-                        table.ajax.reload(null, false); // Refresh DataTable
-                        toggleModal('editTrackableModal'); // Close modal
-                        alert('Trackable updated successfully');
-                    }
+                      if (response.success) {
+                        toggleModal('editTrackableModal');
+                        trackableTable.ajax.reload(null, false);
+                        toastr.success('Trackable updated successfully');
+                        
+                    }                 
                 },
                 error: function(xhr) {
                     console.error('Error updating trackable:', xhr);

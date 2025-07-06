@@ -7,7 +7,7 @@
             <img src="{{ asset('admin-theme/assets/images/logo.png') }}" alt="Logo" class="w-[80px] h-[80px] object-contain">
         </a>
         <div class="pl-[0px]">
-            <a href="#" class="inline-block manrope-medium text-[13px] mt-[3px] mr-[10px] text-[#437651] underline" style="text-decoration:none;">&lt; Back</a>
+            <a href="javascript:;" onclick="goBack(); return false;" class="inline-block manrope-medium text-[13px] mt-[3px] mr-[10px] text-[#437651] underline" style="text-decoration:none;">&lt; Back</a>
         </div>
         <div class="relative">
             <input type="text" placeholder="Search" class="top-search w-[280px] md:w-64 lg:w-80 rounded-full bg-[#fff] text-black focus:outline-none text-[13px] px-[40px] py-[8px] border-[1px] border-solid border-[#D6D6D6]">

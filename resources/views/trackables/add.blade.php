@@ -23,6 +23,7 @@
                     <div id="other_name_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
+
             <!-- Linked Objects -->
             <div class="flex flex-wrap mb-[30px]">
                 <div class="lg:w-2/6 w-full">
@@ -31,13 +32,13 @@
                 <div class="lg:w-4/6 w-full">
                     <div id="linkedObjectsContainer" class="flex flex-col gap-2">
                         <div class="flex align-middle input-group">
-                            <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Linked Object">
-                            <button type="button" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" onclick="addNewLinkedObjectField('#linkedObjectsContainer', 'linked_objects[]')">
+                            <input type="text" name="linked_objects[]" class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]" placeholder="Enter Type" oninput="checkInput(this)">
+                            <button id="addButton" class="border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center" disabled>
                                 <img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">
                             </button>
                         </div>
-                        <div id="linked_objects_error" class="text-red-500 text-sm hidden"></div>
                     </div>
+                    <div id="linked_objects_error" class="text-red-500 text-sm hidden"></div>
                 </div>
             </div>
 
@@ -56,31 +57,70 @@
 </x-modal>
 
 <script>
-    function toggleStatus(button) {
-        let isActive = $(button).text().trim() === 'Active';
-        if (isActive) {
-            $(button).text('Inactive').removeClass('bg-[#047413]').addClass('bg-[#F96767]');
-            $('#status_input').val('Inactive');
-        } else {
-            $(button).text('Active').removeClass('bg-[#F96767]').addClass('bg-[#047413]');
-            $('#status_input').val('Active');
+    // document.addEventListener('DOMContentLoaded', function() {
+       function checkInput(input) {
+            const addButton = input.nextElementSibling;
+            addButton.disabled = input.value.trim() === '';
         }
-    }
 
-    function addNewLinkedObjectField(containerId, inputName) {
-        let container = $(containerId);
-        let newDiv = $('<div>').addClass('flex align-middle input-group');
-        let newInput = $('<input>')
-            .attr('type', 'text')
-            .attr('name', inputName)
-            .addClass('h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]')
-            .attr('placeholder', 'Enter Linked Object');
-        let newButton = $('<button>')
-            .attr('type', 'button')
-            .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
-            .html('<img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] h-[20px]" alt="Delete">')
-            .on('click', function() { newDiv.remove(); });
-        newDiv.append(newInput).append(newButton);
-        container.append(newDiv);
-    }
+        document.getElementById('addButton').addEventListener('click', function(event) {
+            event.preventDefault();
+            addNewField(this);
+        });
+
+        function addNewField(addBtn) {
+            const input = addBtn.previousElementSibling;
+            if (input.value.trim() === '') return;
+
+            // Convert the current input and add button to a new div with a delete button
+            let currentDiv = input.parentElement;
+            let newDeleteButton = document.createElement('button');
+            newDeleteButton.className = "border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center";
+            newDeleteButton.innerHTML = '<img src="{{ asset('admin-theme/assets/images/delete.png') }}" class="w-[20px] h-[20px]" alt="Delete">';
+            newDeleteButton.addEventListener('click', function() {
+                currentDiv.remove();
+            });
+            currentDiv.removeChild(addBtn);
+            currentDiv.appendChild(newDeleteButton);
+
+            // Create a new input field row to be inserted at the top
+            let newDiv = document.createElement('div');
+            newDiv.classList.add('flex', 'align-middle', 'input-group');
+            let newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = 'linked_objects[]';
+            newInput.className = "h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]";
+            newInput.placeholder = "Enter Type";
+            newInput.oninput = function() { checkInput(this); };
+            let newAddButton = document.createElement('button');
+            newAddButton.className = "border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center";
+            newAddButton.innerHTML = '<img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">';
+            newAddButton.disabled = true;
+            newAddButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                addNewField(this);
+            });
+
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newAddButton);
+
+            // Insert new div at the top
+            let container = document.getElementById('linkedObjectsContainer');
+            container.insertBefore(newDiv, container.firstChild);
+
+            // Keep the current input value and disable the new add button until edited
+            addBtn.disabled = true;
+        }
+
+        function toggleStatus(button) {
+            let isActive = $(button).text().trim() === 'Active';
+            if (isActive) {
+                $(button).text('Inactive').removeClass('bg-[#047413]').addClass('bg-[#F96767]');
+                $('#status_input').val('Inactive');
+            } else {
+                $(button).text('Active').removeClass('bg-[#F96767]').addClass('bg-[#047413]');
+                $('#status_input').val('Active');
+            }
+        }
+    // });
 </script>

@@ -37,9 +37,21 @@ class TrackableController extends Controller
             'other_name' => $data['other_name'],
         ]);
 
-        if (!empty($data['linked_objects'])) {
+        if (isset($data['linked_objects']) && is_array($data['linked_objects'])) {
+            $filteredLinkedObjects = [];
+
             foreach ($data['linked_objects'] as $object) {
-                $trackable->linkedObjects()->create(['name' => $object]);
+                $trimmedObject = trim($object);
+                if (!empty($trimmedObject) && $trimmedObject !== '' && $trimmedObject !== null) {
+                    $filteredLinkedObjects[] = $trimmedObject;
+                }
+            }
+
+            // Only proceed if we have valid objects
+            if (!empty($filteredLinkedObjects)) {
+                foreach ($filteredLinkedObjects as $object) {
+                    $trackable->linkedObjects()->create(['name' => $object]);
+                }
             }
         }
 
@@ -87,16 +99,31 @@ class TrackableController extends Controller
         ]);
 
         $trackable->linkedObjects()->delete();
-        if (!empty($data['linked_objects'])) {
+        if (isset($data['linked_objects']) && is_array($data['linked_objects'])) {
+            $filteredLinkedObjects = [];
+
             foreach ($data['linked_objects'] as $object) {
-                $trackable->linkedObjects()->create(['name' => $object]);
+                $trimmedObject = trim($object);
+                if (!empty($trimmedObject) && $trimmedObject !== '' && $trimmedObject !== null) {
+                    $filteredLinkedObjects[] = $trimmedObject;
+                }
+            }
+
+            // Only proceed if we have valid objects
+            if (!empty($filteredLinkedObjects)) {
+                foreach ($filteredLinkedObjects as $object) {
+                    $trackable->linkedObjects()->create(['name' => $object]);
+                }
             }
         }
 
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Trackable updated successfully'
-        // ]);
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Trackable updated successfully'
+            ]);
+        }
+
         return redirect()->route('settings.index');
     }
 
