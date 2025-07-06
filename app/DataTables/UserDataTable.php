@@ -77,6 +77,19 @@ class UserDataTable extends DataTable
                     $query->whereIn('users.is_active', $mappedStatuses);
                 }
             })
+            ->editColumn('name', function ($user) {
+                $initials = getInitials($user->name);
+
+                return '
+                <div >
+                    <a href="' . route('users.show', $user->id) . '" class="flex items-center">
+                        <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">'
+                        . $initials .
+                        '</span>
+                        <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">' . $user->name . '</div>
+                    </a>
+                </div>';
+            })
             ->editColumn('company_name', fn($user) => $user->company_name ?? 'N/A')
             ->editColumn('access_level', fn($user) => $user->access_level ?? 'N/A')
             ->editColumn('created_at', fn($user) => $user->created_at->format('M d, Y'))
@@ -105,7 +118,7 @@ class UserDataTable extends DataTable
                         </li>
                     </ul>';
             })
-           ->rawColumns(['is_active', 'action'])
+           ->rawColumns(['name','is_active', 'action'])
            ->addIndexColumn();
     }
 
