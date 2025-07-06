@@ -1274,15 +1274,15 @@
                         .attr('name', 'linked_objects[]')
                         .addClass('h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[14px] border-[#EBEBEB] border-solid bg-white p-[7px] text-[#7A86A1] text-[14px] mr-[10px]')
                         .attr('placeholder', 'Enter Type')
-                        .on('input', function() { checkInput(this); });
+                        .on('input', function() { checkEditInput(this); });
                     let addButton = $('<button>')
-                        .attr('id', 'addLinkedObject')
+                        .attr('id', 'editAddButton')
                         .addClass('border-[1px] rounded-[14px] border-[#EBEBEB] border-solid w-[50px] flex justify-center items-center')
                         .html('<img src="{{ asset('admin-theme/assets/images/add-camera.png') }}" class="object-contain w-[50px] h-[41px] p-[11px]" alt="Add">')
                         .prop('disabled', true)
                         .on('click', function(event) {
                             event.preventDefault();
-                            addNewField(this);
+                            editAddNewField(this);
                         });
                     initialDiv.append(initialInput).append(addButton);
                     container.append(initialDiv);
