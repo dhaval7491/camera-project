@@ -135,7 +135,6 @@
                     minlength: 2
                 },
                 logo: {
-                    required: true,
                     extension: "jpg|jpeg|png|gif"
                 },
                 location: {
@@ -161,7 +160,6 @@
                     minlength: "Company name must be at least 2 characters long"
                 },
                 logo: {
-                    required: "Please upload a company logo",
                     extension: "Please upload a valid image file (jpg, jpeg, png, gif)"
                 },
                 location: {
