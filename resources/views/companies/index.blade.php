@@ -636,14 +636,14 @@
 
         // Handle Add Project modal with pre-selected company
         window.openCreateProjectModal = function(companyId) {
+            getCompanies(companyId, 'project');
             toggleModal('createProjectModal');
-            $('#company_id').val(companyId);
         };
 
         // Handle Add User modal with pre-selected company
         window.openCreateUserModal = function(companyId) {
+            getCompanies(companyId, 'user'); // Pass companyId to the function
             toggleModal('createUserModal');
-            $('#u_company_id').val(companyId).trigger('change');
         };
 
         // Handle Delete company
@@ -670,42 +670,111 @@
         };
     });
 
-    $('#u_company_id').on('change', function() {
-        var companyId = $(this).val();
-        var $projectSelect = $('#u_project_id');
+    // $('#u_company_id').on('change', function() {
+    //     var companyId =  $('#u_company_id').val();
+    //     alert("company change" + companyId)
+    //     loadProjectsForCompany(companyId);
+    // });
 
-        // Clear existing options and reinitialize Select2
-        $projectSelect.empty().trigger('change');
-
-        if (companyId) {
-            // Fetch related projects via AJAX
-            $.ajax({
-                url: '{{ route("mappings.get-projects") }}',
-                method: 'POST',
-                data: {
-                    company_id: companyId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (response.success && response.projects) {
-                        // Populate project dropdown
-                        $.each(response.projects, function(id, name) {
-                            var option = new Option(name, id, false, false);
-                            $projectSelect.append(option);
-                        });
-                        // Reinitialize Select2
-                        $projectSelect.trigger('change');
-                    } else {
-                        toastr.error('No projects found for this company');
+   function getCompanies(selectedCompanyId = null, type) {
+    var $companySelect = $('#u_company_id');
+    var $pCompanySelect = $('#companies');
+    
+    // Clear existing options and reinitialize Select2
+    if(type == 'user')
+    {
+        $companySelect.empty().trigger('change');
+    }
+    else{
+        $pCompanySelect.empty().trigger('change');
+    }
+    
+    
+    // Fetch related projects via AJAX
+    $.ajax({
+        url: '{{ route("get-companies") }}',
+        method: 'GET',
+        success: function(response) {
+            if (response.success && response.companies) {
+                // Populate project dropdown
+                $.each(response.companies, function(id, name) {
+                    var option = new Option(name, id, false, false);
+                    if(type == 'user')
+                    {
+                        $companySelect.append(option);
                     }
-                },
-                error: function(xhr) {
-                    console.error('Error fetching projects:', xhr);
-                    toastr.error('Failed to load projects');
+                    else{
+                        $pCompanySelect.append(option);
+                    }
+                });
+                
+                // Reinitialize Select2
+                if(type == 'user'){
+                    $companySelect.trigger('change');
                 }
-            });
+                else{
+                    $pCompanySelect.trigger('change');
+                }
+                
+                
+                // Set the selected value AFTER options are populated
+                if (selectedCompanyId) {
+                    if(type == 'user')
+                    $companySelect.val(selectedCompanyId);
+                    else
+                    $pCompanySelect.val(selectedCompanyId);
+                    // Manually trigger the project loading instead of relying on change event
+                    if(type == 'user'){
+                        loadProjectsForCompany(selectedCompanyId);
+                    }
+                }
+            } else {
+                toastr.error('No companies found for this project');
+            }
+        },
+        error: function(xhr) {
+            console.error('Error fetching companies:', xhr);
+            toastr.error('Failed to load companies');
         }
     });
+}
+
+// Extract the project loading logic into a separate function
+function loadProjectsForCompany(companyId) {
+    var $projectSelect = $('#u_project_id');
+
+    // Clear existing options and reinitialize Select2
+    $projectSelect.empty().trigger('change');
+
+    if (companyId) {
+        // Fetch related projects via AJAX
+        $.ajax({
+            url: '{{ route("mappings.get-projects") }}',
+            method: 'POST',
+            data: {
+                company_id: companyId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success && response.projects) {
+                    // Populate project dropdown
+                    $.each(response.projects, function(id, name) {
+                        var option = new Option(name, id, false, false);
+                        $projectSelect.append(option);
+                    });
+                    // Reinitialize Select2
+                    $projectSelect.trigger('change');
+                } else {
+                    toastr.error('No projects found for this company');
+                }
+            },
+            error: function(xhr) {
+                console.error('Error fetching projects:', xhr);
+                toastr.error('Failed to load projects');
+            }
+        });
+    }
+}
 </script>
 <script>
     $(document).ready(function() {

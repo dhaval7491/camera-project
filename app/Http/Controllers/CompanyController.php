@@ -172,4 +172,14 @@ class CompanyController extends Controller
             'is_active' => $company->is_active
         ]);
     }
+
+    public function getCompanies(Request $request)
+    {
+        $companies = Company::pluck('company_name', 'id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'companies' => $companies
+        ]);
+    }
 }

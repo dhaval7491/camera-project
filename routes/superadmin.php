@@ -70,6 +70,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
     Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
     Route::post('/mappings/get-companies', [MappingController::class, 'getCompanies'])->name('mappings.get-companies');
+    Route::get('/get-companies', [CompanyController::class, 'getCompanies'])->name('get-companies');
 });
 
 Route::prefix('signaling')->group(function () {
