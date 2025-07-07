@@ -65,7 +65,7 @@
         </div>
         <div class="form-list-table">
             <div class="">
-                <div class="relative overflow-x-scroll h-full">
+                <div class="relative overflow-x-scroll">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-[#e6e6e6]">
                             <tr>
@@ -103,6 +103,52 @@
                             <tr class="bg-white">
                                 <td colspan="5" class="px-6 py-4 text-center manrope-regular text-black font-normal text-[16px]">
                                     No trackables found.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between pl-[5px] pr-[5px]">
+            <h4 class="manrope-medium text-[18px] mb-[10px] mt-[10px]">User List</h4>
+        </div>
+        <div class="form-list-table">
+            <div class="">
+                <div class="relative overflow-x-scroll">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-[#e6e6e6]">
+                            <tr>
+                                <!-- <th scope="col" class="px-6 py-3 manrope-medium text-[#344563] font-medium text-[16px]"></th> -->
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Email</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Company</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($users as $user)
+                            <tr class="bg-{{ $loop->even ? '[#f8f8f8]' : 'white' }} transition duration-300 ease-in-out hover:bg-[#ededed]">
+                                <td class="px-6 py-4 text-center">
+                                    <p class="manrope-regular text-black font-normal text-[16px]"><a href="{{ route('users.show', $user->id) }}" class="cursor-pointer">{{ $user->name }}</a></p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $user->email ?? 'N/A' }}</p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $user->company_name ?? 'None' }}</p>
+                                </td>
+                                <td class="px-[20px] py-[20px] text-center">
+                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
+                                        {{ $user->is_active ? 'Active' : 'Inactive' }}
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr class="bg-white">
+                                <td colspan="5" class="px-6 py-4 text-center manrope-regular text-black font-normal text-[16px]">
+                                    No users found.
                                 </td>
                             </tr>
                             @endforelse
