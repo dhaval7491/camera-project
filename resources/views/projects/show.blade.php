@@ -52,7 +52,7 @@
                         </div>
                         <div class="lg:w-2/6 w-full pl-[5px] pr-[5px]">
                             <div class="profile-detail">
-                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Company Name: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames }}</span></p>
+                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Company Name: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames ?: 'None' }}</span></p>
                                 <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular text-[16px]">Status:</span><span class="manrope-regular text-[16px] text-[#047413]">{{ $project->is_active ? 'Active' : 'Inactive' }}</span></p>
                             </div>
                         </div>
