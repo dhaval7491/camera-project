@@ -91,7 +91,7 @@
                                     <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->other_name ?? 'N/A' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->linked_objects ?? 'None' }}</p>
+                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->linkedObjects->pluck('name')->implode(', ') ?: 'None' }}</p>
                                 </td>
                                 <td class="px-[20px] py-[20px] text-center">
                                     <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
@@ -137,7 +137,6 @@
                                     <p class="manrope-regular text-black font-normal text-[16px]">{{ $user->email ?? 'N/A' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $user->company_name ?? 'None' }}</p>
                                 </td>
                                 <td class="px-[20px] py-[20px] text-center">
                                     <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
