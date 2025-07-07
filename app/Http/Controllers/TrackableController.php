@@ -67,8 +67,17 @@ class TrackableController extends Controller
      */
     public function show(Trackable $trackable)
     {
-        $projects = Project::select('name', 'id')->get();
-        return view('trackables.show', compact('trackable', 'projects'));
+        $trackable->load([
+            'projects' => function ($query) {
+                $query->select('projects.id', 'projects.name', 'projects.created_at', 'projects.is_active')
+                      ->with(['companies' => function ($query) {
+                          $query->select('companies.id', 'companies.company_name');
+                      }]);
+            }, 
+            'linkedObjects'
+        ]);
+        
+        return view('trackables.show', compact('trackable'));
     }
 
     /**
