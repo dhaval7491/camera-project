@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\TrackableDataTable;
+use App\DataTables\TrackableProjectDataTable;
 use App\Http\Requests\TrackableRequest;
+use App\Models\Company;
 use App\Models\Project;
 use App\Models\Trackable;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class TrackableController extends Controller
 {
@@ -76,8 +79,14 @@ class TrackableController extends Controller
             }, 
             'linkedObjects'
         ]);
-        
-        return view('trackables.show', compact('trackable'));
+        // dd($trackable->id);
+        $dataTable = app(TrackableProjectDataTable::class, ['trackableId' => $trackable->id]);
+        return $dataTable->render('trackables.show', [
+            'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
+            'projects' => Project::pluck('name', 'id')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
+            'trackable' => $trackable
+        ]);
     }
 
     /**
