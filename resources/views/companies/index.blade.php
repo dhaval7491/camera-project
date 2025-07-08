@@ -115,6 +115,15 @@
 {!! $dataTable->scripts() !!}
 <script>
     $(document).ready(function() {
+        $('#companies').select2({
+        placeholder: 'Select Company',
+        allowClear: true
+    });
+
+    // Remove placeholder tag from selected list
+    $('#companies').on('select2:select', function (e) {
+        $(this).find('option[value=""]').prop('disabled', true);
+    });
         let table = $('#companies-table').DataTable();
 
         // Initialize Select2
@@ -665,6 +674,14 @@
                     }
                 });
             }
+        };
+
+        window.cancelCreateUserModal = function() {
+            $('#createUserForm')[0].reset();
+            $('#createUserModal select').val(null).trigger('change');
+            $('.text-red-500').addClass('hidden');
+            $('select').removeClass('input-error');
+            toggleModal('createUserModal');
         };
     });
 
