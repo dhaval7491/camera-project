@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full flex">
-    <p class="inline-block manrope-medium text-[13px]  px-[0px] mt-[15px] mr-[15px] text-[#437651] underline">
-        < Back</p>
-</div>
 <div class="w-[85%]  mt-[20px] mx-auto  p-[10px] h-[80%]">
     <ul class="flex mb-[30px]">
         <li class="pr-[20px] py-[5px]" role="presentation">
