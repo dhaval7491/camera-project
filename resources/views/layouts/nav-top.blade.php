@@ -17,13 +17,13 @@
         </div>
     </div>
     <div class="flex items-center space-x-4">
-        <button onclick="window.location.href='help.html';" class="relative p-2">
+        <a href="{{route('help.index')}}" class="relative p-2">
             <img src="{{ asset('admin-theme/assets/images/help-que.png') }}" alt="Help" class="h-6">
-        </button>
-        <button onclick="window.location.href='notification.html';" class="relative p-2">
+        </a>
+        <a href="{{route('alerts.index')}}" class="relative p-2">
             <img src="{{ asset('admin-theme/assets/images/notification.png') }}" alt="Notifications" class="h-6">
             <span class="absolute -top-1 -right-1 bg-[#fd591a] text-white text-xs w-4 h-4 flex items-center justify-center rounded-[14px]">1</span>
-        </button>
+        </a>
         <button class="w-[30px] h-[30px] bg-[#FD8C1A] text-white text-[11px] manrope-medium rounded-[20px] flex items-center justify-center" onclick="toggleProfileDropdown(event)">
             RS
             <div class="profile-drop absolute bg-white tab-shadow rounded-md hidden top-[70px] right-[0px] w-[200px] p-[10px] z-[8]">

@@ -24,6 +24,9 @@ Route::get('superadmin',function() {
 Route::get('/superadmin/reset_password', function() {
     return view('superadmin.reset_password');
 });
+Route::get('help', function() {
+    return view('help.index');
+})->name('help.index');
 Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
 Route::post('/superadmin/login',[LoginController::class,'login'])->name('superadmin.login');
 Route::get('password/reset', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
