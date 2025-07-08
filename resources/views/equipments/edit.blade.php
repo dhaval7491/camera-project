@@ -41,14 +41,19 @@
             label-class="block text-[13px] manrope-regular text-[#000000]" />
         <div id="equipment_code_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
-        <x-form-input
-            label="Password"
-            type="password"
-            name="password"
-            id="edit_password"
-            placeholder="Enter Password"
-            class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[13px] manrope-regular text-[#000000]" />
+        <div class="relative">
+            <x-form-input
+                label="Password"
+                type="password"
+                name="password"
+                id="edit_password"
+                placeholder="Enter Password"
+                class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
+                label-class="block text-[13px] manrope-regular text-[#000000]" />
+            <button type="button" class="absolute right-3 top-[30%] transform -translate-y-[-50%] text-gray-700">
+                <i class="fas fa-eye-slash toggle-password" id="toggleEditPassword"></i>
+            </button>
+        </div>
         <div id="password_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
         <div class="text-right mt-[50px] mb-[20px]]">
@@ -63,3 +68,12 @@
         </div>
     </form>
 </x-modal>
+<script>
+    document.getElementById('toggleEditPassword').addEventListener('click', function() {
+        const passwordField = document.getElementById('edit_password');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
