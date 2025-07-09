@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
+use App\Http\Controllers\LiveKitController;
 use App\Http\Controllers\SignalingController;
 use App\Http\Controllers\WebRTCController;
 use Illuminate\Http\Request;
@@ -24,6 +25,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/equipment/logout', [EquipmentController::class, 'logout']);
         Route::post('/equipment/refresh', [EquipmentController::class, 'refresh']);
         Route::get('get-camera-list', [EquipmentController::class, 'getCameraList']);
+    });
+    Route::prefix('livekit')->group(function () {
+        Route::post('/token', [LiveKitController::class, 'generateToken']);
     });
 });
 
