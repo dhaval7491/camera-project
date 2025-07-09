@@ -47,31 +47,31 @@ class LiveKitController extends Controller
                 ->setRoomName($roomName);
 
             // Set additional permissions if provided
-            if (isset($permissions['canPublish']) && $permissions['canPublish']) {
+            if (!empty($permissions['canPublish'])) {
                 $videoGrant->setCanPublish();
             }
 
-            if (isset($permissions['canSubscribe']) && $permissions['canSubscribe']) {
+            if (!empty($permissions['canSubscribe'])) {
                 $videoGrant->setCanSubscribe();
             }
 
-            if (isset($permissions['canPublishData']) && $permissions['canPublishData']) {
+            if (!empty($permissions['canPublishData'])) {
                 $videoGrant->setCanPublishData();
             }
 
-            if (isset($permissions['canUpdateOwnMetadata']) && $permissions['canUpdateOwnMetadata']) {
+            if (!empty($permissions['canUpdateOwnMetadata'])) {
                 $videoGrant->setCanUpdateOwnMetadata();
             }
 
-            if (isset($permissions['hidden']) && $permissions['hidden']) {
+            if (!empty($permissions['hidden'])) {
                 $videoGrant->setHidden();
             }
 
-            if (isset($permissions['recorder']) && $permissions['recorder']) {
+            if (!empty($permissions['recorder'])) {
                 $videoGrant->setRecorder();
             }
 
-            // Initialize and fetch the JWT Token
+            // Generate the token
             $token = (new AccessToken($this->apiKey, $this->secretKey))
                 ->init($tokenOptions)
                 ->setGrant($videoGrant)
@@ -79,15 +79,18 @@ class LiveKitController extends Controller
 
             return response()->json([
                 'success' => true,
-                'token' => $token,
-                'server_url' => $this->serverUrl,
-                'room_name' => $roomName,
-                'participant_name' => $participantName,
+                'message' => 'LiveKit token generated successfully',
+                'data' => [
+                    'token' => $token,
+                    'server_url' => $this->serverUrl,
+                    'room_name' => $roomName,
+                    'participant_name' => $participantName,
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Failed to generate token: ' . $e->getMessage(),
             ], 400);
         }
     }
