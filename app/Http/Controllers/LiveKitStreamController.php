@@ -8,11 +8,12 @@ use Agence104\LiveKit\AccessToken;
 use Agence104\LiveKit\AccessTokenOptions;
 use Agence104\LiveKit\VideoGrant;
 
-class LiveKitController extends Controller
+class LiveKitStreamController extends Controller
 {
     private $apiKey;
     private $secretKey;
     private $serverUrl;
+    
 
     public function __construct()
     {
