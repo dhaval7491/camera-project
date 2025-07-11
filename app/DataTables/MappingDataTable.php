@@ -130,13 +130,13 @@ class MappingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('checkbox')->title('')->addClass('text-left text-[#344563] text-[13px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('camera_name')->title('Camera Name')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('tablet_name')->title('Tablet Name')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('status')->title('Status')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('action')->title('Action')->addClass('text-left text-[#344563] text-[13px] manrope-regular relative')->orderable(false)->searchable(false),
+            Column::make('checkbox')->title('')->addClass('check-block text-left text-[#344563] text-[11px] manrope-regular')->orderable(false)->searchable(false)->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
+            Column::make('camera_name')->title('Camera Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('tablet_name')->title('Tablet Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('project_name')->title('Project Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('status')->title('Status')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('action')->title('Action')->addClass('text-left text-[#344563] text-[11px] manrope-regular relative')->orderable(false)->searchable(false),
         ];
     }
 

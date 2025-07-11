@@ -148,8 +148,9 @@ table.dataTable>tfoot>tr>th, table.dataTable>tfoot>tr>td{
 thead{
   background-color: #ffffff;
   border-bottom:2px solid #E9EDF0;
-  /* position: fixed;
-  width:100%; */
+  position: sticky;
+    top: 0;
+    z-index: 10;
 }
 table.dataTable tbody th, table.dataTable tbody td {
   padding: 6px 32px;
@@ -772,7 +773,7 @@ text-align: left !important;
 }
 .all-table thead th.status 
 {
-  min-width:150px;
+  min-width:90px;
 }
 .all-table thead th.action 
 {
@@ -780,7 +781,7 @@ text-align: left !important;
 }
 .all-table thead th.people 
 {
-  min-width:150px
+  min-width:70px
 }
 .all-table thead th.linked
 {
@@ -788,11 +789,19 @@ text-align: left !important;
 }
 .all-table thead th.companyName ,.all-table thead th.projectName ,.all-table thead th.company ,.all-table thead th.name ,.all-table thead th.email ,.all-table thead th.equipmentName ,.all-table thead th.mappedto
 {
-  min-width:200px !important;
+  min-width:150px !important;
+}
+.all-table thead th.email
+{
+  min-width:100px !important;
+}
+.all-table thead th.mappedto
+{
+  min-width:100px !important;
 }
 .all-table thead th.dateCreated , .all-table thead th.location ,.all-table thead th.created ,.all-table thead th.accesslevel , .all-table thead th.equipmentCode , .all-table thead th.equipmentType
 {
-  min-width:180px !important;
+  min-width:80px !important;
 }
 #search-input:focus-visible 
 {
@@ -857,3 +866,8 @@ table.dataTable thead>tr>th.sorting:before, table.dataTable thead>tr>th.sorting:
   {
       display:none;
   }
+.check-block 
+{
+  width:20px !important;
+  padding: 6px 10px !important;
+}
