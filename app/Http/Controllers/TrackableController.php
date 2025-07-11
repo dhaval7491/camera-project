@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\TrackableDataTable;
+use App\DataTables\TrackableProjectDataTable;
 use App\Http\Requests\TrackableRequest;
+use App\Models\Company;
 use App\Models\Project;
 use App\Models\Trackable;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 
 class TrackableController extends Controller
 {
@@ -37,9 +40,21 @@ class TrackableController extends Controller
             'other_name' => $data['other_name'],
         ]);
 
-        if (!empty($data['linked_objects'])) {
+        if (isset($data['linked_objects']) && is_array($data['linked_objects'])) {
+            $filteredLinkedObjects = [];
+
             foreach ($data['linked_objects'] as $object) {
-                $trackable->linkedObjects()->create(['name' => $object]);
+                $trimmedObject = trim($object);
+                if (!empty($trimmedObject) && $trimmedObject !== '' && $trimmedObject !== null) {
+                    $filteredLinkedObjects[] = $trimmedObject;
+                }
+            }
+
+            // Only proceed if we have valid objects
+            if (!empty($filteredLinkedObjects)) {
+                foreach ($filteredLinkedObjects as $object) {
+                    $trackable->linkedObjects()->create(['name' => $object]);
+                }
             }
         }
 
@@ -55,8 +70,23 @@ class TrackableController extends Controller
      */
     public function show(Trackable $trackable)
     {
-        $projects = Project::select('name', 'id')->get();
-        return view('trackables.show', compact('trackable', 'projects'));
+        $trackable->load([
+            'projects' => function ($query) {
+                $query->select('projects.id', 'projects.name', 'projects.created_at', 'projects.is_active')
+                      ->with(['companies' => function ($query) {
+                          $query->select('companies.id', 'companies.company_name');
+                      }]);
+            }, 
+            'linkedObjects'
+        ]);
+        // dd($trackable->id);
+        $dataTable = app(TrackableProjectDataTable::class, ['trackableId' => $trackable->id]);
+        return $dataTable->render('trackables.show', [
+            'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
+            'projects' => Project::pluck('name', 'id')->toArray(),
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
+            'trackable' => $trackable
+        ]);
     }
 
     /**
@@ -87,16 +117,31 @@ class TrackableController extends Controller
         ]);
 
         $trackable->linkedObjects()->delete();
-        if (!empty($data['linked_objects'])) {
+        if (isset($data['linked_objects']) && is_array($data['linked_objects'])) {
+            $filteredLinkedObjects = [];
+
             foreach ($data['linked_objects'] as $object) {
-                $trackable->linkedObjects()->create(['name' => $object]);
+                $trimmedObject = trim($object);
+                if (!empty($trimmedObject) && $trimmedObject !== '' && $trimmedObject !== null) {
+                    $filteredLinkedObjects[] = $trimmedObject;
+                }
+            }
+
+            // Only proceed if we have valid objects
+            if (!empty($filteredLinkedObjects)) {
+                foreach ($filteredLinkedObjects as $object) {
+                    $trackable->linkedObjects()->create(['name' => $object]);
+                }
             }
         }
 
-        // return response()->json([
-        //     'success' => true,
-        //     'message' => 'Trackable updated successfully'
-        // ]);
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Trackable updated successfully'
+            ]);
+        }
+
         return redirect()->route('settings.index');
     }
 

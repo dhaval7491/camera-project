@@ -10,7 +10,22 @@
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[13px] manrope-regular text-[#000000]" />
 
-        <x-form-input
+
+        <div class="flex flex-wrap mb-[15px]">
+            <div class="lg:w-2/6 w-full">
+                <label for="company_id" class="block text-[14px] manrope-regular text-[#000000] mt-[7px]">Company Name</label>
+            </div>
+            <div class="lg:w-4/6 w-full">
+                <select name="companies[]" id="companies" multiple class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px] select2">
+                    @foreach($companies as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </select>
+                <div id="companies_error" class="text-red-500 text-sm hidden"></div>
+            </div>
+        </div>    
+
+        <!-- <x-form-input
             label="Company Name"
             type="select2"
             name="companies"
@@ -18,7 +33,7 @@
             :options="$companies"
             :multiple="true"
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
-            label-class="block text-[13px] manrope-regular text-[#000000]" />
+            label-class="block text-[13px] manrope-regular text-[#000000]" /> -->
 
         <x-form-input
             label="Location"

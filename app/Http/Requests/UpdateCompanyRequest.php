@@ -25,6 +25,9 @@ class UpdateCompanyRequest extends FormRequest
             'company_name' => 'required|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'location' => 'required|string',
+            'admin_name' => 'required|string',
+            'admin_email' => 'required|email|unique:users,email,' . $this->company->admin->id,
+            'admin_password' => 'nullable|string|min:6',
         ];
     }
 }

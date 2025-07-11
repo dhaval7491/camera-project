@@ -58,6 +58,18 @@
 <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
+<script>
+    // Global goBack function - accessible from anywhere
+    function goBack() {
+        // Check if there's history to go back to
+        if (document.referrer && document.referrer !== window.location.href) {
+            window.history.back();
+        } else {
+            // Fallback to dashboard or home page if no history
+            window.location.href = '{{ route("superadmin.dashboard") ?? "/" }}';
+        }
+    }
+</script>
 <!---------------------- responsive sidebar collapse ------------------->
 <script>
     $(document).ready(function() {

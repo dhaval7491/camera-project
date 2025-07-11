@@ -24,6 +24,9 @@ Route::get('superadmin',function() {
 Route::get('/superadmin/reset_password', function() {
     return view('superadmin.reset_password');
 });
+Route::get('help', function() {
+    return view('help.index');
+})->name('help.index');
 Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
 Route::post('/superadmin/login',[LoginController::class,'login'])->name('superadmin.login');
 Route::get('password/reset', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -70,6 +73,8 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/equipments/generate-code', [EquipmentController::class, 'generateEquipmentCode'])->name('equipments.generate-code');
     Route::post('/mappings/get-projects', [MappingController::class, 'getProjects'])->name('mappings.get-projects');
     Route::post('/mappings/get-companies', [MappingController::class, 'getCompanies'])->name('mappings.get-companies');
+    Route::get('/get-companies', [CompanyController::class, 'getCompanies'])->name('get-companies');
+    Route::get('/get-projects', [ProjectController::class, 'getProjects'])->name('get-projects');
 });
 
 Route::prefix('signaling')->group(function () {

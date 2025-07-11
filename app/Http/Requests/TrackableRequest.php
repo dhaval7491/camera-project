@@ -24,9 +24,23 @@ class TrackableRequest extends FormRequest
         return [
             'trackable_name' => ['required', 'string', 'max:255'],
             'other_name' => ['required', 'string', 'max:255'],
-            'linked_objects' => ['sometimes', 'array'],
+            'linked_objects' => [
+            'required',
+            'array',
+            function ($attribute, $value, $fail) {
+                // Filter out empty values
+                $nonEmptyValues = array_filter($value, function($item) {
+                    return !empty(trim($item));
+                });
+                
+                // Check if at least one non-empty value exists
+                if (empty($nonEmptyValues)) {
+                    $fail('At least one linked object is required.');
+                }
+            },
+        ],
             'project_id' => ['nullable', 'exists:projects,id'],
-            'linked_objects.*' => ['required', 'string', 'max:255'],
+            'linked_objects.*' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

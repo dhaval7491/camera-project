@@ -14,17 +14,17 @@
                     <div class="table-filter lg:float-right md:float-right sm:float-left xs:float-left">
                         <ul class="list-inline list-unstyled flex">
                             <li class="list-inline-item mr-[15px]">
-                                <button
+                                <!-- <button
                                     class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModal('createTrackableModal')">
                                     <span class="mr-[10px]"><img src="{{ asset('admin-theme/assets/images/add.png') }}" class="w-[15px] mt-[2px]"></span> Create Trackable
-                                </button>
+                                </button> -->
                             </li>
                             <li class="list-inline-item">
-                                <button
+                                <!-- <button
                                     class="flex manrope-medium bg-[#437651] select-shadow btn rounded-[8px] py-[10px] px-[25px] text-[12px] border-[1px] border-solid border-[#437651] text-white"
                                     onclick="toggleModalassigntrackable()">Assign Trackable
-                                </button>
+                                </button> -->
                             </li>
                         </ul>
                     </div>
@@ -38,7 +38,7 @@
             <div class="flex flex-wrap mb-[30px]">
                 <div class="lg:w-1/9 w-full pl-[5px] pr-[15px] border-r-[#e4e4e4] border-r-[1px] border-r-solid flex items-center justify-center">
                     <div class="text-center inline-block w-[100px] h-[100px] mr-[10px] text-[50px] bg-gradient-to-b from-[#844EBC] to-[#AA55AA] text-[#fff] manrope-semibold rounded-[6px] py-[10px] px-[10px] items-center justify-center">
-                        {{ strtoupper(substr($project->name, 0, 2)) }}
+                        {{ getInitials($project->name) }}
                     </div>
                 </div>
                 <div class="lg:w-8/9 w-full pl-[15px] pr-[10px]">
@@ -47,12 +47,12 @@
                             <div class="profile-detail">
                                 <p class="pt-[0px]"><span class="w-[37%] inline-block manrope-regular text-[16px] text-[#344563]">Name of project:</span><span class="manrope-regular text-[16px] text-[#969696]">
                                         {{ $project->name }}</span></p>
-                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Date Created: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $project->created_at->format('M d - Y') }}</span></p>
+                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Date Created: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ displayDateFormat($project->created_at) }}</span></p>
                             </div>
                         </div>
                         <div class="lg:w-2/6 w-full pl-[5px] pr-[5px]">
                             <div class="profile-detail">
-                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Company Name: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames }}</span></p>
+                                <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular">Company Name: </span><span class="manrope-regular text-[16px] text-[#969696]">{{ $companyNames ?: 'None' }}</span></p>
                                 <p class="pt-[10px]"><span class="w-[37%] inline-block manrope-regular text-[16px]">Status:</span><span class="manrope-regular text-[16px] text-[#047413]">{{ $project->is_active ? 'Active' : 'Inactive' }}</span></p>
                             </div>
                         </div>
@@ -65,11 +65,11 @@
         </div>
         <div class="form-list-table">
             <div class="">
-                <div class="relative overflow-x-scroll h-full">
+                <div class="relative overflow-x-scroll">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-[#e6e6e6]">
                             <tr>
-                                <th scope="col" class="px-6 py-3 manrope-medium text-[#344563] font-medium text-[16px]"></th>
+                                <!-- <th scope="col" class="px-6 py-3 manrope-medium text-[#344563] font-medium text-[16px]"></th> -->
                                 <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Trackable Name</th>
                                 <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Other name</th>
                                 <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Linked Objects</th>
@@ -79,11 +79,11 @@
                         <tbody>
                             @forelse ($trackables as $trackable)
                             <tr class="bg-{{ $loop->even ? '[#f8f8f8]' : 'white' }} transition duration-300 ease-in-out hover:bg-[#ededed]">
-                                <th class="text-center">
+                                <!-- <th class="text-center">
                                     <div class="">
                                         <input id="checkbox-{{ $trackable->id }}" type="checkbox" value="{{ $trackable->id }}" class="text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     </div>
-                                </th>
+                                </th> -->
                                 <td class="px-6 py-4 text-center">
                                     <p class="manrope-regular text-black font-normal text-[16px]"><a href="{{ route('trackables.show', $trackable->id) }}" class="cursor-pointer">{{ $trackable->trackable_name }}</a></p>
                                 </td>
@@ -91,7 +91,7 @@
                                     <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->other_name ?? 'N/A' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->linked_objects ?? 'None' }}</p>
+                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $trackable->linkedObjects->pluck('name')->implode(', ') ?: 'None' }}</p>
                                 </td>
                                 <td class="px-[20px] py-[20px] text-center">
                                     <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
@@ -103,6 +103,51 @@
                             <tr class="bg-white">
                                 <td colspan="5" class="px-6 py-4 text-center manrope-regular text-black font-normal text-[16px]">
                                     No trackables found.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between pl-[5px] pr-[5px]">
+            <h4 class="manrope-medium text-[18px] mb-[10px] mt-[10px]">User List</h4>
+        </div>
+        <div class="form-list-table">
+            <div class="">
+                <div class="relative overflow-x-scroll">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-[#e6e6e6]">
+                            <tr>
+                                <!-- <th scope="col" class="px-6 py-3 manrope-medium text-[#344563] font-medium text-[16px]"></th> -->
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Name</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Email</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Company</th>
+                                <th scope="col" class="px-6 py-3 text-center manrope-medium text-[#344563] font-medium text-[13px]">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($users as $user)
+                            <tr class="bg-{{ $loop->even ? '[#f8f8f8]' : 'white' }} transition duration-300 ease-in-out hover:bg-[#ededed]">
+                                <td class="px-6 py-4 text-center">
+                                    <p class="manrope-regular text-black font-normal text-[16px]"><a href="{{ route('users.show', $user->id) }}" class="cursor-pointer">{{ $user->name }}</a></p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <p class="manrope-regular text-black font-normal text-[16px]">{{ $user->email ?? 'N/A' }}</p>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                </td>
+                                <td class="px-[20px] py-[20px] text-center">
+                                    <button class="table-status w-[90px] bg-[#047413] text-white rounded-[7px] py-1 px-4 text-sm font-medium">
+                                        {{ $user->is_active ? 'Active' : 'Inactive' }}
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr class="bg-white">
+                                <td colspan="5" class="px-6 py-4 text-center manrope-regular text-black font-normal text-[16px]">
+                                    No users found.
                                 </td>
                             </tr>
                             @endforelse

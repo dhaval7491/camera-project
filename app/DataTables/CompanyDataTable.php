@@ -25,7 +25,7 @@ class CompanyDataTable extends DataTable
                     <div class="flex items-center">
                         <span class="text-center inline-block mr-[10px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">' . $initials . '</span>
                         <div class="text-[#344563] text-[11px] manrope-regular cursor-pointer">
-                            ' . $company->company_name . '
+                           <a href="' . route('companies.show', $company->id) . '">' . $company->company_name . '</a>
                         </div>
                     </div>';
             })

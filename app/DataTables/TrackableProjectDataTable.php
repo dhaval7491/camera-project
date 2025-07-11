@@ -6,8 +6,16 @@ use App\Models\Project;
 use Yajra\DataTables\Services\DataTable;
 use Illuminate\Support\Facades\DB;
 
-class ProjectDataTable extends DataTable
+class TrackableProjectDataTable extends DataTable
 {
+    protected $trackableId;
+
+    // Allow passing trackable_id to the DataTable
+    public function __construct($trackableId = null)
+    {
+        $this->trackableId = $trackableId;
+    }
+
     public function dataTable($query)
     {
         return datatables()
@@ -33,7 +41,7 @@ class ProjectDataTable extends DataTable
                 $initials = getInitials($project->name);
 
                 return '
-                <div >
+                <div>
                     <a href="' . route('projects.show', $project->id) . '" class="flex items-center">
                         <span class="text-center inline-block w-[40px] h-[40px] mr-[10px] text-[14px] bg-[#004040] text-white manrope-semibold rounded-[6px] py-[6px] px-[6px]" style="width:30px; height:30px; font-size:12px;">'
                         . $initials .
@@ -59,6 +67,7 @@ class ProjectDataTable extends DataTable
         $query = $model->newQuery()
             ->leftJoin('company_project', 'projects.id', '=', 'company_project.project_id')
             ->leftJoin('companies', 'company_project.company_id', '=', 'companies.id')
+            ->join('project_trackable', 'projects.id', '=', 'project_trackable.project_id') // Changed to innerJoin
             ->select([
                 'projects.id',
                 'projects.name',
@@ -78,18 +87,24 @@ class ProjectDataTable extends DataTable
                 'projects.created_at'
             );
 
-        // ✅ Filter by selected companies (from filter dropdown)
+        // Filter by trackable_id if provided
+        //  dd($this->trackableId);
+        if ($this->trackableId) {
+           
+            $query->where('project_trackable.trackable_id', $this->trackableId);
+        }
+
+        // Filter by selected companies
         if (request()->has('company_ids') && !empty(request('company_ids'))) {
             $query->whereIn('company_project.company_id', request('company_ids'));
         }
 
-        // ✅ Filter by statuses (e.g., Active, Inactive, Blocked)
+        // Filter by statuses
         if (request()->has('statuses') && !empty(request('statuses'))) {
             $mappedStatuses = array_map(function ($status) {
                 return match (strtolower($status)) {
                     'active' => 1,
                     'inactive' => 0,
-                    'blocked' => 2,
                     default => $status
                 };
             }, request('statuses'));
@@ -97,7 +112,7 @@ class ProjectDataTable extends DataTable
             $query->whereIn('projects.is_active', $mappedStatuses);
         }
 
-        // ✅ Global search including company name (safe and optimized)
+        // Global search
         if ($keyword = request('search.value')) {
             $keyword = strtolower($keyword);
 
@@ -116,7 +131,6 @@ class ProjectDataTable extends DataTable
 
         return $query;
     }
-
 
     public function html()
     {
@@ -184,7 +198,7 @@ class ProjectDataTable extends DataTable
                         <li class="py-[5px]">
                             <form action="' . route('projects.destroy', $project->id) . '" method="POST" onsubmit="return confirm(\'Are you sure?\');">
                                 ' . csrf_field() . method_field('DELETE') . '
-                                <button type="submit" class="flex items-center text-[#344563] text-[13px] manrope-medium">
+                                <button type="submit" class="flex items-center text-[#344563] text-[14px] manrope-medium">
                                     <img src="' . asset('admin-theme/assets/images/delete.png') . '" class="w-[16px] mr-[11px] object-contain">
                                     <p>Delete</p>
                                 </button>

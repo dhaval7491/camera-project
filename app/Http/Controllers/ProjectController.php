@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Project;
 use App\Models\Trackable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 class ProjectController extends Controller
@@ -19,7 +20,7 @@ class ProjectController extends Controller
     {
         return $dataTable->render('projects.index', [
             'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
-            'projects' => Project::pluck('name','id')->toArray(),
+            'projects' => Project::pluck('name', 'id')->toArray(),
             'permissions' => Permission::pluck('name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
@@ -59,8 +60,27 @@ class ProjectController extends Controller
     {
         $project = Project::with('companies')->findOrFail($id);
         $companyNames = $project->companies->pluck('company_name')->join(', ');
-        $trackables = $project->trackables()->get(); 
-        return view('projects.show', compact('project', 'companyNames','trackables'));
+        $trackables = $project->trackables()->get();
+        $users = DB::table('users')
+        ->select([
+            'users.id',
+            'users.name',
+            'users.email',
+            'users.is_active',
+            'users.created_at',
+            'users.access_level',
+            DB::raw("(SELECT GROUP_CONCAT(c.company_name SEPARATOR ', ') 
+                      FROM company_user cu 
+                      JOIN companies c ON c.id = cu.company_id 
+                      WHERE cu.user_id = users.id) as company_name")
+        ])
+        ->join('project_user', 'users.id', '=', 'project_user.user_id')
+        ->leftJoin('company_user', 'users.id', '=', 'company_user.user_id')
+        ->leftJoin('companies', 'company_user.company_id', '=', 'companies.id')
+        ->where('project_user.project_id', $id)
+        ->groupBy('users.id', 'users.name', 'users.email', 'users.is_active', 'users.created_at', 'users.access_level')
+        ->get();
+        return view('projects.show', compact('project', 'companyNames', 'trackables', 'users'));
     }
 
     /**
@@ -113,6 +133,16 @@ class ProjectController extends Controller
             'success' => true,
             'message' => 'Project status updated successfully',
             'is_active' => $project->is_active
+        ]);
+    }
+
+    public function getProjects(Request $request)
+    {
+        $projects = Project::pluck('name', 'id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'projects' => $projects
         ]);
     }
 }

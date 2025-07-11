@@ -1,4 +1,4 @@
-<x-modal id="createUserModal" title="Create a New User" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
+<x-modal id="createUserModal" title="Create a New User" :onClose="'cancelCreateUserModal()'" class="relative inline-block bg-white rounded-[40px] shadow-xl transform transition-all overflow-hidden px-[20px] py-[20px]">
     <form method="POST" action="{{ route('users.store') }}" id="createUserForm" enctype="multipart/form-data">
         @csrf
         <div class="space-y-4">
