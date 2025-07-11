@@ -21,18 +21,13 @@
 
     <div class="lg:w-4/6 w-full">
         @if($type === 'file')
-        <input
-            type="file"
-            name="{{ $name }}"
-            id="{{ $id }}"
-            class="h-[44px] mt-[-7px] p-1 w-full text-slate-500 text-sm rounded-[18px] leading-6 file:bg-[#437651] file:text-[#fff] file:font-semibold file:border-none file:px-4 file:py-1 file:mr-6 file:rounded-[14px] border border-[#EBEBEB] {{ $class }}" /> -->
             <div class="flex">
-            <label for="profile_image" class="flex items-center w-[40%] gap-2 px-4 py-2 border border-[#EBEBEB] rounded-[16px] text-[#6B7280] hover:bg-gray-100 transition mt-[-5px] cursor-pointer h-[43px]" style="width:40%; color:#6B7280; border-radius:16px; padding: 10px 16px;"><img src="http://localhost/unniffy/public/assets/images/upload.png" class="w-[12px]" style="width:12px;"><span class="manrope-regular text-[12px]">Browse files</span>
+            <label for="{{ $id }}" class="flex items-center w-[40%] gap-2 px-4 py-2 border border-[#EBEBEB] rounded-[16px] text-[#6B7280] hover:bg-gray-100 transition mt-[-5px] cursor-pointer h-[43px]" style="width:40%; color:#6B7280; border-radius:16px; padding: 10px 16px;"><img src="http://localhost/unniffy/public/assets/images/upload.png" class="w-[12px]" style="width:12px;"><span class="manrope-regular text-[12px]">Browse files</span>
             </label>
             <input
                 type="file"
                 name="{{ $name }}"
-                id="profile_image"
+                id="{{ $id }}"
                 class="hidden"
             />
             <img src="" class="w-[50px] border-solid border-[1px] border-[#ebebeb] mt-[-3px] rounded-[8px] ml-[7px] object-contain" style="height:36px; margin-top:-3px; margin-left:7px;">
