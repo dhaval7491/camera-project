@@ -2,39 +2,67 @@
 @section('content')
 <style>
     .video-box {
-      width: 140px; /* Match video width */
-      height: 80px; /* Match video height */
-      max-width: 100%; /* Ensure responsiveness */
-      position: relative; /* For positioning video-info */
-      margin: 10px; /* Optional: spacing */
-      overflow: hidden; /* Prevent overflow */
+        width: 140px;
+        /* Match video width */
+        height: 80px;
+        /* Match video height */
+        max-width: 100%;
+        /* Ensure responsiveness */
+        position: relative;
+        /* For positioning video-info */
+        margin: 10px;
+        /* Optional: spacing */
+        overflow: hidden;
+        /* Prevent overflow */
     }
 
     .video-box video {
-      width: 100%; /* Fill video-box width */
-      height: 100%; /* Fill video-box height */
-      display: block; /* Remove extra space below video */
-      object-fit: cover; /* Ensure video fills container without distortion */
+        width: 100% !important;
+        /* Fill video-box width */
+        height: 100% !important;
+        /* Fill video-box height */
+        display: block;
+        /* Remove extra space below video */
+        object-fit: cover;
+        /* Ensure video fills container without distortion */
     }
 
     .video-info {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      display: flex;
-      align-items: center;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        display: flex;
+        align-items: center;
     }
 
     .video-status {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
     }
 
     .status-connecting {
-      background-color: orange; /* Example styling for connecting status */
+        background-color: orange;
+        /* Example styling for connecting status */
     }
-  </style>
+
+    /* Main video container styling */
+    .main-video-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #000;
+        border-radius: 8px;
+    }
+
+    .main-video-container video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+</style>
 <div class="flex flex-wrap">
     <div class="lg:w-1/6 md:w-1/6 w-full">
         <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll">
@@ -52,7 +80,7 @@
         <div class="video-player px-[10px] relative w-full {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
             <div class="video-container relative w-full" style="aspect-ratio: 16/9;">
                 <div
-                    class="w-full h-full object-cover rounded-lg"
+                    class="main-video-container w-full h-full"
                     id="mainVideo{{ $project['project_id'] }}"
                     style="background-color: #000;">
                 </div>
@@ -123,7 +151,7 @@
                     <li class="flex flex-col items-center">
                         <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
                             <div class="video-box w-full" id="video-box-{{ $camera['id']}}">
-                                <video width="140" height="80" id="video-{{ $camera['id']}}" autoplay playsinline></video>
+                                <div width="140" height="80" id="video-{{ $camera['id']}}"></div>
                                 <div class="video-info">
                                     <div class="video-status status-connecting"></div>
                                 </div>
@@ -230,10 +258,15 @@
         border-radius: 8px;
         overflow: hidden;
         margin: 5px 0;
+        width: 140px;
+        height: 80px;
     }
 
     .video-box video {
         display: block;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
     }
 
     .video-info {
@@ -264,6 +297,24 @@
 
     .status-disconnected {
         background-color: red;
+    }
+
+    /* Main video container specific styling */
+    .main-video-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #000;
+        border-radius: 8px;
+    }
+
+    .main-video-container video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+        border-radius: 8px;
     }
 </style>
 @endpush
@@ -331,30 +382,72 @@
 
         const room = new LivekitClient.Room();
         currentRoom = room;
+        currentCameraId = cameraId;
 
         room.on(LivekitClient.RoomEvent.TrackSubscribed, (track, publication, participant) => {
             console.log('TrackSubscribed:', track, publication, participant);
             if (track.kind === LivekitClient.Track.Kind.Video) {
-                // alert();
                 const videoElement = track.attach();
                 videoElement.autoplay = true;
                 videoElement.playsInline = true;
+
+                // Apply styling to ensure video fits container
+                videoElement.style.width = '100%';
+                videoElement.style.height = '100%';
+                videoElement.style.objectFit = 'cover';
+                videoElement.style.display = 'block';
+                videoElement.style.borderRadius = '8px';
+
                 const mainVideo = document.getElementById(`mainVideo${projectId}`);
-                mainVideo.srcObject = null; // Clear previous stream
-                console.log(videoElement);
+                // Clear previous content
+                mainVideo.innerHTML = '';
+                // Add new video element
                 mainVideo.appendChild(videoElement);
+
+                // Create thumbnail video element (clone the video stream)
+                const thumbnailVideoElement = track.attach();
+                thumbnailVideoElement.autoplay = true;
+                thumbnailVideoElement.playsInline = true;
+
+                // Apply styling to thumbnail video
+                thumbnailVideoElement.style.width = '100%';
+                thumbnailVideoElement.style.height = '100%';
+                thumbnailVideoElement.style.objectFit = 'cover';
+                thumbnailVideoElement.style.display = 'block';
+
+                // Render thumbnail video for the matching camera
+                const thumbnailContainer = document.getElementById(`video-${cameraId}`);
+                if (thumbnailContainer) {
+                    thumbnailContainer.innerHTML = '';
+                    thumbnailContainer.appendChild(thumbnailVideoElement);
+                }
+
                 document.getElementById(`statusText${projectId}`).textContent = 'Connected';
                 document.getElementById(`onlineStatus${projectId}`).textContent = 'Online';
-                document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.remove('status-connecting');
-                document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.add('status-connected');
+
+                const videoBox = document.getElementById(`video-box-${cameraId}`);
+                if (videoBox) {
+                    const statusElement = videoBox.querySelector('.video-status');
+                    if (statusElement) {
+                        statusElement.classList.remove('status-connecting');
+                        statusElement.classList.add('status-connected');
+                    }
+                }
             }
         });
 
         room.on(LivekitClient.RoomEvent.Disconnected, () => {
             document.getElementById(`statusText${projectId}`).textContent = 'Not connected';
             document.getElementById(`onlineStatus${projectId}`).textContent = 'Offline';
-            document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.remove('status-connected');
-            document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.add('status-disconnected');
+
+            const videoBox = document.getElementById(`video-box-${cameraId}`);
+            if (videoBox) {
+                const statusElement = videoBox.querySelector('.video-status');
+                if (statusElement) {
+                    statusElement.classList.remove('status-connected');
+                    statusElement.classList.add('status-disconnected');
+                }
+            }
         });
 
         try {
@@ -365,8 +458,15 @@
             console.error('Failed to connect:', err);
             document.getElementById(`statusText${projectId}`).textContent = 'Connection failed';
             document.getElementById(`onlineStatus${projectId}`).textContent = 'Offline';
-            document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.remove('status-connecting');
-            document.getElementById(`video-box-${cameraId}`).querySelector('.video-status').classList.add('status-disconnected');
+
+            const videoBox = document.getElementById(`video-box-${cameraId}`);
+            if (videoBox) {
+                const statusElement = videoBox.querySelector('.video-status');
+                if (statusElement) {
+                    statusElement.classList.remove('status-connecting');
+                    statusElement.classList.add('status-disconnected');
+                }
+            }
         }
     }
 
