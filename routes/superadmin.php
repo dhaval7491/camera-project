@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Equipment;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\LiveKitStreamController;
 use App\Http\Controllers\LiveStreamController;
 use App\Http\Controllers\MappingController;
 use App\Http\Controllers\ProfileController;
@@ -18,17 +19,17 @@ use App\Http\Controllers\TrackableController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('superadmin',function() {
+Route::get('superadmin', function () {
     return view('superadmin.webrtc');
 });
-Route::get('/superadmin/reset_password', function() {
+Route::get('/superadmin/reset_password', function () {
     return view('superadmin.reset_password');
 });
-Route::get('help', function() {
+Route::get('help', function () {
     return view('help.index');
 })->name('help.index');
-Route::get('/superadmin/login',[LoginController::class,'showLoginPage'])->name('superadmin.login.page');
-Route::post('/superadmin/login',[LoginController::class,'login'])->name('superadmin.login');
+Route::get('/superadmin/login', [LoginController::class, 'showLoginPage'])->name('superadmin.login.page');
+Route::post('/superadmin/login', [LoginController::class, 'login'])->name('superadmin.login');
 Route::get('password/reset', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
 // Handle email submission
@@ -39,23 +40,23 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 
 // Handle password reset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-Route::middleware(['superadmin_auth'])->group(function(){
-    Route::get('/superadmin/dashboard',[DashboardController::class,'index'])->name('superadmin.dashboard');
-    Route::get('/superadmin/logout',[DashboardController::class,'logout'])->name('superadmin.logout');
+Route::middleware(['superadmin_auth'])->group(function () {
+    Route::get('/superadmin/dashboard', [DashboardController::class, 'index'])->name('superadmin.dashboard');
+    Route::get('/superadmin/logout', [DashboardController::class, 'logout'])->name('superadmin.logout');
     Route::resource('companies', CompanyController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('users', UserController::class);
     Route::resource('equipments', EquipmentController::class);
     Route::resource('mappings', MappingController::class);
     Route::resource('trackables', TrackableController::class);
-    Route::get('/alerts',[AlertController::class,'index'])->name('alerts.index');
-    Route::get('/settings',[SettingController::class,'index'])->name('settings.index');
+    Route::get('/alerts', [AlertController::class, 'index'])->name('alerts.index');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::get('/settings/equipments', [SettingController::class, 'equipments'])->name('settings.equipments');
     Route::get('/settings/mappings', [SettingController::class, 'mappings'])->name('settings.mappings');
     Route::get('/settings/trackables', [SettingController::class, 'trackables'])->name('settings.trackables');
-    Route::get('/account-settings',[SettingController::class,'accountSettings'])->name('account-settings');
-    Route::get('/live-stream',[LiveStreamController::class,'index'])->name('streams.index');
-    Route::get('/analytics',[AnalyticController::class,'index'])->name('analytics.index');
+    Route::get('/account-settings', [SettingController::class, 'accountSettings'])->name('account-settings');
+    Route::get('/live-stream', [LiveStreamController::class, 'index'])->name('streams.index');
+    Route::get('/analytics', [AnalyticController::class, 'index'])->name('analytics.index');
     Route::get('/alerts/load-more', [AlertController::class, 'loadMore'])->name('alerts.load-more');
     Route::get('/get-company-data', [CompanyController::class, 'data'])->name('companies.data');
     Route::get('/get-project-data', [ProjectController::class, 'data'])->name('projects.data');
@@ -75,6 +76,7 @@ Route::middleware(['superadmin_auth'])->group(function(){
     Route::post('/mappings/get-companies', [MappingController::class, 'getCompanies'])->name('mappings.get-companies');
     Route::get('/get-companies', [CompanyController::class, 'getCompanies'])->name('get-companies');
     Route::get('/get-projects', [ProjectController::class, 'getProjects'])->name('get-projects');
+    Route::post('/token', [LiveKitStreamController::class, 'generateToken'])->name('livekit.token');
 });
 
 Route::prefix('signaling')->group(function () {
@@ -83,3 +85,4 @@ Route::prefix('signaling')->group(function () {
     Route::post('room/{roomId}/callee-candidate', [SignalingController::class, 'addCalleeCandidate']);
     Route::get('room/{roomId}/caller-candidates', [SignalingController::class, 'getCallerCandidates']);
 });
+

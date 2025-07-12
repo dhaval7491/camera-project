@@ -27,6 +27,7 @@ class LiveKitStreamController extends Controller
      */
     public function generateToken(Request $request): JsonResponse
     {
+        // dd($request);
         $request->validate([
             'room_name' => 'required|string|max:255',
             'participant_name' => 'required|string|max:255',
