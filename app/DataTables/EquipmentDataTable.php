@@ -173,12 +173,12 @@ class EquipmentDataTable extends DataTable
                 ->title('')
                 ->orderable(false)
                 ->searchable(false)
-                ->render('function() { return \'<input type="checkbox" class="border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#344563] text-[13px] manrope-regular'),
-            Column::make('equipment_name')->title('Equipment Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
-            Column::make('equipment_code')->title('Equipment Code')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+                ->render('function() { return \'<input type="checkbox" class=" border-gray-300 rounded h-4 w-4 accent-[#437651] focus:ring-0">\'; }')->addClass('text-left text-[#344563] text-[13px] manrope-regular check-block'),
+            Column::make('equipment_name')->title('Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('equipment_code')->title('Code')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('project_name')->title('Project Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
-            Column::make('equipment_type')->title('Equipment Type')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('equipment_type')->title('Type')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('mapped_to')->title('Mapped To')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::computed('action')

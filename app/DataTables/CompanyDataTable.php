@@ -158,7 +158,7 @@ class CompanyDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
+            Column::make('company_name')->title('Company Name')->addClass('text-left text-[#344563] text-[11px] manrope-regular w-[300px] min-w-[200px]'),
             Column::make('created_at')->title('Date Created')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('location')->title('Location')->addClass('text-left text-[#344563] text-[11px] manrope-regular'),
             Column::make('status')->title('Status')->addClass('text-left'),

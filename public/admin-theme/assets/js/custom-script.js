@@ -4,9 +4,9 @@ document.getElementById("search-toggle").addEventListener("click", function () {
 
     if (searchInput.classList.contains("w-0")) {
         searchInput.classList.remove("w-0", "p-0");
-        searchInput.classList.add("w-[202px]", "p-[8px]");
+        searchInput.classList.add("w-[202px]", "p-[5px]");
     } else {
-        searchInput.classList.remove("w-[202px]", "p-[8px]");
+        searchInput.classList.remove("w-[202px]", "p-[5px]");
         searchInput.classList.add("w-0", "p-0");
     }
 });
