@@ -4,6 +4,7 @@ use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
 use App\Http\Controllers\LiveKitStreamController;
 use App\Http\Controllers\SignalingController;
+use App\Http\Controllers\WeatherDataController;
 use App\Http\Controllers\WebRTCController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/equipment/logout', [EquipmentController::class, 'logout']);
         Route::post('/equipment/refresh', [EquipmentController::class, 'refresh']);
         Route::get('get-camera-list', [EquipmentController::class, 'getCameraList']);
+        Route::prefix('weather')->group(function () {
+            Route::post('/weather-data', [WeatherDataController::class, 'store']);
+            Route::get('/weather-data/{equipment}', [WeatherDataController::class, 'getWeatherData']);
+        });
     });
     Route::prefix('livekit')->group(function () {
         Route::post('/token', [LiveKitStreamController::class, 'generateToken']);
