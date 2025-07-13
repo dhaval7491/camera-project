@@ -30,9 +30,32 @@
                 id="{{ $id }}"
                 class="hidden"
             />
-            <img src="" class="w-[50px] border-solid border-[1px] border-[#ebebeb] mt-[-3px] rounded-[8px] ml-[7px] object-contain" style="height:36px; margin-top:-3px; margin-left:7px;">
+            <img src="" id="{{ $id }}_preview" class="w-[50px] border-solid border-[1px] border-[#ebebeb] mt-[-3px] rounded-[8px] ml-[7px] object-contain" style="height:36px; margin-top:-3px; margin-left:7px;">
             </div>
         <div id="{{ $id }}_error" class="text-red-500 text-sm hidden"></div>
+        @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('{{ $id }}');
+                const preview = document.getElementById('{{ $id }}_preview');
+
+                if (input && preview) {
+                    input.addEventListener('change', function (e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                preview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            preview.src = '';
+                        }
+                    });
+                }
+            });
+        </script>
+        @endpush
         @elseif($type === 'select')
         <select
             name="{{ $name }}"

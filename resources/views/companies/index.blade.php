@@ -625,10 +625,8 @@
                     $('#edit_admin_email').val(response.admin_email);
                     // $('#edit_company_admin_password').val(response.admin_password);
                     $('#editCompanyForm').attr('action', '{{ url("companies") }}/' + response.id);
-                    // Remove any existing logo preview
-                    $('#edit_company_logo').siblings('.logo-preview').remove();
                     if (response.logo) {
-                        $('#edit_company_logo').after(`<div class="logo-preview"><img src="${response.logo}" alt="Current Logo" class="w-32 h-32 object-contain"></div>`);
+                        $('#edit_company_logo_preview').attr('src', response.logo);
                     }
 
                     // Open the edit modal
