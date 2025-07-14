@@ -606,10 +606,10 @@
                     required: true,
                     minlength: 2
                 },
-                password: {
-                    required: true,
-                    minlength: 8
-                }
+                // password: {
+                //     required: true,
+                //     minlength: 8
+                // }
             },
             messages: {
                 type: {
@@ -619,10 +619,10 @@
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
                 },
-                password: {
-                    required: "Please enter a password",
-                    minlength: "Password must be at least 8 characters long"
-                }
+                // password: {
+                //     required: "Please enter a password",
+                //     minlength: "Password must be at least 8 characters long"
+                // }
             },
             errorPlacement: function(error, element) {
                 var errorDiv = '#' + (element.attr('name') === 'type' ? 'type_error' : element.attr('id') + '_error');
@@ -738,9 +738,9 @@
                     required: true,
                     minlength: 2
                 },
-                password: {
-                    minlength: 8
-                },
+                // password: {
+                //     minlength: 8
+                // },
                 stream_link: {
                     required: function() {
                         return $('#editEquipmentForm input[name="type"]:checked').val() === 'camera';
@@ -756,9 +756,9 @@
                     required: "Please enter an equipment name",
                     minlength: "Equipment name must be at least 2 characters long"
                 },
-                password: {
-                    minlength: "Password must be at least 8 characters long"
-                },
+                // password: {
+                //     minlength: "Password must be at least 8 characters long"
+                // },
                 stream_link: {
                     required: "Please enter a streaming link for camera equipment",
                     url: "Please enter a valid URL"

@@ -39,7 +39,7 @@
             class="h-[44px] focus-visible:outline-none w-full border-[1px] rounded-[18px] border-[#EBEBEB] border-solid bg-white p-[7px] mt-[-7px] text-[#7A86A1] text-[14px]"
             label-class="block text-[13px] manrope-regular text-[#000000]" />
 
-        <div class="relative">
+        <!-- <div class="relative">
             <x-form-input
                 label="Password"
                 type="password"
@@ -51,7 +51,7 @@
             <button type="button" class="absolute right-3 top-[30%] transform -translate-y-[-50%] text-gray-700">
                 <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
             </button>
-        </div>
+        </div> -->
 
         <div class="text-right mt-[50px] mb-[20px]">
             <button type="button" onclick="cancelCreateEquipmentModal()"

@@ -49,9 +49,7 @@ class EquipmentController extends Controller
     {
         $prefix = $type === 'camera' ? 'CAM' : 'TAB';
         do {
-            $number = rand(100, 999);
-            $letters = strtoupper(Str::random(3));
-            $code = "$prefix-$number-$letters";
+            $code = (string) rand(100000, 999999);
         } while (Equipment::where('equipment_code', $code)->exists());
         return $code;
     }
@@ -63,8 +61,8 @@ class EquipmentController extends Controller
     {
         $data = $request->validated();
         // Hash the password before storing
-        if (isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
+        if (isset($data['equipment_code'])) {
+            $data['password'] = bcrypt($data['equipment_code']);
         }
         Equipment::create($data);
         return redirect()->route('settings.index');
@@ -100,11 +98,11 @@ class EquipmentController extends Controller
     {
         $data = $request->validated();
         // Hash the password before storing
-        if (!empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']); // Prevent updating password with null
-        }
+        // if (!empty($data['password'])) {
+        //     $data['password'] = bcrypt($data['password']);
+        // } else {
+        //     unset($data['password']); // Prevent updating password with null
+        // }
         $equipment->update($data);
         return redirect()->route('settings.index');
     }

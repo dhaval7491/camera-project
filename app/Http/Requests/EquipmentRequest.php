@@ -31,7 +31,7 @@ class EquipmentRequest extends FormRequest
                 'string',
                 Rule::unique('equipments', 'equipment_code')->ignore($equipmentId),
             ],
-            'password' => $this->isMethod('post') ? 'required|string' : 'nullable|string',
+            // 'password' => $this->isMethod('post') ? 'required|string' : 'nullable|string',
         ];
     }
 }

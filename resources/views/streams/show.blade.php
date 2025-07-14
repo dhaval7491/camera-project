@@ -474,28 +474,29 @@
         await joinRoom(cameraId, projectId);
     }
 
-    function openPTab(event, streamId) {
-    // Get all video-player elements
-    const videoPlayers = document.querySelectorAll('.video-player');
-    
-    // Add 'hidden' class to all video-player elements
-    videoPlayers.forEach(player => {
-        player.classList.add('hidden');
-    });
-    
-    // Remove 'hidden' class from the selected stream
-    const selectedStream = document.getElementById(streamId);
-    if (selectedStream) {
-        selectedStream.classList.remove('hidden');
+    function openPTab(event, streamId) 
+    {
+        // Get all video-player elements
+        const videoPlayers = document.querySelectorAll('.video-player');
+        
+        // Add 'hidden' class to all video-player elements
+        videoPlayers.forEach(player => {
+            player.classList.add('hidden');
+        });
+        
+        // Remove 'hidden' class from the selected stream
+        const selectedStream = document.getElementById(streamId);
+        if (selectedStream) {
+            selectedStream.classList.remove('hidden');
+        }
+        
+        // Optional: Update active tab styling (e.g., highlight the clicked button)
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.classList.remove('bg-[#ededed]');
+        });
+        event.currentTarget.classList.add('bg-[#ededed]');
     }
-    
-    // Optional: Update active tab styling (e.g., highlight the clicked button)
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => {
-        button.classList.remove('bg-[#ededed]');
-    });
-    event.currentTarget.classList.add('bg-[#ededed]');
-}
 
     // Initialize with first camera of first project
     document.addEventListener('DOMContentLoaded', async () => {

@@ -41,7 +41,7 @@
             label-class="block text-[13px] manrope-regular text-[#000000]" />
         <div id="equipment_code_error" class="text-red-500 text-sm mt-1 hidden"></div>
 
-        <div class="relative">
+        <!-- <div class="relative">
             <x-form-input
                 label="Password"
                 type="password"
@@ -54,7 +54,7 @@
                 <i class="fas fa-eye-slash toggle-password" id="toggleEditPassword"></i>
             </button>
         </div>
-        <div id="password_error" class="text-red-500 text-sm mt-1 hidden"></div>
+        <div id="password_error" class="text-red-500 text-sm mt-1 hidden"></div> -->
 
         <div class="text-right mt-[50px] mb-[20px]]">
             <button type="button" onclick="cancelEditEquipmentModal()"
