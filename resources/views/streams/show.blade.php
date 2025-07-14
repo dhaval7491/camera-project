@@ -67,7 +67,7 @@
     <div class="lg:w-1/6 md:w-1/6 w-full">
         <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll">
             @foreach($projects as $project)
-            <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openTab(event, 'stream{{ $project['project_id'] }}')">
+            <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openPTab(event, 'stream{{ $project['project_id'] }}')">
                 <div class="flex">
                     <p class="w-[100%] text-left manrope-medium text-[13px] font-medium mb-[5px]">{{ $project['project_name'] }}</p>
                 </div>
@@ -473,6 +473,29 @@
     async function switchCamera(cameraId, projectId) {
         await joinRoom(cameraId, projectId);
     }
+
+    function openPTab(event, streamId) {
+    // Get all video-player elements
+    const videoPlayers = document.querySelectorAll('.video-player');
+    
+    // Add 'hidden' class to all video-player elements
+    videoPlayers.forEach(player => {
+        player.classList.add('hidden');
+    });
+    
+    // Remove 'hidden' class from the selected stream
+    const selectedStream = document.getElementById(streamId);
+    if (selectedStream) {
+        selectedStream.classList.remove('hidden');
+    }
+    
+    // Optional: Update active tab styling (e.g., highlight the clicked button)
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('bg-[#ededed]');
+    });
+    event.currentTarget.classList.add('bg-[#ededed]');
+}
 
     // Initialize with first camera of first project
     document.addEventListener('DOMContentLoaded', async () => {
