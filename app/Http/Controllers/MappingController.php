@@ -38,6 +38,15 @@ class MappingController extends Controller
     public function store(MappingRequest $request)
     {
         $data = $request->validated();
+        // Check if an exact same mapping already exists
+        $exists = Mapping::where($data)->exists();
+
+        if ($exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mapping already exists',
+            ], 409); // 409 Conflict
+        }
         Mapping::create($data);
         return response()->json([
             'success' => true,

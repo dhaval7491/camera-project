@@ -681,7 +681,7 @@
                     processData: false,
                     success: function(response) {
                         toggleModal('createMappingModal');
-                        mappingTable.ajax.reload(null, false);
+                        // mappingTable.ajax.reload(null, false);
                         toastr.success('Mapping created successfully');
                         $('#createMappingForm')[0].reset();
                         $('#createMappingForm select').val(null).trigger('change');
@@ -697,7 +697,10 @@
                                 $(errorDiv).text(error[0]).removeClass('hidden');
                                 $('#' + key).addClass('input-error');
                             });
-                        } else {
+                        } else if((xhr.status === 409)){
+                            toastr.error('Mapping already exists');
+                        }
+                        else {
                             toastr.error('Failed to create mapping');
                         }
                     }
