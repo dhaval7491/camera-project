@@ -47,7 +47,7 @@ class LiveStreamController extends Controller
         }
 
         $projectsArray = array_values($projects); // re-index for clean output
-        // dd($projectsArray);
+        // dd(auth()->user());
         return view('streams.index', ['projects' => $projectsArray]);
     }
 
@@ -97,7 +97,7 @@ class LiveStreamController extends Controller
         }
 
         $projectsArray = array_values($projects);
-        // dd($camera);
+        // dd($projectsArray);
         return view('streams.show', [
             'cameraId' => $camera->id,
             'projects' => $projectsArray,

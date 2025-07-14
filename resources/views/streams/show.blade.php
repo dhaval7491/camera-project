@@ -183,9 +183,9 @@
                     <p class="text-white manrope-bold text-[16px] text-center">15 mph</p>
                 </div>
             </div>
-            <div class="absolute top-[73%] right-[30px] w-[210px]">
+            <!-- <div class="absolute top-[73%] right-[30px] w-[210px]">
                 <img src="{{ asset('admin-theme/assets/images/compas.png') }}" class="bg-[#00000057] py-[9px] px-[48px] rounded-full">
-            </div>
+            </div> -->
             <div x-show="!open" class="online absolute top-[20px] right-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
                 <p class="flex text-white">
                     <img src="{{ asset('admin-theme/assets/images/online.png') }}" class="w-[20px] object-contain mr-[5px]">
@@ -333,7 +333,7 @@
     // Global room instance to manage connections
     let currentRoom = null;
 
-    function getLiveKitToken(roomName, participantName = 'viewer') {
+    function getLiveKitToken(roomName, participantName = '{{ auth()->user()->name ?? "viewer" }}') {
         return new Promise((resolve, reject) => {
             console.log('Fetching token from:', '{{ route("livekit.token") }}');
             $.ajax({
