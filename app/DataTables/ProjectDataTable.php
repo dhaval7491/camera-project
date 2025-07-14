@@ -166,7 +166,7 @@ class ProjectDataTable extends DataTable
                         <li class="py-[5px]">
                             <a href="javascript:void(0);" class="flex manrope-medium text-[#344563] text-[13px]">
                                 <img src="' . asset('admin-theme/assets/images/equipment.png') . '" class="w-[16px] mr-[11px] object-contain">
-                                <p onclick="toggleModal(\'createEquipmentModal\')">Add Equipment</p>
+                                <p onclick="openAddMappingModal(' . $project->id . ')">Add Equipment</p>
                             </a>
                         </li>
                         <li class="py-[5px]">

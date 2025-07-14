@@ -89,6 +89,7 @@
 @include('trackables.add')
 <!-- Add User Modal -->
 @include('users.add')
+@include('mappings.add')
 @endsection
 
 @push('styles')
@@ -625,6 +626,85 @@
             }
         });
 
+         // jQuery Validation for Create Mapping Form
+        $('#createMappingForm').validate({
+            rules: {
+                company_id: {
+                    required: true
+                },
+                project_id: {
+                    required: true
+                },
+                camera_id: {
+                    required: true
+                },
+                tablet_id: {
+                    required: true
+                }
+            },
+            messages: {
+                company_id: {
+                    required: "Please select a company"
+                },
+                project_id: {
+                    required: "Please select a project"
+                },
+                camera_id: {
+                    required: "Please select a camera"
+                },
+                tablet_id: {
+                    required: "Please select a tablet"
+                }
+            },
+            errorPlacement: function(error, element) {
+                var errorDiv = '#' + element.attr('id') + '_error';
+                $(errorDiv).text(error.text()).removeClass('hidden');
+                element.addClass('input-error');
+            },
+            success: function(label, element) {
+                var errorDiv = '#' + $(element).attr('id') + '_error';
+                $(errorDiv).addClass('hidden').text('');
+                $(element).removeClass('input-error');
+            }
+        });
+
+        // Handle Create Mapping Submission
+        $('#createMappingSubmit').on('click', function(e) {
+            e.preventDefault();
+            if ($('#createMappingForm').valid()) {
+                var formData = new FormData($('#createMappingForm')[0]);
+                $.ajax({
+                    url: '{{ route("mappings.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        toggleModal('createMappingModal');
+                        mappingTable.ajax.reload(null, false);
+                        toastr.success('Mapping created successfully');
+                        $('#createMappingForm')[0].reset();
+                        $('#createMappingForm select').val(null).trigger('change');
+                        $('.text-red-500').addClass('hidden');
+                        $('select').removeClass('input-error');
+                    },
+                    error: function(xhr) {
+                        console.error('Error creating mapping:', xhr);
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, error) {
+                                var errorDiv = '#' + key + '_error';
+                                $(errorDiv).text(error[0]).removeClass('hidden');
+                                $('#' + key).addClass('input-error');
+                            });
+                        } else {
+                            toastr.error('Failed to create mapping');
+                        }
+                    }
+                });
+            }
+        });
+
         // Apply filters to DataTable
         function applyFilters() {
             let companyIds = $('#company-filter').val() || [];
@@ -752,6 +832,11 @@
             toggleModal('createUserModal');
         };
 
+        window.openAddMappingModal = function(projectId) {
+            getProjects(projectId);
+            toggleModal('createMappingModal');
+        };
+
         window.cancelCreateUserModal = function() {
             $('#createUserForm')[0].reset();
             $('#createUserModal select').val(null).trigger('change');
@@ -762,9 +847,10 @@
 
         function getProjects(selectedProjectId = null) {
             var $projectSelect = $('#u_project_id');
-
+            var $projectMapSelect = $('#project_id');
             // Clear existing options and reinitialize Select2
             $projectSelect.empty().trigger('change');
+            $projectMapSelect.empty().trigger('change');
 
             // Fetch companies via AJAX
             $.ajax({
@@ -774,16 +860,18 @@
                     if (response.success && response.projects) {
                         // Populate company dropdown
                         $.each(response.projects, function(id, name) {
-                            var option = new Option(name, id, false, false);
-                            $projectSelect.append(option);
+                           $projectSelect.append(new Option(name, id, false, false));
+                           $projectMapSelect.append(new Option(name, id, false, false));
                         });
 
                         // Reinitialize Select2
                         $projectSelect.trigger('change');
+                        $projectMapSelect.trigger('change');
 
                         // Set the selected company AFTER options are populated
                         if (selectedProjectId) {
                             $projectSelect.val(selectedProjectId);
+                            $projectMapSelect.val(selectedProjectId)
                             // Manually trigger the project loading instead of relying on change event
                             loadCompaniesForProject(selectedProjectId);
                         }
@@ -800,10 +888,10 @@
 
         function loadCompaniesForProject(projectId) {
             var $companySelect = $('#u_company_id');
-
+            var $companyMapSelect = $('#company_id');
             // Clear existing options and reinitialize Select2
             $companySelect.empty().trigger('change');
-
+            $companyMapSelect.empty().trigger('change');
             if (projectId) {
                 // Fetch related projects via AJAX
                 $.ajax({
@@ -817,11 +905,12 @@
                         if (response.success && response.companies) {
                             // Populate project dropdown
                             $.each(response.companies, function(id, name) {
-                                var option = new Option(name, id, false, false);
-                                $companySelect.append(option);
+                                $companySelect.append(new Option(name, id, false, false));
+                                $companyMapSelect.append(new Option(name, id, false, false));
                             });
                             // Reinitialize Select2
                             $companySelect.trigger('change');
+                            $companyMapSelect.trigger('change');
                         } else {
                             toastr.error('No companies found for this project');
                         }

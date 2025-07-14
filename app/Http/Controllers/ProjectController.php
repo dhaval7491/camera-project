@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\ProjectDataTable;
 use App\Http\Requests\StoreProjectRequest;
 use App\Models\Company;
+use App\Models\Equipment;
 use App\Models\Project;
 use App\Models\Trackable;
 use Illuminate\Http\Request;
@@ -22,6 +23,8 @@ class ProjectController extends Controller
             'companies' => Company::pluck('company_name', 'id')->toArray(), // Pass companies for edit modal
             'projects' => Project::pluck('name', 'id')->toArray(),
             'permissions' => Permission::pluck('name', 'id')->toArray(),
+            'cameras' => Equipment::where('type', 'camera')->pluck('equipment_name', 'id')->toArray(),
+            'tablets' => Equipment::where('type', 'tablet')->pluck('equipment_name', 'id')->toArray(),
             'statuses' => [
                 1 => 'Active',
                 0 => 'Inactive'
