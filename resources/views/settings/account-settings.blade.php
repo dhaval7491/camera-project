@@ -14,7 +14,7 @@
                     <div class="flex flex-wrap mt-[10px] mb-[10px]">
                         <div class="lg:w-1/6 w-full pl-[5px] pr-[5px]">
                             <div class="relative w-[73%] mb-[40px] my-[10px]">
-                                <img src="{{ asset('admin-theme/assets/images/profile-edit.png') }}" class="w-full" alt="Profile Picture">
+                                <img src="{{ asset('admin-theme/assets/images/profile-dummy.png') }}" class="rounded-full w-[120px] h-[120px]" alt="Profile Picture">
                                 <label for="file-input"
                                     class="absolute right-[10px] bg-white p-1 rounded-full shadow-md cursor-pointer flex items-center justify-center" style="bottom:10px;">
                                     <img src="{{ asset('admin-theme/assets/images/camera.png') }}" class="w-[20px] h-[20px] object-contain p-[2px]" alt="Upload Icon">
