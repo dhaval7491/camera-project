@@ -270,6 +270,26 @@
 
 @push('scripts')
 <script>
+    // Extract room ID from URL
+    function getRoomIdFromUrl() {
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const streamsIndex = segments.indexOf('streams');
+        
+        if (streamsIndex !== -1 && streamsIndex < segments.length - 1) {
+            const roomId = segments[streamsIndex + 1];
+            return parseInt(roomId);
+        }
+        
+        // Fallback to default room ID if not found in URL
+        console.warn('Room ID not found in URL, using default room 23');
+        return 23;
+    }
+
+    // Get the dynamic room ID
+    const ROOM_ID = getRoomIdFromUrl();
+    console.log('Using room ID:', ROOM_ID);
+
     // Janus Gateway REST API integration
     const JANUS_URL = "https://unnifyy.com:8089/janus";
     let janusConnections = {}; // Store connections per project
@@ -340,7 +360,7 @@
         
         async joinAsSubscriber(feedId) {
             this.feedId = feedId;
-            console.log(`[PROJECT ${this.projectId}] Joining as subscriber to feed:`, feedId);
+            console.log(`[PROJECT ${this.projectId}] Joining as subscriber to feed:`, feedId, 'in room:', ROOM_ID);
             
             try {
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
@@ -348,7 +368,7 @@
                     body: {
                         request: "join",
                         ptype: "subscriber",
-                        room: 23, // You might want to make this dynamic
+                        room: ROOM_ID, // Now using dynamic room ID
                         feed: feedId
                     },
                     transaction: randStr()
@@ -362,6 +382,7 @@
                 return false;
             }
         }
+
         
         async startSubscriber(jsep) {
             try {
@@ -396,12 +417,12 @@
                 
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
                     janus: "message",
-                    body: { request: "start", room: 1234 },
+                    body: { request: "start", room: ROOM_ID }, // Using dynamic room ID
                     jsep: answer,
                     transaction: randStr()
                 });
                 
-                console.log(`[PROJECT ${this.projectId}] Sent SDP answer`);
+                console.log(`[PROJECT ${this.projectId}] Sent SDP answer for room:`, ROOM_ID);
             } catch (error) {
                 console.error(`[PROJECT ${this.projectId}] StartSubscriber error:`, error);
                 this.updateStatus("Connection failed");
@@ -548,12 +569,13 @@
         
         return connection;
     }
+
     
     async function listParticipants(connection) {
         try {
             const res = await janusPost(`/${connection.sessionId}/${connection.handleId}`, {
                 janus: "message",
-                body: { request: "listparticipants", room: 23 },
+                body: { request: "listparticipants", room: ROOM_ID }, // Using dynamic room ID
                 transaction: randStr()
             });
             
@@ -562,7 +584,7 @@
                 const publishers = data.participants.filter(p => p.publisher);
                 if (publishers.length > 0) {
                     const feedId = publishers[0].id;
-                    console.log(`[PROJECT ${connection.projectId}] Found publisher via list:`, feedId);
+                    console.log(`[PROJECT ${connection.projectId}] Found publisher via list:`, feedId, 'in room:', ROOM_ID);
                     await connection.joinAsSubscriber(feedId);
                 }
             }
