@@ -82,13 +82,39 @@
     .size-control input[type="range"] {
         width: 60px;
     }
+
+    /* Active tab styling */
+    .tab-button {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .tab-button.active {
+        background-color: #3b82f6 !important;
+        border-color: #2563eb !important;
+        color: white !important;
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    }
+
+    .tab-button.active p {
+        color: white !important;
+    }
+
+    .tab-button:hover {
+        background-color: #e5e7eb;
+    }
+
+    .tab-button.active:hover {
+        background-color: #2563eb !important;
+    }
 </style>
 
 <div class="flex flex-wrap">
     <div class="lg:w-1/6 md:w-1/6 w-full">
         <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll">
-            @foreach($projects as $project)
-            <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer" onclick="openPTab(event, 'stream{{ $project['project_id'] }}')">
+            @foreach($projects as $index => $project)
+            <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer {{ $index == 0 ? 'active' : '' }}" 
+                    onclick="openPTab(event, 'stream{{ $project['project_id'] }}', '{{ $project['project_id'] }}')">
                 <div class="flex">
                     <p class="w-[100%] text-left manrope-medium text-[13px] font-medium mb-[5px]">{{ $project['project_name'] }}</p>
                 </div>
@@ -102,7 +128,7 @@
         <div class="video-player px-[10px] relative w-full {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
             <div class="video-container relative w-full" style="aspect-ratio: 16/9;">
                 <div class="main-video-container w-full h-full" id="mainVideo{{ $project['project_id'] }}" style="background-color: #000;">
-                    <!-- Video element will be inserted here by JavaScript -->
+                    <!-- Main video stream will be inserted here -->
                 </div>
             </div>
             
@@ -189,11 +215,11 @@
                     class="absolute top-0 bg-[#0000007a] mr-[10px] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2] w-full">
                     @foreach($project['camera'] as $camera)
                     <li class="flex flex-col items-center">
-                        <div class="cursor-pointer" onclick="janusSwitchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
-                            <div class="video-box w-full" id="video-box-{{ $camera['id']}}">
-                                <div width="140" height="80" id="video-{{ $camera['id']}}"></div>
+                        <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
+                            <div class="video-box w-full" id="video-box-{{ $project['project_id'] }}-{{ $camera['id']}}">
+                                <div width="140" height="80" id="video-{{ $project['project_id'] }}-{{ $camera['id']}}"></div>
                                 <div class="video-info">
-                                    <div class="video-status status-connecting" id="status-{{ $camera['id']}}"></div>
+                                    <div class="video-status status-connecting" id="status-{{ $project['project_id'] }}-{{ $camera['id']}}"></div>
                                 </div>
                             </div>
                             <p class="manrope-medium bg-[white] text-[13px] inline-block w-full py-[1px] mb-0 text-center">{{ $camera['camera_name'] }}</p>
@@ -255,10 +281,6 @@
         min-height: 400px;
     }
 
-    .tab-button.bg-[#ededed] {
-        background-color: #ededed !important;
-    }
-
     video {
         width: 100%;
         height: auto;
@@ -270,29 +292,12 @@
 
 @push('scripts')
 <script>
-    // Extract room ID from URL
-    function getRoomIdFromUrl() {
-        const path = window.location.pathname;
-        const segments = path.split('/');
-        const streamsIndex = segments.indexOf('streams');
-        
-        if (streamsIndex !== -1 && streamsIndex < segments.length - 1) {
-            const roomId = segments[streamsIndex + 1];
-            return parseInt(roomId);
-        }
-        
-        // Fallback to default room ID if not found in URL
-        console.warn('Room ID not found in URL, using default room 23');
-        return 23;
-    }
-
-    // Get the dynamic room ID
-    const ROOM_ID = getRoomIdFromUrl();
-    console.log('Using room ID:', ROOM_ID);
-
     // Janus Gateway REST API integration
     const JANUS_URL = "https://unnifyy.com:8089/janus";
-    let janusConnections = {}; // Store connections per project
+    
+    // Global state management
+    let projectConnections = {}; // Store all project connections
+    let currentActiveProject = null;
     
     // Utility functions
     function randStr() {
@@ -317,27 +322,31 @@
         }
     }
     
-    // Janus connection class
-    class JanusConnection {
-        constructor(projectId) {
+    // Camera connection class for individual cameras
+    class CameraConnection {
+        constructor(projectId, cameraId, isMainCamera = false) {
             this.projectId = projectId;
+            this.cameraId = cameraId;
+            this.roomId = cameraId; // Room ID equals camera ID
+            this.isMainCamera = isMainCamera;
             this.sessionId = null;
             this.handleId = null;
             this.feedId = null;
             this.pc = null;
-            this.currentVideoElement = null;
+            this.videoElement = null;
             this.isPolling = false;
+            this.isConnected = false;
         }
         
         async createSession() {
             try {
                 const res = await janusPost("", { janus: "create", transaction: randStr() });
                 this.sessionId = res.data.id;
-                console.log(`[PROJECT ${this.projectId}] Created session:`, this.sessionId);
+                console.log(`[CAMERA ${this.cameraId}] Created session:`, this.sessionId);
                 this.pollEvents();
                 return true;
             } catch (error) {
-                console.error(`[PROJECT ${this.projectId}] Session creation failed:`, error);
+                console.error(`[CAMERA ${this.cameraId}] Session creation failed:`, error);
                 return false;
             }
         }
@@ -350,17 +359,17 @@
                     transaction: randStr()
                 });
                 this.handleId = res.data.id;
-                console.log(`[PROJECT ${this.projectId}] Attached to plugin:`, this.handleId);
+                console.log(`[CAMERA ${this.cameraId}] Attached to plugin:`, this.handleId);
                 return true;
             } catch (error) {
-                console.error(`[PROJECT ${this.projectId}] Plugin attachment failed:`, error);
+                console.error(`[CAMERA ${this.cameraId}] Plugin attachment failed:`, error);
                 return false;
             }
         }
         
         async joinAsSubscriber(feedId) {
             this.feedId = feedId;
-            console.log(`[PROJECT ${this.projectId}] Joining as subscriber to feed:`, feedId, 'in room:', ROOM_ID);
+            console.log(`[CAMERA ${this.cameraId}] Joining as subscriber to feed:`, feedId, 'in room:', this.roomId);
             
             try {
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
@@ -368,7 +377,7 @@
                     body: {
                         request: "join",
                         ptype: "subscriber",
-                        room: ROOM_ID, // Now using dynamic room ID
+                        room: this.roomId,
                         feed: feedId
                     },
                     transaction: randStr()
@@ -377,12 +386,11 @@
                 this.updateStatus("Connecting...");
                 return true;
             } catch (error) {
-                console.error(`[PROJECT ${this.projectId}] Join failed:`, error);
+                console.error(`[CAMERA ${this.cameraId}] Join failed:`, error);
                 this.updateStatus("Connection failed");
                 return false;
             }
         }
-
         
         async startSubscriber(jsep) {
             try {
@@ -391,7 +399,7 @@
                 });
                 
                 this.pc.ontrack = (e) => {
-                    console.log(`[PROJECT ${this.projectId}] Received remote track`);
+                    console.log(`[CAMERA ${this.cameraId}] Received remote track`);
                     this.handleRemoteStream(e.streams[0]);
                 };
                 
@@ -417,59 +425,103 @@
                 
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
                     janus: "message",
-                    body: { request: "start", room: ROOM_ID }, // Using dynamic room ID
+                    body: { request: "start", room: this.roomId },
                     jsep: answer,
                     transaction: randStr()
                 });
                 
-                console.log(`[PROJECT ${this.projectId}] Sent SDP answer for room:`, ROOM_ID);
+                console.log(`[CAMERA ${this.cameraId}] Sent SDP answer for room:`, this.roomId);
             } catch (error) {
-                console.error(`[PROJECT ${this.projectId}] StartSubscriber error:`, error);
+                console.error(`[CAMERA ${this.cameraId}] StartSubscriber error:`, error);
                 this.updateStatus("Connection failed");
             }
         }
         
         handleRemoteStream(stream) {
-            // Create video element for main container
+            // Create video element
             const videoElement = document.createElement("video");
             videoElement.autoplay = true;
             videoElement.playsInline = true;
-            videoElement.controls = false; // We'll use custom controls
+            videoElement.controls = false;
             videoElement.style.width = '100%';
             videoElement.style.height = '100%';
             videoElement.style.objectFit = 'cover';
             videoElement.style.display = 'block';
             videoElement.style.borderRadius = '8px';
-            videoElement.id = `remoteVideo${this.projectId}`;
+            videoElement.id = `video-${this.projectId}-${this.cameraId}-element`;
             
             // Attach stream to video element
             videoElement.srcObject = stream;
+            this.videoElement = videoElement;
             
-            // Replace content in main video container
-            const mainVideo = document.getElementById(`mainVideo${this.projectId}`);
-            if (mainVideo) {
-                mainVideo.innerHTML = '';
-                mainVideo.appendChild(videoElement);
-                this.currentVideoElement = videoElement;
-                
-                // Set up volume control
-                this.setupVolumeControl();
+            // // Place video in appropriate container
+            // if (this.isMainCamera) {
+            //     this.placeInMainContainer();
+            // } else {
+            //     this.placeInThumbnailContainer();
+            // }
+
+            // Always place in thumbnail container first
+            this.placeInThumbnailContainer();
+            
+            // If this is the main camera, also place in main container
+            if (this.isMainCamera) {
+                this.placeInMainContainer();
             }
             
+            this.isConnected = true;
             this.updateStatus("Connected");
-            this.updateOnlineStatus("Online");
+        }
+        
+        placeInMainContainer() {
+            const mainVideo = document.getElementById(`mainVideo${this.projectId}`);
+            if (mainVideo && this.videoElement) {
+                mainVideo.innerHTML = '';
+                mainVideo.appendChild(this.videoElement);
+                this.setupVolumeControl();
+                this.updateOnlineStatus("Online");
+            }
+        }
+        
+        placeInThumbnailContainer() {
+            const thumbnailContainer = document.getElementById(`video-${this.projectId}-${this.cameraId}`);
+            if (thumbnailContainer && this.videoElement) {
+                // Clone the video element for thumbnail
+                const thumbnailVideo = this.videoElement.cloneNode();
+                thumbnailVideo.srcObject = this.videoElement.srcObject;
+                thumbnailVideo.style.width = '100%';
+                thumbnailVideo.style.height = '100%';
+                thumbnailVideo.id = `thumbnail-${this.projectId}-${this.cameraId}`;
+                
+                thumbnailContainer.innerHTML = '';
+                thumbnailContainer.appendChild(thumbnailVideo);
+            }
+        }
+        
+        moveToMainContainer() {
+            if (this.videoElement && this.isConnected) {
+                this.isMainCamera = true;
+                this.placeInMainContainer();
+                
+                // Update other cameras to not be main
+                const projectConnection = projectConnections[this.projectId];
+                if (projectConnection) {
+                    Object.values(projectConnection.cameras).forEach(camera => {
+                        if (camera.cameraId !== this.cameraId) {
+                            camera.isMainCamera = false;
+                        }
+                    });
+                }
+            }
         }
         
         setupVolumeControl() {
-            if (this.currentVideoElement) {
+            if (this.videoElement) {
                 const volumeSlider = document.getElementById(`volume-slider${this.projectId}`);
                 if (volumeSlider) {
-                    // Set initial volume
-                    this.currentVideoElement.volume = volumeSlider.value;
-                    
-                    // Update volume when slider changes
+                    this.videoElement.volume = volumeSlider.value;
                     volumeSlider.addEventListener('input', () => {
-                        this.currentVideoElement.volume = volumeSlider.value;
+                        this.videoElement.volume = volumeSlider.value;
                     });
                 }
             }
@@ -487,159 +539,279 @@
                     if (data.janus === "event") {
                         const pluginData = data.plugindata?.data;
                         
-                        // Check for publisher feed info
                         if (pluginData?.videoroom === "event" && pluginData.publishers?.length > 0) {
                             const feedId = pluginData.publishers[0].id;
-                            console.log(`[PROJECT ${this.projectId}] Found publisher feed ID:`, feedId);
+                            console.log(`[CAMERA ${this.cameraId}] Found publisher feed ID:`, feedId);
                             await this.joinAsSubscriber(feedId);
                         }
                         
-                        // Handle JSEP offer
                         if (data.jsep) {
-                            console.log(`[PROJECT ${this.projectId}] Got JSEP offer`);
+                            console.log(`[CAMERA ${this.cameraId}] Got JSEP offer`);
                             await this.startSubscriber(data.jsep);
                         }
                     }
                 } catch (err) {
-                    console.error(`[PROJECT ${this.projectId}] Polling error:`, err);
+                    console.error(`[CAMERA ${this.cameraId}] Polling error:`, err);
                 }
                 
                 await sleep(500);
             }
         }
         
+        async listParticipants() {
+            try {
+                const res = await janusPost(`/${this.sessionId}/${this.handleId}`, {
+                    janus: "message",
+                    body: { request: "listparticipants", room: this.roomId },
+                    transaction: randStr()
+                });
+                
+                const data = res.plugindata?.data;
+                if (data?.videoroom === "participants") {
+                    const publishers = data.participants.filter(p => p.publisher);
+                    if (publishers.length > 0) {
+                        const feedId = publishers[0].id;
+                        console.log(`[CAMERA ${this.cameraId}] Found publisher via list:`, feedId, 'in room:', this.roomId);
+                        await this.joinAsSubscriber(feedId);
+                    }
+                }
+            } catch (error) {
+                console.error(`[CAMERA ${this.cameraId}] List participants error:`, error);
+            }
+        }
+        
         updateStatus(status) {
-            const statusElement = document.getElementById(`statusText${this.projectId}`);
+            const statusElement = document.getElementById(`status-${this.projectId}-${this.cameraId}`);
             if (statusElement) {
-                statusElement.textContent = status;
+                statusElement.className = `video-status ${
+                    status === 'Connected' ? 'status-connected' :
+                    status === 'Connecting...' ? 'status-connecting' :
+                    'status-disconnected'
+                }`;
+            }
+            
+            // Update main status if this is main camera
+            if (this.isMainCamera) {
+                const mainStatusElement = document.getElementById(`statusText${this.projectId}`);
+                if (mainStatusElement) {
+                    mainStatusElement.textContent = status;
+                }
             }
         }
         
         updateOnlineStatus(status) {
-            const onlineElement = document.getElementById(`onlineStatus${this.projectId}`);
-            if (onlineElement) {
-                onlineElement.textContent = status;
+            if (this.isMainCamera) {
+                const onlineElement = document.getElementById(`onlineStatus${this.projectId}`);
+                if (onlineElement) {
+                    onlineElement.textContent = status;
+                }
             }
         }
         
         async disconnect() {
             this.isPolling = false;
+            this.isConnected = false;
             
             if (this.pc) {
                 this.pc.close();
                 this.pc = null;
             }
             
-            if (this.currentVideoElement) {
-                this.currentVideoElement.srcObject = null;
-                this.currentVideoElement = null;
+            if (this.videoElement) {
+                this.videoElement.srcObject = null;
+                this.videoElement = null;
             }
             
             if (this.sessionId) {
                 try {
                     await janusPost(`/${this.sessionId}`, { janus: "destroy", transaction: randStr() });
                 } catch (error) {
-                    console.error(`[PROJECT ${this.projectId}] Session destroy error:`, error);
+                    console.error(`[CAMERA ${this.cameraId}] Session destroy error:`, error);
                 }
                 this.sessionId = null;
             }
             
             this.updateStatus("Disconnected");
-            this.updateOnlineStatus("Offline");
+            if (this.isMainCamera) {
+                this.updateOnlineStatus("Offline");
+            }
+        }
+    }
+    
+    // Project connection manager
+    class ProjectConnection {
+        constructor(projectId, cameras) {
+            this.projectId = projectId;
+            this.cameras = {};
+            this.isInitialized = false;
+            
+            // Initialize camera connections
+            cameras.forEach((camera, index) => {
+                const isMainCamera = index === 0; // First camera is main by default
+                this.cameras[camera.id] = new CameraConnection(projectId, camera.id, isMainCamera);
+            });
+        }
+        
+        async initializeAllCameras() {
+            if (this.isInitialized) return;
+            
+            console.log(`[PROJECT ${this.projectId}] Initializing all cameras...`);
+            
+            // Initialize all cameras
+            const initPromises = Object.values(this.cameras).map(async (camera) => {
+                const sessionCreated = await camera.createSession();
+                if (sessionCreated) {
+                    const pluginAttached = await camera.attachPlugin();
+                    if (pluginAttached) {
+                        // Try to list participants to find existing publishers
+                        await camera.listParticipants();
+                    }
+                }
+            });
+            
+            await Promise.all(initPromises);
+            this.isInitialized = true;
+            
+            console.log(`[PROJECT ${this.projectId}] All cameras initialized`);
+        }
+        
+        switchMainCamera(cameraId) {
+            const targetCamera = this.cameras[cameraId];
+            if (targetCamera && targetCamera.isConnected) {
+                // Set all cameras to not main
+                Object.values(this.cameras).forEach(camera => {
+                    camera.isMainCamera = false;
+                });
+                
+                // Move target camera to main container
+                targetCamera.moveToMainContainer();
+                
+                console.log(`[PROJECT ${this.projectId}] Switched main camera to:`, cameraId);
+            }
+        }
+        
+        async disconnect() {
+            console.log(`[PROJECT ${this.projectId}] Disconnecting all cameras...`);
+            
+            const disconnectPromises = Object.values(this.cameras).map(camera => camera.disconnect());
+            await Promise.all(disconnectPromises);
+            
+            this.isInitialized = false;
+        }
+        
+        getMainCameraVideoElement() {
+            const mainCamera = Object.values(this.cameras).find(camera => camera.isMainCamera);
+            return mainCamera ? mainCamera.videoElement : null;
         }
     }
     
     // Global functions
-    async function initJanusConnection(projectId) {
-        if (janusConnections[projectId]) {
-            await janusConnections[projectId].disconnect();
+    async function initializeProject(projectId) {
+        console.log(`Initializing project: ${projectId}`);
+        
+        // Get project data
+        const projectsDataElement = document.getElementById('projectsData');
+        const projects = JSON.parse(projectsDataElement.textContent);
+        const project = projects.find(p => p.project_id == projectId);
+        
+        if (!project || !project.camera || project.camera.length === 0) {
+            console.error(`Project ${projectId} not found or has no cameras`);
+            return;
         }
         
-        const connection = new JanusConnection(projectId);
-        janusConnections[projectId] = connection;
-        
-        const sessionCreated = await connection.createSession();
-        if (sessionCreated) {
-            const pluginAttached = await connection.attachPlugin();
-            if (pluginAttached) {
-                // Try to list participants to find existing publishers
-                await listParticipants(connection);
-            }
+        // Create project connection if not exists
+        if (!projectConnections[projectId]) {
+            projectConnections[projectId] = new ProjectConnection(projectId, project.camera);
         }
         
-        return connection;
-    }
-
-    
-    async function listParticipants(connection) {
-        try {
-            const res = await janusPost(`/${connection.sessionId}/${connection.handleId}`, {
-                janus: "message",
-                body: { request: "listparticipants", room: ROOM_ID }, // Using dynamic room ID
-                transaction: randStr()
-            });
-            
-            const data = res.plugindata?.data;
-            if (data?.videoroom === "participants") {
-                const publishers = data.participants.filter(p => p.publisher);
-                if (publishers.length > 0) {
-                    const feedId = publishers[0].id;
-                    console.log(`[PROJECT ${connection.projectId}] Found publisher via list:`, feedId, 'in room:', ROOM_ID);
-                    await connection.joinAsSubscriber(feedId);
-                }
-            }
-        } catch (error) {
-            console.error(`[PROJECT ${connection.projectId}] List participants error:`, error);
-        }
+        // Initialize all cameras for this project
+        await projectConnections[projectId].initializeAllCameras();
+        
+        // Update current active project
+        currentActiveProject = projectId;
     }
     
-    async function janusSwitchCamera(cameraId, projectId) {
+    async function switchCamera(cameraId, projectId) {
         console.log(`Switching to camera ${cameraId} for project ${projectId}`);
-        // For now, just reinitialize connection
-        // You might want to implement actual camera switching logic here
-        await initJanusConnection(projectId);
+        
+        const projectConnection = projectConnections[projectId];
+        if (projectConnection) {
+            projectConnection.switchMainCamera(cameraId);
+        }
+    }
+    
+    async function openPTab(event, streamId, projectId) {
+        console.log(`Opening tab for project: ${projectId}`);
+        
+        // Update tab active state
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+        
+        // Hide all video players
+        const videoPlayers = document.querySelectorAll('.video-player');
+        videoPlayers.forEach(player => {
+            player.classList.add('hidden');
+        });
+        
+        // Show selected stream
+        const selectedStream = document.getElementById(streamId);
+        if (selectedStream) {
+            selectedStream.classList.remove('hidden');
+        }
+        
+        // Initialize project if not already done or if switching projects
+        if (currentActiveProject !== projectId) {
+            await initializeProject(projectId);
+        }
     }
     
     // Video control functions
     function togglePlayPause(projectId) {
-        const connection = janusConnections[projectId];
-        if (connection && connection.currentVideoElement) {
-            const video = connection.currentVideoElement;
-            const playPauseIcon = document.getElementById(`play-pause-icon${projectId}`);
-            
-            if (video.paused) {
-                video.play();
-                if (playPauseIcon) {
-                    playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
-                }
-            } else {
-                video.pause();
-                if (playPauseIcon) {
-                    playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
+        const projectConnection = projectConnections[projectId];
+        if (projectConnection) {
+            const videoElement = projectConnection.getMainCameraVideoElement();
+            if (videoElement) {
+                const playPauseIcon = document.getElementById(`play-pause-icon${projectId}`);
+                
+                if (videoElement.paused) {
+                    videoElement.play();
+                    if (playPauseIcon) {
+                        playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
+                    }
+                } else {
+                    videoElement.pause();
+                    if (playPauseIcon) {
+                        playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
+                    }
                 }
             }
         }
     }
     
     function toggleMute(projectId) {
-        const connection = janusConnections[projectId];
-        if (connection && connection.currentVideoElement) {
-            const video = connection.currentVideoElement;
-            const muteIcon = document.getElementById(`mute-icon${projectId}`);
-            const volumeSlider = document.getElementById(`volume-slider${projectId}`);
-            
-            if (video.muted) {
-                video.muted = false;
-                if (muteIcon) {
-                    muteIcon.src = "{{ asset('admin-theme/assets/images/microphone.png') }}";
-                }
-                if (volumeSlider) {
-                    video.volume = volumeSlider.value;
-                }
-            } else {
-                video.muted = true;
-                if (muteIcon) {
-                    muteIcon.src = "{{ asset('admin-theme/assets/images/mute.png') }}";
+        const projectConnection = projectConnections[projectId];
+        if (projectConnection) {
+            const videoElement = projectConnection.getMainCameraVideoElement();
+            if (videoElement) {
+                const muteIcon = document.getElementById(`mute-icon${projectId}`);
+                const volumeSlider = document.getElementById(`volume-slider${projectId}`);
+                
+                if (videoElement.muted) {
+                    videoElement.muted = false;
+                    if (muteIcon) {
+                        muteIcon.src = "{{ asset('admin-theme/assets/images/microphone.png') }}";
+                    }
+                    if (volumeSlider) {
+                        videoElement.volume = volumeSlider.value;
+                    }
+                } else {
+                    videoElement.muted = true;
+                    if (muteIcon) {
+                        muteIcon.src = "{{ asset('admin-theme/assets/images/mute.png') }}";
+                    }
                 }
             }
         }
@@ -658,35 +830,8 @@
         }
     }
     
-    function openPTab(event, streamId) {
-        // Get all video-player elements
-        const videoPlayers = document.querySelectorAll('.video-player');
-        
-        // Add 'hidden' class to all video-player elements
-        videoPlayers.forEach(player => {
-            player.classList.add('hidden');
-        });
-        
-        // Remove 'hidden' class from the selected stream
-        const selectedStream = document.getElementById(streamId);
-        if (selectedStream) {
-            selectedStream.classList.remove('hidden');
-        }
-        
-        // Update active tab styling
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => {
-            button.classList.remove('bg-[#ededed]');
-        });
-        event.currentTarget.classList.add('bg-[#ededed]');
-        
-        // Extract project ID and initialize connection
-        const projectId = streamId.replace('stream', '');
-        initJanusConnection(projectId);
-    }
-    
     // Initialize when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const projectsDataElement = document.getElementById('projectsData');
         if (!projectsDataElement) {
             console.error('projectsData element not found');
@@ -697,9 +842,11 @@
             const projects = JSON.parse(projectsDataElement.textContent);
             if (projects.length > 0) {
                 const firstProjectId = projects[0].project_id;
-                // Initialize the first project
-                setTimeout(() => {
-                    initJanusConnection(firstProjectId);
+                console.log('Initializing first project:', firstProjectId);
+                
+                // Initialize the first project after a short delay
+                setTimeout(async () => {
+                    await initializeProject(firstProjectId);
                 }, 1000);
             } else {
                 console.error('No projects available');
@@ -710,10 +857,38 @@
     });
     
     // Cleanup connections when page unloads
-    window.addEventListener('beforeunload', () => {
-        Object.values(janusConnections).forEach(connection => {
-            connection.disconnect();
-        });
+    window.addEventListener('beforeunload', async () => {
+        console.log('Cleaning up all connections...');
+        
+        const disconnectPromises = Object.values(projectConnections).map(project => project.disconnect());
+        await Promise.all(disconnectPromises);
+        
+        projectConnections = {};
+        currentActiveProject = null;
     });
+    
+    // Optional: Add reconnection logic for failed connections
+    function scheduleReconnection(projectId, cameraId, delay = 5000) {
+        setTimeout(async () => {
+            const projectConnection = projectConnections[projectId];
+            if (projectConnection && projectConnection.cameras[cameraId]) {
+                const camera = projectConnection.cameras[cameraId];
+                if (!camera.isConnected && camera.sessionId) {
+                    console.log(`Attempting to reconnect camera ${cameraId} for project ${projectId}`);
+                    await camera.listParticipants();
+                }
+            }
+        }, delay);
+    }
+    
+    // Expose global functions for debugging
+    window.janusDebug = {
+        projectConnections,
+        currentActiveProject,
+        initializeProject,
+        switchCamera,
+        scheduleReconnection
+    };
+    
 </script>
 @endpush
