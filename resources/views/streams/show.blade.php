@@ -2,8 +2,8 @@
 @section('content')
 <style>
     .video-box {
-        width: 140px;
-        height: 80px;
+        height: 60px;
+        width: 100%;
         max-width: 100%;
         position: relative;
         margin: 10px;
@@ -109,24 +109,32 @@
     }
 </style>
 
-<div class="flex flex-wrap">
-    <div class="lg:w-1/6 md:w-1/6 w-full">
-        <div class="crane-list py-[10px] pl-[5px] pr-[10px] h-[90%] overflow-y-scroll">
+<div class="flex flex-wrap" style="height: calc(100vh - 120px); width:100%;">
+    <div class="lg:w-1/6 md:w-1/6 sm:w-6/6 w-full">
+        <div class="crane-list py-[10px] pl-[5px] pr-[10px] overflow-y-scroll w-full">
             @foreach($projects as $index => $project)
-            <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer {{ $index == 0 ? 'active' : '' }}" 
+            <!-- <button class="w-full tab-button tab-shadow py-[15px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer {{ $index == 0 ? 'active' : '' }}" 
                     onclick="openPTab(event, 'stream{{ $project['project_id'] }}', '{{ $project['project_id'] }}')">
                 <div class="flex">
                     <p class="w-[100%] text-left manrope-medium text-[13px] font-medium mb-[5px]">{{ $project['project_name'] }}</p>
+                </div>
+            </button> -->
+            <button class="w-full tab-button tab-shadow py-[10px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer  hover:bg-green-500 hover:text-white 
+                {{ $index == 0 ? 'bg-green-500 text-black' : 'bg-white text-black' }}" style="height:42px;">
+                <div class="flex">
+                    <p class="w-[100%] text-left manrope-medium text-[13px] font-medium mb-[5px]">
+                        {{ $project['project_name'] }}
+                    </p>
                 </div>
             </button>
             @endforeach
         </div>
     </div>
     
-    <div class="lg:w-5/6 md:w-4/6 mt-[10px]">
+    <div class="lg:w-5/6 md:w-5/6 sm:w-6/6 mt-[10px] xs:6/6 w-full">
         @foreach($projects as $index => $project)
         <div class="video-player px-[10px] relative w-full {{ $index == 0 ? '' : 'hidden' }}" id="stream{{ $project['project_id'] }}" x-data="{ open: false }">
-            <div class="video-container relative w-full" style="aspect-ratio: 16/9;">
+            <div class="video-container relative w-full h-full" style="aspect-ratio: 16/9;">
                 <div class="main-video-container w-full h-full" id="mainVideo{{ $project['project_id'] }}" style="background-color: #000;">
                     <!-- Main video stream will be inserted here -->
                 </div>
@@ -135,7 +143,7 @@
             <p id="statusText{{ $project['project_id'] }}" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
             
             <div class="video-controls">
-                <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[18px] pb-[10px] pl-[40px]">
+                <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[0px] pb-[0px] pl-[20px] pr-[20px]">
                     <div>
                         <ul class="navbar-nav mr-auto video-volume">
                             <li class="nav-item">
@@ -212,17 +220,17 @@
                     x-transition:leave="transition transform ease-in duration-200"
                     x-transition:leave-start="translate-y-0 opacity-100"
                     x-transition:leave-end="-translate-y-10 opacity-0"
-                    class="absolute top-0 bg-[#0000007a] mr-[10px] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2] w-full">
+                    class="absolute top-0 bg-[#0000007a] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]" style="width:96.6%;">
                     @foreach($project['camera'] as $camera)
-                    <li class="flex flex-col items-center">
+                    <li class="mb-[2px] w-[10%]">
                         <div class="cursor-pointer" onclick="switchCamera('{{ $camera['id'] }}', '{{ $project['project_id'] }}')">
                             <div class="video-box w-full" id="video-box-{{ $project['project_id'] }}-{{ $camera['id']}}">
-                                <div width="140" height="80" id="video-{{ $project['project_id'] }}-{{ $camera['id']}}"></div>
+                                <div id="video-{{ $project['project_id'] }}-{{ $camera['id']}}"></div>
                                 <div class="video-info">
                                     <div class="video-status status-connecting" id="status-{{ $project['project_id'] }}-{{ $camera['id']}}"></div>
                                 </div>
                             </div>
-                            <p class="manrope-medium bg-[white] text-[13px] inline-block w-full py-[1px] mb-0 text-center">{{ $camera['camera_name'] }}</p>
+                            <p class="manrope-medium bg-[white] text-[13px] inline-block w-full py-[1px] mb-0 text-center pl-[5px] pr-[5px]">{{ $camera['camera_name'] }}</p>
                         </div>
                     </li>
                     @endforeach
@@ -245,14 +253,14 @@
             </div>
             
             <!-- Weather info -->
-            <div class="absolute top-[30%] right-[30px] bg-[#00000054] py-[45px] px-[10px] rounded-full">
+            <div class="absolute top-[30%] right-[30px] bg-[#00000054] lg:py-[45px] md:py-[45px] px-[10px] rounded-full sm:py-[25px]">
                 <div class="text-white text-[20px] cursor-pointer mb-[30px]">
-                    <img src="{{ asset('admin-theme/assets/images/weather.png') }}" class="w-[40px] object-contain mx-auto mb-[8px]">
-                    <p class="text-white manrope-bold text-[18px] text-center">5'</p>
+                    <img src="{{ asset('admin-theme/assets/images/weather.png') }}" class="w-[30px] w-[30px] object-contain mx-auto mb-[8px]">
+                    <p class="text-white manrope-bold text-[15px] text-center">5'</p>
                 </div>
                 <div class="text-white text-[20px] cursor-pointer">
-                    <img src="{{ asset('admin-theme/assets/images/wind.png') }}" class="w-[25px] object-contain mx-auto mb-[8px]">
-                    <p class="text-white manrope-bold text-[16px] text-center">15 mph</p>
+                    <img src="{{ asset('admin-theme/assets/images/wind.png') }}" class="w-[20px] object-contain mx-auto mb-[8px]">
+                    <p class="text-white manrope-bold text-[12px] text-center">15 mph</p>
                 </div>
             </div>
             
