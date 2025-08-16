@@ -25,6 +25,7 @@
     <!-- @yield('css') -->
     
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
