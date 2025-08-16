@@ -120,8 +120,13 @@
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>
 
@@ -129,9 +134,19 @@
     <!-- Sidebar with projects -->
     <div class="lg:w-1/6 md:w-1/6 sm:w-6/6 w-full">
         <div class="crane-list py-[10px] pl-[5px] pr-[10px] overflow-y-scroll w-full">
+            <!-- All Cam View Switch -->
+            <div class="mb-[15px] px-[10px]">
+                <div class="flex items-center justify-between">
+                    <span class="manrope-medium text-[13px] font-medium text-black">All Cam View</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" id="allCamViewSwitch">
+                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                    </label>
+                </div>
+            </div>
             @foreach($projects as $index => $project)
             <button class="w-full tab-button tab-shadow py-[10px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer hover:bg-green-500 hover:text-white 
-                {{ $index == 0 ? 'bg-green-500 text-white active' : 'bg-white text-black' }}" 
+                {{ $index == 0 ? 'bg-green-500 text-white active' : 'bg-white text-black' }}"
                 style="height:42px;"
                 onclick="selectProject({{ $project->project_id }}, this, '{{ $project->project_name }}')">
                 <div class="flex">
@@ -143,7 +158,7 @@
             @endforeach
         </div>
     </div>
-    
+
     <!-- Main video area -->
     <div class="lg:w-5/6 md:w-5/6 sm:w-6/6 mt-[10px] xs:6/6 w-full">
         <!-- Loading indicator -->
@@ -151,12 +166,12 @@
             <div class="loading-spinner"></div>
             <p class="text-gray-600">Loading cameras...</p>
         </div>
-        
+
         <!-- Error message -->
         <div id="errorMessage" class="text-center text-red-600" style="display: none;">
             <p>Error loading project cameras. Please try again.</p>
         </div>
-        
+
         <!-- Single video player container -->
         <div class="video-player px-[10px] relative w-full" id="videoPlayerContainer" x-data="{ open: false }" style="display: none;">
             <div class="video-container relative w-full h-full" style="aspect-ratio: 16/9;">
@@ -167,9 +182,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <p id="statusText" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
-            
+
             <!-- Video controls -->
             <div class="video-controls">
                 <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[0px] pb-[0px] pl-[20px] pr-[20px]">
@@ -184,7 +199,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                     <div>
                         <ul class="flex">
                             <li class="nav-item">
@@ -219,7 +234,7 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                     <div>
                         <ul class="navbar-nav ml-auto flex">
                             <li class="nav-item">
@@ -238,7 +253,7 @@
                     </div>
                 </nav>
             </div>
-            
+
             <!-- Camera thumbnails overlay -->
             <div>
                 <ul x-show="open"
@@ -249,20 +264,20 @@
                     x-transition:leave="transition transform ease-in duration-200"
                     x-transition:leave-start="translate-y-0 opacity-100"
                     x-transition:leave-end="-translate-y-10 opacity-0"
-                    class="absolute top-0 bg-[#0000007a] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]" 
-                    style="width:96.6%;" 
+                    class="absolute top-0 bg-[#0000007a] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]"
+                    style="width:96.6%;"
                     id="cameraThumbnailsList">
                     <!-- Camera thumbnails will be populated dynamically -->
                 </ul>
             </div>
-            
+
             <!-- Close button for thumbnails -->
             <div x-show="open" class="absolute top-[20px] right-[30px] cursor-pointer z-[5]" @click="open = false">
                 <p class="flex text-white items-center">
                     <span class="w-[20px] object-contain text-white manrope-medium">X</span>
                 </p>
             </div>
-            
+
             <!-- Camera count button -->
             <div class="absolute top-[20px] left-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
                 <p class="flex text-white text-[20px] cursor-pointer" @click="open = !open">
@@ -270,7 +285,7 @@
                     <span id="cameraCount">0</span>
                 </p>
             </div>
-            
+
             <!-- Weather info -->
             <div class="absolute top-[30%] right-[30px] bg-[#00000054] lg:py-[45px] md:py-[45px] px-[10px] rounded-full sm:py-[25px]">
                 <div class="text-white text-[20px] cursor-pointer mb-[30px]">
@@ -282,7 +297,7 @@
                     <p class="text-white manrope-bold text-[12px] text-center">15 mph</p>
                 </div>
             </div>
-            
+
             <!-- Online status -->
             <div x-show="!open" class="online absolute top-[20px] right-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
                 <p class="flex text-white">
@@ -315,27 +330,29 @@
 <script>
     // Janus Gateway REST API integration
     const JANUS_URL = "https://unnifyy.com:8089/janus";
-    
+
     // Global state management
     let currentProject = null;
     let projectConnection = null;
     let currentCameras = [];
     let activeTab = null;
-    
+
     // Utility functions
     function randStr() {
         return Math.random().toString(36).substring(2, 12);
     }
-    
+
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
+
     async function janusPost(endpoint, body) {
         try {
             const res = await fetch(`${JANUS_URL}${endpoint}`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(body),
             });
             return await res.json();
@@ -344,7 +361,7 @@
             throw error;
         }
     }
-    
+
     // Camera connection class
     class CameraConnection {
         constructor(cameraId, cameraName, isMainCamera = false) {
@@ -360,10 +377,13 @@
             this.isPolling = false;
             this.isConnected = false;
         }
-        
+
         async createSession() {
             try {
-                const res = await janusPost("", { janus: "create", transaction: randStr() });
+                const res = await janusPost("", {
+                    janus: "create",
+                    transaction: randStr()
+                });
                 this.sessionId = res.data.id;
                 console.log(`[CAMERA ${this.cameraId}] Created session:`, this.sessionId);
                 this.pollEvents();
@@ -373,7 +393,7 @@
                 return false;
             }
         }
-        
+
         async attachPlugin() {
             try {
                 const res = await janusPost(`/${this.sessionId}`, {
@@ -389,11 +409,11 @@
                 return false;
             }
         }
-        
+
         async joinAsSubscriber(feedId) {
             this.feedId = feedId;
             console.log(`[CAMERA ${this.cameraId}] Joining as subscriber to feed:`, feedId, 'in room:', this.roomId);
-            
+
             try {
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
                     janus: "message",
@@ -405,7 +425,7 @@
                     },
                     transaction: randStr()
                 });
-                
+
                 this.updateStatus("Connecting...");
                 return true;
             } catch (error) {
@@ -414,18 +434,20 @@
                 return false;
             }
         }
-        
+
         async startSubscriber(jsep) {
             try {
                 this.pc = new RTCPeerConnection({
-                    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+                    iceServers: [{
+                        urls: "stun:stun.l.google.com:19302"
+                    }]
                 });
-                
+
                 this.pc.ontrack = (e) => {
                     console.log(`[CAMERA ${this.cameraId}] Received remote track`);
                     this.handleRemoteStream(e.streams[0]);
                 };
-                
+
                 this.pc.onicecandidate = async (event) => {
                     if (event.candidate) {
                         await janusPost(`/${this.sessionId}/${this.handleId}`, {
@@ -436,30 +458,35 @@
                     } else {
                         await janusPost(`/${this.sessionId}/${this.handleId}`, {
                             janus: "trickle",
-                            candidate: { completed: true },
+                            candidate: {
+                                completed: true
+                            },
                             transaction: randStr()
                         });
                     }
                 };
-                
+
                 await this.pc.setRemoteDescription(jsep);
                 const answer = await this.pc.createAnswer();
                 await this.pc.setLocalDescription(answer);
-                
+
                 await janusPost(`/${this.sessionId}/${this.handleId}`, {
                     janus: "message",
-                    body: { request: "start", room: this.roomId },
+                    body: {
+                        request: "start",
+                        room: this.roomId
+                    },
                     jsep: answer,
                     transaction: randStr()
                 });
-                
+
                 console.log(`[CAMERA ${this.cameraId}] Sent SDP answer for room:`, this.roomId);
             } catch (error) {
                 console.error(`[CAMERA ${this.cameraId}] StartSubscriber error:`, error);
                 this.updateStatus("Connection failed");
             }
         }
-        
+
         handleRemoteStream(stream) {
             // Create video element
             const videoElement = document.createElement("video");
@@ -473,23 +500,23 @@
             videoElement.style.display = 'block';
             videoElement.style.borderRadius = '8px';
             videoElement.id = `video-${this.cameraId}-element`;
-            
+
             // Attach stream to video element
             videoElement.srcObject = stream;
             this.videoElement = videoElement;
-            
+
             // Always place in thumbnail container first
             this.placeInThumbnailContainer();
-            
+
             // If this is the main camera, also place in main container
             if (this.isMainCamera) {
                 this.placeInMainContainer();
             }
-            
+
             this.isConnected = true;
             this.updateStatus("Connected");
         }
-        
+
         placeInMainContainer() {
             const mainVideo = document.getElementById('mainVideoContainer');
             if (mainVideo && this.videoElement) {
@@ -502,7 +529,7 @@
                 this.updateOnlineStatus("Online");
             }
         }
-        
+
         placeInThumbnailContainer() {
             const thumbnailContainer = document.getElementById(`video-${this.cameraId}`);
             if (thumbnailContainer && this.videoElement) {
@@ -513,12 +540,12 @@
                 thumbnailContainer.appendChild(thumbnailVideo);
             }
         }
-        
+
         moveToMainContainer() {
             if (this.videoElement && this.isConnected) {
                 this.isMainCamera = true;
                 this.placeInMainContainer();
-                
+
                 // Update other cameras to not be main
                 if (projectConnection) {
                     Object.values(projectConnection.cameras).forEach(camera => {
@@ -529,7 +556,7 @@
                 }
             }
         }
-        
+
         setupVolumeControl() {
             const mainVideo = document.querySelector('#mainVideoContainer video');
             if (mainVideo) {
@@ -542,25 +569,25 @@
                 }
             }
         }
-        
+
         async pollEvents() {
             if (this.isPolling) return;
             this.isPolling = true;
-            
+
             while (this.sessionId && this.isPolling) {
                 try {
                     const res = await fetch(`${JANUS_URL}/${this.sessionId}?rid=${Date.now()}&maxev=1`);
                     const data = await res.json();
-                    
+
                     if (data.janus === "event") {
                         const pluginData = data.plugindata?.data;
-                        
+
                         if (pluginData?.videoroom === "event" && pluginData.publishers?.length > 0) {
                             const feedId = pluginData.publishers[0].id;
                             console.log(`[CAMERA ${this.cameraId}] Found publisher feed ID:`, feedId);
                             await this.joinAsSubscriber(feedId);
                         }
-                        
+
                         if (data.jsep) {
                             console.log(`[CAMERA ${this.cameraId}] Got JSEP offer`);
                             await this.startSubscriber(data.jsep);
@@ -569,19 +596,22 @@
                 } catch (err) {
                     console.error(`[CAMERA ${this.cameraId}] Polling error:`, err);
                 }
-                
+
                 await sleep(500);
             }
         }
-        
+
         async listParticipants() {
             try {
                 const res = await janusPost(`/${this.sessionId}/${this.handleId}`, {
                     janus: "message",
-                    body: { request: "listparticipants", room: this.roomId },
+                    body: {
+                        request: "listparticipants",
+                        room: this.roomId
+                    },
                     transaction: randStr()
                 });
-                
+
                 const data = res.plugindata?.data;
                 if (data?.videoroom === "participants") {
                     const publishers = data.participants.filter(p => p.publisher);
@@ -595,7 +625,7 @@
                 console.error(`[CAMERA ${this.cameraId}] List participants error:`, error);
             }
         }
-        
+
         updateStatus(status) {
             const statusElement = document.getElementById(`status-${this.cameraId}`);
             if (statusElement) {
@@ -605,7 +635,7 @@
                     'status-disconnected'
                 }`;
             }
-            
+
             // Update main status if this is main camera
             if (this.isMainCamera) {
                 const mainStatusElement = document.getElementById('statusText');
@@ -614,7 +644,7 @@
                 }
             }
         }
-        
+
         updateOnlineStatus(status) {
             if (this.isMainCamera) {
                 const onlineElement = document.getElementById('onlineStatus');
@@ -623,37 +653,40 @@
                 }
             }
         }
-        
+
         async disconnect() {
             this.isPolling = false;
             this.isConnected = false;
-            
+
             if (this.pc) {
                 this.pc.close();
                 this.pc = null;
             }
-            
+
             if (this.videoElement) {
                 this.videoElement.srcObject = null;
                 this.videoElement = null;
             }
-            
+
             if (this.sessionId) {
                 try {
-                    await janusPost(`/${this.sessionId}`, { janus: "destroy", transaction: randStr() });
+                    await janusPost(`/${this.sessionId}`, {
+                        janus: "destroy",
+                        transaction: randStr()
+                    });
                 } catch (error) {
                     console.error(`[CAMERA ${this.cameraId}] Session destroy error:`, error);
                 }
                 this.sessionId = null;
             }
-            
+
             this.updateStatus("Disconnected");
             if (this.isMainCamera) {
                 this.updateOnlineStatus("Offline");
             }
         }
     }
-    
+
     // Project connection manager
     class ProjectConnection {
         constructor(projectData) {
@@ -661,19 +694,19 @@
             this.projectName = projectData.project_name;
             this.cameras = {};
             this.isInitialized = false;
-            
+
             // Initialize camera connections
             projectData.cameras.forEach((camera, index) => {
                 const isMainCamera = index === 0; // First camera is main by default
                 this.cameras[camera.id] = new CameraConnection(camera.id, camera.camera_name, isMainCamera);
             });
         }
-        
+
         async initializeAllCameras() {
             if (this.isInitialized) return;
-            
+
             console.log(`[PROJECT ${this.projectId}] Initializing all cameras...`);
-            
+
             // Initialize all cameras
             const initPromises = Object.values(this.cameras).map(async (camera) => {
                 const sessionCreated = await camera.createSession();
@@ -684,13 +717,13 @@
                     }
                 }
             });
-            
+
             await Promise.all(initPromises);
             this.isInitialized = true;
-            
+
             console.log(`[PROJECT ${this.projectId}] All cameras initialized`);
         }
-        
+
         switchMainCamera(cameraId) {
             const targetCamera = this.cameras[cameraId];
             if (targetCamera && targetCamera.isConnected) {
@@ -698,29 +731,29 @@
                 Object.values(this.cameras).forEach(camera => {
                     camera.isMainCamera = false;
                 });
-                
+
                 // Move target camera to main container
                 targetCamera.moveToMainContainer();
-                
+
                 console.log(`[PROJECT ${this.projectId}] Switched main camera to:`, cameraId);
             }
         }
-        
+
         async disconnect() {
             console.log(`[PROJECT ${this.projectId}] Disconnecting all cameras...`);
-            
+
             const disconnectPromises = Object.values(this.cameras).map(camera => camera.disconnect());
             await Promise.all(disconnectPromises);
-            
+
             this.isInitialized = false;
         }
-        
+
         getMainCameraVideoElement() {
             const mainCamera = Object.values(this.cameras).find(camera => camera.isMainCamera);
             return mainCamera ? mainCamera.videoElement : null;
         }
     }
-    
+
     // AJAX function to get project cameras
     function fetchProjectCameras(projectId) {
         return new Promise((resolve, reject) => {
@@ -746,18 +779,18 @@
             });
         });
     }
-    
+
     // Function to create camera thumbnails
     function createCameraThumbnails(cameras) {
         const thumbnailsList = document.getElementById('cameraThumbnailsList');
         if (!thumbnailsList) return;
-        
+
         thumbnailsList.innerHTML = '';
-        
+
         cameras.forEach(camera => {
             const listItem = document.createElement('li');
             listItem.className = 'mb-[2px] w-[10%]';
-            
+
             listItem.innerHTML = `
                 <div class="cursor-pointer" onclick="switchCamera('${camera.id}')">
                     <div class="video-box w-full" id="video-box-${camera.id}">
@@ -771,17 +804,17 @@
                     </p>
                 </div>
             `;
-            
+
             thumbnailsList.appendChild(listItem);
         });
-        
+
         // Update camera count
         const cameraCountElement = document.getElementById('cameraCount');
         if (cameraCountElement) {
             cameraCountElement.textContent = cameras.length;
         }
     }
-    
+
     // Main function to select and load a project
     async function selectProject(projectId, buttonElement, projectName) {
         try {
@@ -790,54 +823,54 @@
                 activeTab.classList.remove('active', 'bg-green-500', 'text-white');
                 activeTab.classList.add('bg-white', 'text-black');
             }
-            
+
             buttonElement.classList.add('active', 'bg-green-500', 'text-white');
             buttonElement.classList.remove('bg-white', 'text-black');
             activeTab = buttonElement;
-            
+
             // Show loading
             document.getElementById('loadingIndicator').style.display = 'block';
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('videoPlayerContainer').style.display = 'none';
-            
+
             // Disconnect previous project if exists
             if (projectConnection) {
                 await projectConnection.disconnect();
                 projectConnection = null;
             }
-            
+
             // Fetch project cameras via AJAX
             const projectData = await fetchProjectCameras(projectId);
-            
+
             if (!projectData.cameras || projectData.cameras.length === 0) {
                 throw new Error('No cameras found for this project');
             }
-            
+
             // Store current project data
             currentProject = projectData;
             currentCameras = projectData.cameras;
-            
+
             // Create camera thumbnails
             createCameraThumbnails(projectData.cameras);
-            
+
             // Show video player
             document.getElementById('loadingIndicator').style.display = 'none';
             document.getElementById('videoPlayerContainer').style.display = 'block';
-            
+
             // Initialize project connection
             projectConnection = new ProjectConnection(projectData);
             await projectConnection.initializeAllCameras();
-            
+
             console.log(`Project ${projectName} loaded with ${projectData.cameras.length} cameras`);
-            
+
         } catch (error) {
             console.error('Error selecting project:', error);
-            
+
             // Show error message
             document.getElementById('loadingIndicator').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('videoPlayerContainer').style.display = 'none';
-            
+
             // Reset main container
             const mainVideoContainer = document.getElementById('mainVideoContainer');
             if (mainVideoContainer) {
@@ -849,22 +882,22 @@
             }
         }
     }
-    
+
     // Function to switch main camera
     async function switchCamera(cameraId) {
         console.log(`Switching to camera ${cameraId}`);
-        
+
         if (projectConnection) {
             projectConnection.switchMainCamera(cameraId);
         }
     }
-    
+
     // Video control functions
     function togglePlayPause() {
         const mainVideo = document.querySelector('#mainVideoContainer video');
         if (mainVideo) {
             const playPauseIcon = document.getElementById('play-pause-icon');
-            
+
             if (mainVideo.paused) {
                 mainVideo.play();
                 if (playPauseIcon) {
@@ -878,13 +911,13 @@
             }
         }
     }
-    
+
     function toggleMute() {
         const mainVideo = document.querySelector('#mainVideoContainer video');
         if (mainVideo) {
             const muteIcon = document.getElementById('mute-icon');
             const volumeSlider = document.getElementById('volume-slider');
-            
+
             if (mainVideo.muted) {
                 mainVideo.muted = false;
                 if (muteIcon) {
@@ -901,7 +934,7 @@
             }
         }
     }
-    
+
     function toggleFullscreen() {
         const videoContainer = document.getElementById('mainVideoContainer');
         if (videoContainer) {
@@ -914,36 +947,36 @@
             }
         }
     }
-    
+
     // Initialize first project on page load
     document.addEventListener('DOMContentLoaded', async () => {
         console.log('Page loaded, initializing...');
-        
+
         // Get first project button and simulate click after a short delay
         const firstProjectButton = document.querySelector('.tab-button.active');
         if (firstProjectButton) {
             const projectId = firstProjectButton.getAttribute('onclick').match(/selectProject\((\d+)/)[1];
             const projectName = firstProjectButton.querySelector('p').textContent.trim();
-            
+
             setTimeout(async () => {
                 await selectProject(parseInt(projectId), firstProjectButton, projectName);
             }, 1000);
         }
     });
-    
+
     // Cleanup connections when page unloads
     window.addEventListener('beforeunload', async () => {
         console.log('Cleaning up connections...');
-        
+
         if (projectConnection) {
             await projectConnection.disconnect();
             projectConnection = null;
         }
-        
+
         currentProject = null;
         currentCameras = [];
     });
-    
+
     // Expose global functions for debugging
     window.janusDebug = {
         currentProject,
@@ -952,6 +985,5 @@
         selectProject,
         switchCamera
     };
-    
 </script>
 @endpush
