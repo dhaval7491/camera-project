@@ -128,70 +128,6 @@
             transform: rotate(360deg);
         }
     }
-
-    /* All Cam View Grid Styles */
-    .all-cam-grid {
-        min-height: 400px;
-    }
-
-    .camera-grid-item {
-        position: relative;
-        background-color: #000;
-        border-radius: 8px;
-        overflow: hidden;
-        aspect-ratio: 16/9;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .camera-grid-item:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .camera-grid-item video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .camera-offline {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: #666;
-        background-color: #1a1a1a;
-    }
-
-    .camera-live-indicator {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        padding: 4px 8px;
-        border-radius: 4px;
-    }
-
-    .camera-name-label {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-    }
-
-    .camera-status-indicator {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-    }
 </style>
 
 <div class="flex flex-wrap" style="height: calc(100vh - 120px); width:100%;">
@@ -203,7 +139,7 @@
                 <div class="flex items-center justify-between">
                     <span class="manrope-medium text-[13px] font-medium text-black">All Cam View</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer" id="allCamViewSwitch" onchange="toggleAllCamView()">
+                        <input type="checkbox" class="sr-only peer" id="allCamViewSwitch">
                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
                 </div>
@@ -223,7 +159,7 @@
         </div>
     </div>
 
-    <!-- Main content area -->
+    <!-- Main video area -->
     <div class="lg:w-5/6 md:w-5/6 sm:w-6/6 mt-[10px] xs:6/6 w-full">
         <!-- Loading indicator -->
         <div id="loadingIndicator" class="text-center" style="display: none;">
@@ -234,13 +170,6 @@
         <!-- Error message -->
         <div id="errorMessage" class="text-center text-red-600" style="display: none;">
             <p>Error loading project cameras. Please try again.</p>
-        </div>
-
-        <!-- All Cameras Grid View (Hidden by default) -->
-        <div class="all-cam-grid pl-[10px] pr-[10px]" id="allCamGridContainer" style="display: none;">
-            <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6" id="allCamGrid">
-                <!-- Camera grid items will be populated dynamically -->
-            </div>
         </div>
 
         <!-- Single video player container -->
@@ -407,8 +336,6 @@
     let projectConnection = null;
     let currentCameras = [];
     let activeTab = null;
-    let isAllCamViewEnabled = false;
-    let gridConnections = {};
 
     // Utility functions
     function randStr() {
@@ -435,143 +362,13 @@
         }
     }
 
-    // Toggle All Cam View
-    function toggleAllCamView() {
-        const allCamSwitch = document.getElementById('allCamViewSwitch');
-        const allCamGridContainer = document.getElementById('allCamGridContainer');
-        const videoPlayerContainer = document.getElementById('videoPlayerContainer');
-
-        isAllCamViewEnabled = allCamSwitch.checked;
-
-        if (isAllCamViewEnabled) {
-            // Show all cam grid, hide single player
-            allCamGridContainer.style.display = 'block';
-            videoPlayerContainer.style.display = 'none';
-            
-            // If we have current cameras, populate the grid
-            if (currentCameras && currentCameras.length > 0) {
-                populateAllCamGrid(currentCameras);
-            }
-        } else {
-            // Show single player, hide all cam grid
-            allCamGridContainer.style.display = 'none';
-            videoPlayerContainer.style.display = 'block';
-            
-            // Disconnect all grid connections
-            disconnectAllGridCameras();
-        }
-    }
-
-    // Populate All Cam Grid
-    function populateAllCamGrid(cameras) {
-        const allCamGrid = document.getElementById('allCamGrid');
-        if (!allCamGrid) return;
-
-        allCamGrid.innerHTML = '';
-
-        if (!cameras || cameras.length === 0) {
-            allCamGrid.innerHTML = `
-                <div class="col-span-full text-center">
-                    <p class="manrope-medium text-[16px] text-[#344563]">No cameras available for this project.</p>
-                </div>
-            `;
-            return;
-        }
-
-        cameras.forEach((camera, index) => {
-            const gridItem = document.createElement('div');
-            gridItem.className = 'camera-grid-item';
-            gridItem.id = `grid-camera-${camera.id}`;
-            
-            gridItem.innerHTML = `
-                <div class="camera-offline" id="offline-${camera.id}">
-                    <p class="text-white">No stream available</p>
-                </div>
-                <div class="camera-live-indicator" style="display: none;" id="live-indicator-${camera.id}">
-                    <p class="flex manrope-medium font-semibold text-red-500">
-                        <img src="{{ asset('admin-theme/assets/images/live-reco.png') }}" class="w-[15px] object-contain mr-[3px] mt-[-1px]"> Live
-                    </p>
-                </div>
-                <div class="camera-name-label">
-                    <span class="manrope-medium text-white">${camera.camera_name}</span>
-                </div>
-                <div class="camera-status-indicator status-disconnected" id="grid-status-${camera.id}"></div>
-            `;
-
-            // Add click handler to switch to single view
-            gridItem.addEventListener('click', () => {
-                switchToSingleView(camera.id);
-            });
-
-            allCamGrid.appendChild(gridItem);
-
-            // Connect camera with delay to avoid overload
-            setTimeout(() => {
-                connectGridCamera(camera, index * 2000); // Stagger connections by 2 seconds
-            }, 100);
-        });
-    }
-
-    // Connect individual grid camera
-    async function connectGridCamera(camera, delay = 0) {
-        await sleep(delay);
-        
-        console.log(`[GRID] Connecting camera ${camera.id}...`);
-        
-        try {
-            const gridCamera = new CameraConnection(camera.id, camera.camera_name, false);
-            gridCamera.isGridMode = true;
-            gridConnections[camera.id] = gridCamera;
-
-            const sessionCreated = await gridCamera.createSession();
-            if (sessionCreated) {
-                const pluginAttached = await gridCamera.attachPlugin();
-                if (pluginAttached) {
-                    await gridCamera.listParticipants();
-                }
-            }
-        } catch (error) {
-            console.error(`[GRID] Failed to connect camera ${camera.id}:`, error);
-        }
-    }
-
-    // Disconnect all grid cameras
-    async function disconnectAllGridCameras() {
-        console.log('[GRID] Disconnecting all grid cameras...');
-        
-        const disconnectPromises = Object.values(gridConnections).map(camera => camera.disconnect());
-        await Promise.all(disconnectPromises);
-        
-        gridConnections = {};
-    }
-
-    // Switch from all cam view to single view
-    function switchToSingleView(cameraId) {
-        const allCamSwitch = document.getElementById('allCamViewSwitch');
-        allCamSwitch.checked = false;
-        isAllCamViewEnabled = false;
-        
-        // Hide grid, show single player
-        document.getElementById('allCamGridContainer').style.display = 'none';
-        document.getElementById('videoPlayerContainer').style.display = 'block';
-        
-        // Switch to the selected camera
-        if (projectConnection) {
-            projectConnection.switchMainCamera(cameraId);
-        }
-        
-        // Disconnect grid cameras
-        disconnectAllGridCameras();
-    }
-
-    // Camera connection class (modified for grid support)
+    // Camera connection class
     class CameraConnection {
         constructor(cameraId, cameraName, isMainCamera = false) {
             this.cameraId = cameraId;
             this.cameraName = cameraName;
             this.roomId = cameraId;
             this.isMainCamera = isMainCamera;
-            this.isGridMode = false;
             this.sessionId = null;
             this.handleId = null;
             this.feedId = null;
@@ -696,7 +493,7 @@
             videoElement.autoplay = true;
             videoElement.playsInline = true;
             videoElement.controls = false;
-            videoElement.muted = true;
+            videoElement.muted = true; // 🔇 Mute video
             videoElement.style.width = '100%';
             videoElement.style.height = '100%';
             videoElement.style.objectFit = 'cover';
@@ -708,44 +505,16 @@
             videoElement.srcObject = stream;
             this.videoElement = videoElement;
 
-            if (this.isGridMode) {
-                this.placeInGridContainer();
-            } else {
-                // Always place in thumbnail container first
-                this.placeInThumbnailContainer();
+            // Always place in thumbnail container first
+            this.placeInThumbnailContainer();
 
-                // If this is the main camera, also place in main container
-                if (this.isMainCamera) {
-                    this.placeInMainContainer();
-                }
+            // If this is the main camera, also place in main container
+            if (this.isMainCamera) {
+                this.placeInMainContainer();
             }
 
             this.isConnected = true;
             this.updateStatus("Connected");
-        }
-
-        placeInGridContainer() {
-            const gridContainer = document.getElementById(`grid-camera-${this.cameraId}`);
-            const offlineDiv = document.getElementById(`offline-${this.cameraId}`);
-            const liveIndicator = document.getElementById(`live-indicator-${this.cameraId}`);
-
-            if (gridContainer && this.videoElement) {
-                // Hide offline message
-                if (offlineDiv) {
-                    offlineDiv.style.display = 'none';
-                }
-
-                // Show live indicator
-                if (liveIndicator) {
-                    liveIndicator.style.display = 'block';
-                }
-
-                // Add video element
-                const gridVideo = this.videoElement.cloneNode();
-                gridVideo.srcObject = this.videoElement.srcObject;
-                gridVideo.muted = true;
-                gridContainer.insertBefore(gridVideo, gridContainer.firstChild);
-            }
         }
 
         placeInMainContainer() {
@@ -867,18 +636,6 @@
                 }`;
             }
 
-            // Update grid status if in grid mode
-            if (this.isGridMode) {
-                const gridStatusElement = document.getElementById(`grid-status-${this.cameraId}`);
-                if (gridStatusElement) {
-                    gridStatusElement.className = `camera-status-indicator ${
-                        status === 'Connected' ? 'status-connected' :
-                        status === 'Connecting...' ? 'status-connecting' :
-                        'status-disconnected'
-                    }`;
-                }
-            }
-
             // Update main status if this is main camera
             if (this.isMainCamera) {
                 const mainStatusElement = document.getElementById('statusText');
@@ -926,31 +683,6 @@
             this.updateStatus("Disconnected");
             if (this.isMainCamera) {
                 this.updateOnlineStatus("Offline");
-            }
-
-            // Clean up grid view if needed
-            if (this.isGridMode) {
-                const gridContainer = document.getElementById(`grid-camera-${this.cameraId}`);
-                const offlineDiv = document.getElementById(`offline-${this.cameraId}`);
-                const liveIndicator = document.getElementById(`live-indicator-${this.cameraId}`);
-                
-                if (gridContainer) {
-                    // Remove video element
-                    const video = gridContainer.querySelector('video');
-                    if (video) {
-                        video.remove();
-                    }
-                    
-                    // Show offline message
-                    if (offlineDiv) {
-                        offlineDiv.style.display = 'flex';
-                    }
-                    
-                    // Hide live indicator
-                    if (liveIndicator) {
-                        liveIndicator.style.display = 'none';
-                    }
-                }
             }
         }
     }
@@ -1100,16 +832,12 @@
             document.getElementById('loadingIndicator').style.display = 'block';
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('videoPlayerContainer').style.display = 'none';
-            document.getElementById('allCamGridContainer').style.display = 'none';
 
             // Disconnect previous project if exists
             if (projectConnection) {
                 await projectConnection.disconnect();
                 projectConnection = null;
             }
-
-            // Disconnect grid cameras if any
-            await disconnectAllGridCameras();
 
             // Fetch project cameras via AJAX
             const projectData = await fetchProjectCameras(projectId);
@@ -1122,22 +850,16 @@
             currentProject = projectData;
             currentCameras = projectData.cameras;
 
-            // Show appropriate view based on switch state
+            // Create camera thumbnails
+            createCameraThumbnails(projectData.cameras);
+
+            // Show video player
             document.getElementById('loadingIndicator').style.display = 'none';
-            
-            if (isAllCamViewEnabled) {
-                // Show all cam grid
-                document.getElementById('allCamGridContainer').style.display = 'block';
-                populateAllCamGrid(projectData.cameras);
-            } else {
-                // Show single player view
-                document.getElementById('videoPlayerContainer').style.display = 'block';
-                createCameraThumbnails(projectData.cameras);
-                
-                // Initialize project connection
-                projectConnection = new ProjectConnection(projectData);
-                await projectConnection.initializeAllCameras();
-            }
+            document.getElementById('videoPlayerContainer').style.display = 'block';
+
+            // Initialize project connection
+            projectConnection = new ProjectConnection(projectData);
+            await projectConnection.initializeAllCameras();
 
             console.log(`Project ${projectName} loaded with ${projectData.cameras.length} cameras`);
 
@@ -1148,7 +870,6 @@
             document.getElementById('loadingIndicator').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'block';
             document.getElementById('videoPlayerContainer').style.display = 'none';
-            document.getElementById('allCamGridContainer').style.display = 'none';
 
             // Reset main container
             const mainVideoContainer = document.getElementById('mainVideoContainer');
@@ -1252,8 +973,6 @@
             projectConnection = null;
         }
 
-        await disconnectAllGridCameras();
-
         currentProject = null;
         currentCameras = [];
     });
@@ -1263,10 +982,8 @@
         currentProject,
         projectConnection,
         currentCameras,
-        gridConnections,
         selectProject,
-        switchCamera,
-        toggleAllCamView
+        switchCamera
     };
 </script>
 @endpush
