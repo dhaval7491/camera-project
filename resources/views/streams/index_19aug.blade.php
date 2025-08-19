@@ -203,7 +203,7 @@
                 <div class="flex items-center justify-between">
                     <span class="manrope-medium text-[13px] font-medium text-black">All Cam View</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer" id="allCamViewSwitch" onchange="toggleAllCamView()" checked>
+                        <input type="checkbox" class="sr-only peer" id="allCamViewSwitch" onchange="toggleAllCamView()">
                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
                 </div>
@@ -236,8 +236,8 @@
             <p>Error loading project cameras. Please try again.</p>
         </div>
 
-        <!-- All Cameras Grid View (Shown by default) -->
-        <div class="all-cam-grid pl-[10px] pr-[10px]" id="allCamGridContainer" style="display: block;">
+        <!-- All Cameras Grid View (Hidden by default) -->
+        <div class="all-cam-grid pl-[10px] pr-[10px]" id="allCamGridContainer" style="display: none;">
             <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6" id="allCamGrid">
                 <!-- Camera grid items will be populated dynamically -->
             </div>
@@ -407,7 +407,7 @@
     let projectConnection = null;
     let currentCameras = [];
     let activeTab = null;
-    let isAllCamViewEnabled = true; // Changed to true to enable by default
+    let isAllCamViewEnabled = false;
     let gridConnections = {};
 
     // Utility functions
