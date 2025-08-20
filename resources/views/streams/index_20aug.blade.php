@@ -83,7 +83,7 @@
         width: 60px;
     }
 
-    /* Active tab styling for projects */
+    /* Active tab styling */
     .tab-button {
         transition: all 0.3s ease;
         border: 2px solid transparent;
@@ -106,48 +106,6 @@
 
     .tab-button.active:hover {
         background-color: #2563eb !important;
-    }
-
-    /* Main tabs styling */
-    .main-tab-button {
-        padding: 12px 24px;
-        background-color: #374151;
-        color: #9CA3AF;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        border-radius: 8px 8px 0 0;
-    }
-
-    .main-tab-button:hover {
-        background-color: #4B5563;
-        color: #D1D5DB;
-    }
-
-    .main-tab-button.active {
-        background-color: #3B82F6 !important;
-        color: white !important;
-    }
-
-    .main-tab-button svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .tab-content {
-        display: none;
-        background-color: #1F2937;
-        border-radius: 0 8px 8px 8px;
-        min-height: 600px;
-    }
-
-    .tab-content.active {
-        display: block;
     }
 
     /* Loading spinner */
@@ -234,33 +192,6 @@
         height: 12px;
         border-radius: 50%;
     }
-
-    /* Recordings tab specific styles */
-    .recordings-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 500px;
-        color: #9CA3AF;
-    }
-
-    .recordings-icon {
-        width: 80px;
-        height: 80px;
-        background-color: #374151;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-
-    .recordings-icon svg {
-        width: 40px;
-        height: 40px;
-        color: #6B7280;
-    }
 </style>
 
 <div class="flex flex-wrap" style="height: calc(100vh - 120px); width:100%;">
@@ -305,178 +236,145 @@
             <p>Error loading project cameras. Please try again.</p>
         </div>
 
-        <!-- All Cameras Grid View (Shown by default - no tabs here) -->
+        <!-- All Cameras Grid View (Shown by default) -->
         <div class="all-cam-grid pl-[10px] pr-[10px]" id="allCamGridContainer" style="display: block;">
             <div class="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6" id="allCamGrid">
                 <!-- Camera grid items will be populated dynamically -->
             </div>
         </div>
 
-        <!-- Single Camera View with Tabs (Only shown when switching from grid to single camera) -->
-        <div id="singleCameraViewContainer" style="display: none;">
-            <!-- Main tabs (only visible in single camera view) -->
-            <div class="flex mb-0 pl-[10px]" id="mainTabsContainer">
-                <button class="main-tab-button active" id="liveViewTab" onclick="switchMainTab('live-view', this)">
-                    <img src="{{ asset('admin-theme/assets/images/thum-vid.png') }}" class="w-[25px] object-contain mr-[5px]">
-                    Live view
-                </button>
-                <button class="main-tab-button" id="recordingsTab" onclick="switchMainTab('recordings', this)">
-                    <img src="{{ asset('admin-theme/assets/images/record.png') }}" class="w-[25px] object-contain mr-[5px]">
-                    Recordings
-                </button>
+        <!-- Single video player container -->
+        <div class="video-player px-[10px] relative w-full" id="videoPlayerContainer" x-data="{ open: false }" style="display: none;">
+            <div class="video-container relative w-full h-full" style="aspect-ratio: 16/9;">
+                <div class="main-video-container w-full h-full" id="mainVideoContainer" style="background-color: #000;">
+                    <!-- Main video stream will be inserted here -->
+                    <div class="flex items-center justify-center h-full text-white">
+                        <p>Select a camera to start streaming</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Tab content containers -->
-            <div class="tab-contents">
-                <!-- Live View Tab Content -->
-                <div id="live-view" class="tab-content active">
-                    <!-- Single video player container -->
-                    <div class="video-player px-[10px] relative w-full" id="videoPlayerContainer" x-data="{ open: false }">
-                    <div class="video-container relative w-full h-full" style="aspect-ratio: 16/9;">
-                        <div class="main-video-container w-full h-full" id="mainVideoContainer" style="background-color: #000;">
-                            <!-- Main video stream will be inserted here -->
-                            <div class="flex items-center justify-center h-full text-white">
-                                <p>Select a camera to start streaming</p>
-                            </div>
-                        </div>
-                    </div>
+            <p id="statusText" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
 
-                    <p id="statusText" class="manrope-medium text-[14px] text-[#344563]">Not connected</p>
-
-                    <!-- Video controls -->
-                    <div class="video-controls">
-                        <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[0px] pb-[0px] pl-[20px] pr-[20px]">
-                            <div>
-                                <ul class="navbar-nav mr-auto video-volume">
-                                    <li class="nav-item">
-                                        <div class="volume-control flex">
-                                            <img src="{{ asset('admin-theme/assets/images/max-vol.png') }}" alt="Low Volume" class="volume-icon w-[15px] object-contain mr-[5px]">
-                                            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
-                                            <img src="{{ asset('admin-theme/assets/images/min-vol.png') }}" alt="High Volume" class="volume-icon w-[15px] object-contain ml-[5px]">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <ul class="flex">
-                                    <li class="nav-item">
-                                        <button id="play-pause" class="control-btn" onclick="togglePlayPause()">
-                                            <img src="{{ asset('admin-theme/assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]" id="play-pause-icon">
-                                        </button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="microphone" class="control-btn" onclick="toggleMute()">
-                                            <img src="{{ asset('admin-theme/assets/images/speaker.png') }}" class="w-[20px] object-contain mr-[10px]" id="mute-icon">
-                                        </button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="video-speed" class="control-btn">
-                                            <img src="{{ asset('admin-theme/assets/images/video-vid.png') }}" class="w-[20px] object-contain mr-[10px]">
-                                        </button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="video-cut" class="control-btn">
-                                            <img src="{{ asset('admin-theme/assets/images/video-cut.png') }}" class="w-[20px] object-contain mr-[10px]">
-                                        </button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="video-record" class="control-btn">
-                                            <img src="{{ asset('admin-theme/assets/images/video-record.png') }}" class="w-[20px] object-contain mr-[10px]">
-                                        </button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button id="video-setting-menu" class="control-btn">
-                                            <img src="{{ asset('admin-theme/assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]">
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <ul class="navbar-nav ml-auto flex">
-                                    <li class="nav-item">
-                                        <div class="size-control flex">
-                                            <img src="{{ asset('admin-theme/assets/images/min-size.png') }}" alt="min size" class="size-icon w-[15px] object-contain mr-[5px]">
-                                            <input type="range" id="size-slider" min="0" max="1" step="0.1" value="0.5">
-                                            <img src="{{ asset('admin-theme/assets/images/max-size.png') }}" alt="max size" class="size-icon w-[15px] object-contain ml-[5px]">
-                                        </div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button class="control-btn" onclick="toggleFullscreen()">
-                                            <img src="{{ asset('admin-theme/assets/images/max-screen.png') }}" class="w-[15px] object-contain ml-[15px]">
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
-
-                    <!-- Camera thumbnails overlay -->
+            <!-- Video controls -->
+            <div class="video-controls">
+                <nav class="flex justify-between bg-[#00000054] mt-[-53px] z-[9px] relative pt-[0px] pb-[0px] pl-[20px] pr-[20px]">
                     <div>
-                        <ul x-show="open"
-                            @click.away="open = false"
-                            x-transition:enter="transition transform ease-out duration-300"
-                            x-transition:enter-start="-translate-y-10 opacity-0"
-                            x-transition:enter-end="translate-y-0 opacity-100"
-                            x-transition:leave="transition transform ease-in duration-200"
-                            x-transition:leave-start="translate-y-0 opacity-100"
-                            x-transition:leave-end="-translate-y-10 opacity-0"
-                            class="absolute top-0 bg-[#0000007a] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]"
-                            style="width:96.6%;"
-                            id="cameraThumbnailsList">
-                            <!-- Camera thumbnails will be populated dynamically -->
+                        <ul class="navbar-nav mr-auto video-volume">
+                            <li class="nav-item">
+                                <div class="volume-control flex">
+                                    <img src="{{ asset('admin-theme/assets/images/max-vol.png') }}" alt="Low Volume" class="volume-icon w-[15px] object-contain mr-[5px]">
+                                    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                                    <img src="{{ asset('admin-theme/assets/images/min-vol.png') }}" alt="High Volume" class="volume-icon w-[15px] object-contain ml-[5px]">
+                                </div>
+                            </li>
                         </ul>
                     </div>
 
-                    <!-- Close button for thumbnails -->
-                    <div x-show="open" class="absolute top-[20px] right-[30px] cursor-pointer z-[5]" @click="open = false">
-                        <p class="flex text-white items-center">
-                            <span class="w-[20px] object-contain text-white manrope-medium">X</span>
-                        </p>
+                    <div>
+                        <ul class="flex">
+                            <li class="nav-item">
+                                <button id="play-pause" class="control-btn" onclick="togglePlayPause()">
+                                    <img src="{{ asset('admin-theme/assets/images/play.png') }}" class="w-[20px] object-contain mr-[10px]" id="play-pause-icon">
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="microphone" class="control-btn" onclick="toggleMute()">
+                                    <img src="{{ asset('admin-theme/assets/images/speaker.png') }}" class="w-[20px] object-contain mr-[10px]" id="mute-icon">
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="video-speed" class="control-btn">
+                                    <img src="{{ asset('admin-theme/assets/images/video-vid.png') }}" class="w-[20px] object-contain mr-[10px]">
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="video-cut" class="control-btn">
+                                    <img src="{{ asset('admin-theme/assets/images/video-cut.png') }}" class="w-[20px] object-contain mr-[10px]">
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="video-record" class="control-btn">
+                                    <img src="{{ asset('admin-theme/assets/images/video-record.png') }}" class="w-[20px] object-contain mr-[10px]">
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button id="video-setting-menu" class="control-btn">
+                                    <img src="{{ asset('admin-theme/assets/images/video-settings.png') }}" class="w-[20px] object-contain mr-[10px]">
+                                </button>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- Camera count button -->
-                    <div class="absolute top-[20px] left-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
-                        <p class="flex text-white text-[20px] cursor-pointer" @click="open = !open">
-                            <img src="{{ asset('admin-theme/assets/images/thum-vid.png') }}" class="w-[25px] object-contain mr-[5px]">
-                            <span id="cameraCount">0</span>
-                        </p>
+                    <div>
+                        <ul class="navbar-nav ml-auto flex">
+                            <li class="nav-item">
+                                <div class="size-control flex">
+                                    <img src="{{ asset('admin-theme/assets/images/min-size.png') }}" alt="min size" class="size-icon w-[15px] object-contain mr-[5px]">
+                                    <input type="range" id="size-slider" min="0" max="1" step="0.1" value="0.5">
+                                    <img src="{{ asset('admin-theme/assets/images/max-size.png') }}" alt="max size" class="size-icon w-[15px] object-contain ml-[5px]">
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <button class="control-btn" onclick="toggleFullscreen()">
+                                    <img src="{{ asset('admin-theme/assets/images/max-screen.png') }}" class="w-[15px] object-contain ml-[15px]">
+                                </button>
+                            </li>
+                        </ul>
                     </div>
+                </nav>
+            </div>
 
-                    <!-- Weather info -->
-                    <div class="absolute top-[30%] right-[30px] bg-[#00000054] lg:py-[45px] md:py-[45px] px-[10px] rounded-full sm:py-[25px]">
-                        <div class="text-white text-[20px] cursor-pointer mb-[30px]">
-                            <img src="{{ asset('admin-theme/assets/images/weather.png') }}" class="w-[30px] w-[30px] object-contain mx-auto mb-[8px]">
-                            <p class="text-white manrope-bold text-[15px] text-center">5'</p>
-                        </div>
-                        <div class="text-white text-[20px] cursor-pointer">
-                            <img src="{{ asset('admin-theme/assets/images/wind.png') }}" class="w-[20px] object-contain mx-auto mb-[8px]">
-                            <p class="text-white manrope-bold text-[12px] text-center">15 mph</p>
-                        </div>
-                    </div>
+            <!-- Camera thumbnails overlay -->
+            <div>
+                <ul x-show="open"
+                    @click.away="open = false"
+                    x-transition:enter="transition transform ease-out duration-300"
+                    x-transition:enter-start="-translate-y-10 opacity-0"
+                    x-transition:enter-end="translate-y-0 opacity-100"
+                    x-transition:leave="transition transform ease-in duration-200"
+                    x-transition:leave-start="translate-y-0 opacity-100"
+                    x-transition:leave-end="-translate-y-10 opacity-0"
+                    class="absolute top-0 bg-[#0000007a] shadow-lg rounded-md p-2 space-y-2 flex justify-center items-center space-x-4 z-[2]"
+                    style="width:96.6%;"
+                    id="cameraThumbnailsList">
+                    <!-- Camera thumbnails will be populated dynamically -->
+                </ul>
+            </div>
 
-                    <!-- Online status -->
-                    <div x-show="!open" class="online absolute top-[20px] right-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
-                        <p class="flex text-white">
-                            <img id="camStatImg" src="{{ asset('admin-theme/assets/images/offline.png') }}" class="w-[20px] object-contain mr-[5px]">
-                            <span id="onlineStatus">Offline</span>
-                        </p>
-                    </div>
+            <!-- Close button for thumbnails -->
+            <div x-show="open" class="absolute top-[20px] right-[30px] cursor-pointer z-[5]" @click="open = false">
+                <p class="flex text-white items-center">
+                    <span class="w-[20px] object-contain text-white manrope-medium">X</span>
+                </p>
+            </div>
+
+            <!-- Camera count button -->
+            <div class="absolute top-[20px] left-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
+                <p class="flex text-white text-[20px] cursor-pointer" @click="open = !open">
+                    <img src="{{ asset('admin-theme/assets/images/thum-vid.png') }}" class="w-[25px] object-contain mr-[5px]">
+                    <span id="cameraCount">0</span>
+                </p>
+            </div>
+
+            <!-- Weather info -->
+            <div class="absolute top-[30%] right-[30px] bg-[#00000054] lg:py-[45px] md:py-[45px] px-[10px] rounded-full sm:py-[25px]">
+                <div class="text-white text-[20px] cursor-pointer mb-[30px]">
+                    <img src="{{ asset('admin-theme/assets/images/weather.png') }}" class="w-[30px] w-[30px] object-contain mx-auto mb-[8px]">
+                    <p class="text-white manrope-bold text-[15px] text-center">5'</p>
                 </div>
-
-                <!-- Recordings Tab Content -->
-                <div id="recordings" class="tab-content">
-                    <div class="recordings-container">
-                        <div class="recordings-icon">
-                            <svg fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">Recordings</h3>
-                        <p class="text-center">This section will display recorded videos.<br>Coming soon...</p>
-                    </div>
+                <div class="text-white text-[20px] cursor-pointer">
+                    <img src="{{ asset('admin-theme/assets/images/wind.png') }}" class="w-[20px] object-contain mx-auto mb-[8px]">
+                    <p class="text-white manrope-bold text-[12px] text-center">15 mph</p>
                 </div>
+            </div>
+
+            <!-- Online status -->
+            <div x-show="!open" class="online absolute top-[20px] right-[30px] bg-[#00000054] py-[5px] px-[19px] rounded-full">
+                <p class="flex text-white">
+                    <img id="camStatImg" src="{{ asset('admin-theme/assets/images/offline.png') }}" class="w-[20px] object-contain mr-[5px]">
+                    <span id="onlineStatus">Offline</span>
+                </p>
             </div>
         </div>
     </div>
@@ -501,37 +399,6 @@
 
 @push('scripts')
 <script>
-    // Main tab switching function
-    function switchMainTab(tabName, buttonElement) {
-        // Hide all tab contents
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(content => {
-            content.classList.remove('active');
-        });
-
-        // Remove active class from all tab buttons
-        const tabButtons = document.querySelectorAll('.main-tab-button');
-        tabButtons.forEach(button => {
-            button.classList.remove('active');
-        });
-
-        // Show selected tab content
-        const selectedTab = document.getElementById(tabName);
-        if (selectedTab) {
-            selectedTab.classList.add('active');
-        }
-
-        // Add active class to clicked button
-        buttonElement.classList.add('active');
-
-        console.log(`Switched to ${tabName} tab`);
-
-        // If switching to live view and all cam view is disabled, ensure single player is shown
-        if (tabName === 'live-view' && !isAllCamViewEnabled) {
-            document.getElementById('videoPlayerContainer').style.display = 'block';
-        }
-    }
-
     // Janus Gateway REST API integration
     const JANUS_URL = "https://unnifyy.com:8089/janus";
 
@@ -572,26 +439,23 @@
     function toggleAllCamView() {
         const allCamSwitch = document.getElementById('allCamViewSwitch');
         const allCamGridContainer = document.getElementById('allCamGridContainer');
-        const singleCameraViewContainer = document.getElementById('singleCameraViewContainer');
+        const videoPlayerContainer = document.getElementById('videoPlayerContainer');
 
         isAllCamViewEnabled = allCamSwitch.checked;
 
         if (isAllCamViewEnabled) {
-            // Show all cam grid, hide single camera view with tabs
+            // Show all cam grid, hide single player
             allCamGridContainer.style.display = 'block';
-            singleCameraViewContainer.style.display = 'none';
+            videoPlayerContainer.style.display = 'none';
             
             // If we have current cameras, populate the grid
             if (currentCameras && currentCameras.length > 0) {
                 populateAllCamGrid(currentCameras);
             }
         } else {
-            // Show single camera view with tabs, hide all cam grid
+            // Show single player, hide all cam grid
             allCamGridContainer.style.display = 'none';
-            singleCameraViewContainer.style.display = 'block';
-            
-            // Ensure live view tab is active by default
-            switchMainTab('live-view', document.getElementById('liveViewTab'));
+            videoPlayerContainer.style.display = 'block';
             
             // Disconnect all grid connections
             disconnectAllGridCameras();
@@ -687,12 +551,9 @@
         allCamSwitch.checked = false;
         isAllCamViewEnabled = false;
         
-        // Hide grid, show single camera view with tabs
+        // Hide grid, show single player
         document.getElementById('allCamGridContainer').style.display = 'none';
-        document.getElementById('singleCameraViewContainer').style.display = 'block';
-        
-        // Ensure live view tab is active by default
-        switchMainTab('live-view', document.getElementById('liveViewTab'));
+        document.getElementById('videoPlayerContainer').style.display = 'block';
         
         // Switch to the selected camera
         if (projectConnection) {
@@ -1272,18 +1133,12 @@
             document.getElementById('loadingIndicator').style.display = 'none';
             
             if (isAllCamViewEnabled) {
-                // Show all cam grid (no tabs)
+                // Show all cam grid
                 document.getElementById('allCamGridContainer').style.display = 'block';
-                document.getElementById('singleCameraViewContainer').style.display = 'none';
                 populateAllCamGrid(projectData.cameras);
             } else {
-                // Show single camera view with tabs
-                document.getElementById('allCamGridContainer').style.display = 'none';
-                document.getElementById('singleCameraViewContainer').style.display = 'block';
-                
-                // Ensure live view tab is active
-                switchMainTab('live-view', document.getElementById('liveViewTab'));
-                
+                // Show single player view
+                document.getElementById('videoPlayerContainer').style.display = 'block';
                 createCameraThumbnails(projectData.cameras);
                 
                 // Initialize project connection
@@ -1299,8 +1154,8 @@
             // Show error message
             document.getElementById('loadingIndicator').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('videoPlayerContainer').style.display = 'none';
             document.getElementById('allCamGridContainer').style.display = 'none';
-            document.getElementById('singleCameraViewContainer').style.display = 'none';
 
             // Reset main container
             const mainVideoContainer = document.getElementById('mainVideoContainer');
