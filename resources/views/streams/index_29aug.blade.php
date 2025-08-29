@@ -569,7 +569,7 @@
     }
 
     // Toggle All Cam View
-    async function toggleAllCamView() {
+    function toggleAllCamView() {
         const allCamSwitch = document.getElementById('allCamViewSwitch');
         const allCamGridContainer = document.getElementById('allCamGridContainer');
         const singleCameraViewContainer = document.getElementById('singleCameraViewContainer');
@@ -585,12 +585,6 @@
             if (currentCameras && currentCameras.length > 0) {
                 populateAllCamGrid(currentCameras);
             }
-
-            // Disconnect single view connection if exists
-            if (projectConnection) {
-                await projectConnection.disconnect();
-                projectConnection = null;
-            }
         } else {
             // Show single camera view with tabs, hide all cam grid
             allCamGridContainer.style.display = 'none';
@@ -600,17 +594,7 @@
             switchMainTab('live-view', document.getElementById('liveViewTab'));
             
             // Disconnect all grid connections
-            await disconnectAllGridCameras();
-
-            // Initialize single view if not already
-            if (currentCameras && currentCameras.length > 0) {
-                createCameraThumbnails(currentCameras);
-                
-                if (!projectConnection) {
-                    projectConnection = new ProjectConnection(currentProject);
-                    await projectConnection.initializeAllCameras();
-                }
-            }
+            disconnectAllGridCameras();
         }
     }
 
@@ -698,13 +682,25 @@
     }
 
     // Switch from all cam view to single view
-    async function switchToSingleView(cameraId) {
+    function switchToSingleView(cameraId) {
         const allCamSwitch = document.getElementById('allCamViewSwitch');
         allCamSwitch.checked = false;
-        await toggleAllCamView();
+        isAllCamViewEnabled = false;
+        
+        // Hide grid, show single camera view with tabs
+        document.getElementById('allCamGridContainer').style.display = 'none';
+        document.getElementById('singleCameraViewContainer').style.display = 'block';
+        
+        // Ensure live view tab is active by default
+        switchMainTab('live-view', document.getElementById('liveViewTab'));
+        
+        // Switch to the selected camera
         if (projectConnection) {
             projectConnection.switchMainCamera(cameraId);
         }
+        
+        // Disconnect grid cameras
+        disconnectAllGridCameras();
     }
 
     // Camera connection class (modified for grid support)
@@ -1275,7 +1271,25 @@
             // Show appropriate view based on switch state
             document.getElementById('loadingIndicator').style.display = 'none';
             
-            await toggleAllCamView();
+            if (isAllCamViewEnabled) {
+                // Show all cam grid (no tabs)
+                document.getElementById('allCamGridContainer').style.display = 'block';
+                document.getElementById('singleCameraViewContainer').style.display = 'none';
+                populateAllCamGrid(projectData.cameras);
+            } else {
+                // Show single camera view with tabs
+                document.getElementById('allCamGridContainer').style.display = 'none';
+                document.getElementById('singleCameraViewContainer').style.display = 'block';
+                
+                // Ensure live view tab is active
+                switchMainTab('live-view', document.getElementById('liveViewTab'));
+                
+                createCameraThumbnails(projectData.cameras);
+                
+                // Initialize project connection
+                projectConnection = new ProjectConnection(projectData);
+                await projectConnection.initializeAllCameras();
+            }
 
             console.log(`Project ${projectName} loaded with ${projectData.cameras.length} cameras`);
 
