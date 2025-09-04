@@ -528,7 +528,7 @@
 
     // Firebase Camera Control Functions
     async function updateCameraControlData(cameraId, isStart, actionBy = 100) {
-        alert();
+        // alert();
         if (!db) {
             console.error('Firebase not initialized');
             return false;
@@ -1407,7 +1407,7 @@
             console.error('No current camera ID available');
             return;
         }
-        alert(mainVideo)
+        // alert(mainVideo)
         if (mainVideo) {
             const playPauseIcon = document.getElementById('play-pause-icon');
             let newPlayState;
