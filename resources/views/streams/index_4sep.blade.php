@@ -500,97 +500,7 @@
 @endpush
 
 @push('scripts')
-<!-- Firebase SDK -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-firestore-compat.min.js"></script>
-
 <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDmY8h7dV4C68p_WQFDlAoOcinLOl6HslM",
-        authDomain: "hook-camera.firebaseapp.com",
-        projectId: "hook-camera",
-        storageBucket: "hook-camera.firebasestorage.app",
-        messagingSenderId: "898999390945",
-        appId: "1:898999390945:web:753f1c82e3952672e01da0",
-        measurementId: "G-X7SDBG134T"
-    };
-
-    // Initialize Firebase
-    let app, db;
-    try {
-        app = firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        console.log('Firebase initialized successfully');
-    } catch (error) {
-        console.error('Firebase initialization error:', error);
-    }
-
-    // Firebase Camera Control Functions
-    async function updateCameraControlData(cameraId, isStart, actionBy = 100) {
-        alert();
-        if (!db) {
-            console.error('Firebase not initialized');
-            return false;
-        }
-
-        try {
-            const cameraDocRef = db.collection('camera').doc(cameraId.toString());
-            
-            const updateData = {
-                actionBy: actionBy,
-                isStart: isStart,
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            await cameraDocRef.update(updateData);
-            
-            console.log(`Camera ${cameraId} control data updated:`, {
-                actionBy: actionBy,
-                isStart: isStart
-            });
-            
-            return true;
-        } catch (error) {
-            console.error(`Error updating camera ${cameraId} control data:`, error);
-            
-            // If document doesn't exist, create it
-            if (error.code === 'not-found') {
-                try {
-                    await db.collection('camera').doc(cameraId.toString()).set({
-                        actionBy: actionBy,
-                        isStart: isStart,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    console.log(`Camera ${cameraId} document created with control data`);
-                    return true;
-                } catch (createError) {
-                    console.error(`Error creating camera ${cameraId} document:`, createError);
-                    return false;
-                }
-            }
-            
-            return false;
-        }
-    }
-
-    // Get current camera ID
-    function getCurrentCameraId() {
-        if (projectConnection) {
-            const mainCamera = Object.values(projectConnection.cameras).find(camera => camera.isMainCamera);
-            if (mainCamera) {
-                return mainCamera.cameraId;
-            }
-        }
-        
-        if (currentProject && currentProject.cameras && currentProject.cameras.length > 0) {
-            return currentProject.cameras[0].id;
-        }
-        
-        return "23"; // Fallback camera ID
-    }
-
     // Main tab switching function
     function switchMainTab(tabName, buttonElement) {
         // Hide all tab contents
@@ -630,7 +540,7 @@
     let projectConnection = null;
     let currentCameras = [];
     let activeTab = null;
-    let isAllCamViewEnabled = true;
+    let isAllCamViewEnabled = true; // Changed to true to enable by default
     let gridConnections = {};
 
     // Utility functions
@@ -1127,9 +1037,11 @@
                 if (onlineElement) {
                     onlineElement.textContent = status;
                 }
-                if(status == "Online") {
+                if(status == "Online")
+                {
                     camStatImg.src = "{{ asset('admin-theme/assets/images/online.png') }}";
-                } else {
+                }
+                else{
                     camStatImg.src = "{{ asset('admin-theme/assets/images/offline.png') }}";
                 }
             }
@@ -1397,42 +1309,22 @@
         }
     }
 
-    // Video control functions with Firebase integration
-    async function togglePlayPause() {
-        // alert('toggle');
+    // Video control functions
+    function togglePlayPause() {
         const mainVideo = document.querySelector('#mainVideoContainer video');
-        const currentCameraId = getCurrentCameraId();
-         
-        if (!currentCameraId) {
-            console.error('No current camera ID available');
-            return;
-        }
-        alert(mainVideo)
         if (mainVideo) {
             const playPauseIcon = document.getElementById('play-pause-icon');
-            let newPlayState;
 
             if (mainVideo.paused) {
                 mainVideo.play();
-                newPlayState = true;
                 if (playPauseIcon) {
                     playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
                 }
             } else {
                 mainVideo.pause();
-                newPlayState = false;
                 if (playPauseIcon) {
                     playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
                 }
-            }
-           
-            // Update Firebase with the new state
-            const updateSuccess = await updateCameraControlData(currentCameraId, newPlayState, 100);
-            
-            if (updateSuccess) {
-                console.log(`Camera ${currentCameraId} play state updated to: ${newPlayState}`);
-            } else {
-                console.error(`Failed to update Firebase for camera ${currentCameraId}`);
             }
         }
     }
@@ -1512,9 +1404,7 @@
         gridConnections,
         selectProject,
         switchCamera,
-        toggleAllCamView,
-        updateCameraControlData,
-        getCurrentCameraId
+        toggleAllCamView
     };
 </script>
 @endpush
