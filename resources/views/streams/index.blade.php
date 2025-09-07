@@ -1444,55 +1444,103 @@
                 // Only proceed if user confirmed
                 if (result.isConfirmed) {
                     try {
-                        // Execute the play/pause action
                         if (newPlayState) {
-                            await mainVideo.play();
-                            if (playPauseIcon) {
-                                playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
+                            // Starting the camera - need to reconnect
+                            console.log(`Starting camera ${currentCameraId} - reconnecting...`);
+
+                            // Show loading state
+                            const mainVideoContainer = document.getElementById('mainVideoContainer');
+                            if (mainVideoContainer) {
+                                mainVideoContainer.innerHTML = `
+                            <div class="flex items-center justify-center h-full text-white">
+                                <div class="text-center">
+                                    <div class="loading-spinner mb-4"></div>
+                                    <p>Reconnecting camera stream...</p>
+                                </div>
+                            </div>
+                        `;
                             }
-                        } else {
-                            mainVideo.pause();
-                            if (playPauseIcon) {
-                                playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
-                            }
-                        }
 
-                        // Update Firebase with the new state
-                        const updateSuccess = await updateCameraControlData(currentCameraId, newPlayState, 100);
+                            // Update Firebase first
+                            const updateSuccess = await updateCameraControlData(currentCameraId, newPlayState, 100);
 
-                        if (updateSuccess) {
-                            console.log(`Camera ${currentCameraId} play state updated to: ${newPlayState}`);
+                            if (updateSuccess) {
+                                // Reconnect the camera
+                                await reconnectMainCamera(currentCameraId);
 
-                            // Show success message
-                            Swal.fire({
-                                title: 'Success!',
-                                text: `Camera stream has been ${newPlayState ? 'started' : 'stopped'} successfully.`,
-                                icon: 'success',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        } else {
-                            console.error(`Failed to update Firebase for camera ${currentCameraId}`);
-
-                            // Show error message and revert the UI state
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Failed to update camera control. Please try again.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-
-                            // Revert the video state
-                            if (newPlayState) {
-                                mainVideo.pause();
-                                if (playPauseIcon) {
-                                    playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
-                                }
-                            } else {
-                                await mainVideo.play();
+                                // Update play/pause icon
                                 if (playPauseIcon) {
                                     playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
                                 }
+
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Camera stream has been started successfully.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                throw new Error('Failed to update camera control in Firebase');
+                            }
+                        } else {
+                            // Stopping the camera
+                            console.log(`Stopping camera ${currentCameraId}...`);
+
+                            // Pause the video first
+                            mainVideo.pause();
+
+                            // Update Firebase
+                            const updateSuccess = await updateCameraControlData(currentCameraId, newPlayState, 100);
+
+                            if (updateSuccess) {
+                                // Disconnect the current camera connection
+                                if (projectConnection && projectConnection.cameras[currentCameraId]) {
+                                    await projectConnection.cameras[currentCameraId].disconnect();
+                                }
+
+                                // Update UI
+                                if (playPauseIcon) {
+                                    playPauseIcon.src = "{{ asset('admin-theme/assets/images/play.png') }}";
+                                }
+
+                                // Show stopped state in main container
+                                const mainVideoContainer = document.getElementById('mainVideoContainer');
+                                if (mainVideoContainer) {
+                                    mainVideoContainer.innerHTML = `
+                                <div class="flex items-center justify-center h-full text-white">
+                                    <p>Camera stream stopped</p>
+                                </div>
+                            `;
+                                }
+
+                                // Update status
+                                const statusElement = document.getElementById('statusText');
+                                if (statusElement) {
+                                    statusElement.textContent = 'Stopped';
+                                }
+
+                                const onlineStatusElement = document.getElementById('onlineStatus');
+                                if (onlineStatusElement) {
+                                    onlineStatusElement.textContent = 'Offline';
+                                }
+
+                                const camStatImg = document.getElementById('camStatImg');
+                                if (camStatImg) {
+                                    camStatImg.src = "{{ asset('admin-theme/assets/images/offline.png') }}";
+                                }
+
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Camera stream has been stopped successfully.',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                throw new Error('Failed to update camera control in Firebase');
                             }
                         }
                     } catch (error) {
@@ -1501,24 +1549,205 @@
                         // Show error message
                         Swal.fire({
                             title: 'Error!',
-                            text: 'An error occurred while controlling the camera. Please try again.',
+                            text: error.message || 'An error occurred while controlling the camera. Please try again.',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
+
+                        // Reset to error state in main container
+                        const mainVideoContainer = document.getElementById('mainVideoContainer');
+                        if (mainVideoContainer) {
+                            mainVideoContainer.innerHTML = `
+                        <div class="flex items-center justify-center h-full text-white">
+                            <p>Error controlling camera. Please try again.</p>
+                        </div>
+                    `;
+                        }
                     }
                 } else {
                     // User cancelled - show cancellation message (optional)
                     console.log('User cancelled the action');
                 }
             } else {
-                // No video element found
-                Swal.fire({
-                    title: 'No Video Available',
-                    text: 'No video stream is currently available to control.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
+                // No video element found - this means we need to start a fresh connection
+                const result = await Swal.fire({
+                    title: 'Start Camera Stream?',
+                    text: 'No video stream is currently active. Would you like to start the camera stream?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, start it!',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true,
+                    focusCancel: true
                 });
+
+                if (result.isConfirmed) {
+                    try {
+                        // Show loading state
+                        const mainVideoContainer = document.getElementById('mainVideoContainer');
+                        if (mainVideoContainer) {
+                            mainVideoContainer.innerHTML = `
+                        <div class="flex items-center justify-center h-full text-white">
+                            <div class="text-center">
+                                <div class="loading-spinner mb-4"></div>
+                                <p>Starting camera stream...</p>
+                            </div>
+                        </div>
+                    `;
+                        }
+
+                        // Update Firebase and reconnect
+                        const updateSuccess = await updateCameraControlData(currentCameraId, true, 100);
+
+                        if (updateSuccess) {
+                            await reconnectMainCamera(currentCameraId);
+
+                            const playPauseIcon = document.getElementById('play-pause-icon');
+                            if (playPauseIcon) {
+                                playPauseIcon.src = "{{ asset('admin-theme/assets/images/pause.png') }}";
+                            }
+
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Camera stream has been started successfully.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            throw new Error('Failed to update camera control in Firebase');
+                        }
+                    } catch (error) {
+                        console.error('Error starting camera:', error);
+
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to start camera stream. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+
+                        // Reset to error state
+                        const mainVideoContainer = document.getElementById('mainVideoContainer');
+                        if (mainVideoContainer) {
+                            mainVideoContainer.innerHTML = `
+                        <div class="flex items-center justify-center h-full text-white">
+                            <p>Error starting camera. Please try again.</p>
+                        </div>
+                    `;
+                        }
+                    }
+                }
             }
+        }
+
+        // Function to reconnect the main camera
+        async function reconnectMainCamera(cameraId) {
+            console.log(`Reconnecting main camera ${cameraId}...`);
+
+            try {
+                if (!projectConnection) {
+                    throw new Error('No project connection available');
+                }
+
+                const camera = projectConnection.cameras[cameraId];
+                if (!camera) {
+                    throw new Error(`Camera ${cameraId} not found in project`);
+                }
+
+                // Disconnect if already connected
+                if (camera.isConnected) {
+                    await camera.disconnect();
+                    // Wait a bit for cleanup
+                    await sleep(1000);
+                }
+
+                // Reset camera state
+                camera.isMainCamera = true;
+                camera.isConnected = false;
+                camera.sessionId = null;
+                camera.handleId = null;
+                camera.feedId = null;
+                camera.pc = null;
+                camera.videoElement = null;
+                camera.isPolling = false;
+
+                // Update status to connecting
+                camera.updateStatus("Connecting...");
+
+                // Create new session
+                const sessionCreated = await camera.createSession();
+                if (!sessionCreated) {
+                    throw new Error('Failed to create camera session');
+                }
+
+                // Attach plugin
+                const pluginAttached = await camera.attachPlugin();
+                if (!pluginAttached) {
+                    throw new Error('Failed to attach camera plugin');
+                }
+
+                // List participants to start connection
+                await camera.listParticipants();
+
+                console.log(`Camera ${cameraId} reconnection initiated successfully`);
+
+                // Set timeout to check if connection was successful
+                setTimeout(() => {
+                    if (!camera.isConnected) {
+                        console.warn(`Camera ${cameraId} connection timeout - retrying...`);
+                        // Optionally retry connection here
+                        reconnectMainCamera(cameraId);
+                    }
+                }, 10000); // 10 second timeout
+
+                return true;
+
+            } catch (error) {
+                console.error(`Failed to reconnect camera ${cameraId}:`, error);
+
+                // Show error state in main container
+                const mainVideoContainer = document.getElementById('mainVideoContainer');
+                if (mainVideoContainer) {
+                    mainVideoContainer.innerHTML = `
+                <div class="flex items-center justify-center h-full text-white">
+                    <p>Failed to reconnect camera. Please try again.</p>
+                </div>
+            `;
+                }
+
+                throw error;
+            }
+        }
+
+        // Helper function to reinitialize a single camera connection
+        async function reinitializeCameraConnection(cameraId) {
+            if (!currentProject || !currentProject.cameras) {
+                throw new Error('No current project data available');
+            }
+
+            const cameraData = currentProject.cameras.find(cam => cam.id == cameraId);
+            if (!cameraData) {
+                throw new Error(`Camera data not found for ID: ${cameraId}`);
+            }
+
+            // Create new camera connection
+            const newCamera = new CameraConnection(cameraId, cameraData.camera_name, true);
+
+            // Replace in project connection
+            if (projectConnection) {
+                // Disconnect old camera if exists
+                if (projectConnection.cameras[cameraId]) {
+                    await projectConnection.cameras[cameraId].disconnect();
+                }
+
+                // Replace with new camera
+                projectConnection.cameras[cameraId] = newCamera;
+            }
+
+            return newCamera;
         }
 
         function toggleMute() {
