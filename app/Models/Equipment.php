@@ -29,4 +29,12 @@ class Equipment extends Model implements AuthenticatableContract
     {
         return $this->hasOne(Mapping::class, 'tablet_id');
     }
+
+    /**
+     * Get all recordings for this equipment/camera
+     */
+    public function recordings()
+    {
+        return $this->hasMany(Recording::class, 'camera_id', 'id');
+    }
 }
