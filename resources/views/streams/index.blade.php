@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('content')
+<!-- Flatpickr Date Picker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <style>
     .video-box {
         height: 60px;
@@ -261,6 +265,733 @@
         height: 40px;
         color: #6B7280;
     }
+
+    .recordings-player-container {
+        width: 100%;
+        height: 600px;
+        background-color: #0a0a0a;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .recordings-video-wrapper {
+        flex: 1;
+        position: relative;
+        background-color: #000;
+        overflow: hidden;
+    }
+
+    .recordings-video-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background-color: #000;
+    }
+
+    .recordings-video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background-color: #000;
+    }
+
+    .recordings-info-overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .recordings-controls-bar {
+        background: #1a1a1a;
+        border-top: 1px solid #2a2a2a;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .controls-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-bottom: 1px solid #2a2a2a;
+        background: #1a1a1a;
+    }
+
+    .controls-left,
+    .controls-center,
+    .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .control-btn-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .control-btn-icon:hover {
+        background: #2a2a2a;
+        color: #fff;
+    }
+
+    .control-btn-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .play-btn {
+        width: 40px;
+        height: 40px;
+        background: #3b82f6;
+        color: white;
+    }
+
+    .play-btn:hover {
+        background: #2563eb;
+    }
+
+    .filter-label {
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    .divider {
+        color: #4a4a4a;
+        margin: 0 8px;
+    }
+
+    .speed-selector {
+        background: #2a2a2a;
+        color: #9ca3af;
+        border: 1px solid #3a3a3a;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    .date-picker-wrapper {
+        position: relative;
+    }
+
+    .date-picker-input {
+        background: #2a2a2a;
+        color: #9ca3af;
+        border: 1px solid #3a3a3a;
+        padding: 6px 30px 6px 12px;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 140px;
+    }
+
+    .date-picker-input:hover {
+        background: #3a3a3a;
+        color: #fff;
+    }
+
+    .flatpickr-calendar {
+        background: #1a1a1a;
+        border: 1px solid #3a3a3a;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .flatpickr-day {
+        color: #9ca3af;
+    }
+
+    .flatpickr-day:hover {
+        background: #2a2a2a;
+        color: #fff;
+    }
+
+    .flatpickr-day.selected {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .calendar-popup {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 4px;
+        background: #1a1a1a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 12px;
+        display: none;
+        z-index: 1000;
+        min-width: 280px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .calendar-popup.show {
+        display: block;
+    }
+
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .cal-nav-btn {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 18px;
+    }
+
+    .cal-nav-btn:hover {
+        background: #2a2a2a;
+        color: #fff;
+    }
+
+    .cal-month-year {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .calendar-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .calendar-weekdays div {
+        text-align: center;
+        color: #6b7280;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 4px;
+    }
+
+    .calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .calendar-day:hover:not(.disabled) {
+        background: #2a2a2a;
+        color: #fff;
+    }
+
+    .calendar-day.selected {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .calendar-day.today {
+        border: 1px solid #3b82f6;
+    }
+
+    .calendar-day.disabled {
+        color: #4a4a4a;
+        cursor: not-allowed;
+    }
+
+    .calendar-day.has-recording {
+        position: relative;
+    }
+
+    .calendar-day.has-recording::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: #ef4444;
+        border-radius: 50%;
+    }
+
+    .zoom-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 12px;
+    }
+
+    .zoom-btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        color: #9ca3af;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 18px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .zoom-btn:hover {
+        background: #3a3a3a;
+        color: #fff;
+    }
+
+    .zoom-slider-wrapper {
+        width: 80px;
+        position: relative;
+    }
+
+    .zoom-slider {
+        width: 100%;
+        height: 4px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: #2a2a2a;
+        border-radius: 2px;
+        outline: none;
+    }
+
+    .zoom-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        background: #3b82f6;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .zoom-slider::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        background: #3b82f6;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+    }
+
+    .timeline-wrapper {
+        background: #000;
+        border-top: 1px solid #1a1a1a;
+        padding: 0;
+    }
+
+    .timeline-header {
+        display: none; /* Hide header for cleaner look */
+    }
+
+    .timeline-container {
+        position: relative;
+        height: 100px;
+        background: #000;
+        overflow: hidden;
+        user-select: none;
+        cursor: grab;
+    }
+
+    .timeline-container:active {
+        cursor: grabbing;
+    }
+
+    .timeline-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: auto;
+        transition: none;
+        will-change: transform;
+    }
+
+    .timeline-scale {
+        position: relative;
+        height: 100%;
+    }
+
+    /* Horizontal baseline */
+    .timeline-baseline {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #333;
+        z-index: 1;
+    }
+
+    /* Vertical tick marks */
+    .timeline-tick {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 20px;
+        background: #333;
+        border-left: 1px dotted #444;
+    }
+
+    .timeline-tick.major {
+        height: 30px;
+        background: #444;
+        border-left: 1px solid #555;
+    }
+
+    /* Time labels */
+    .timeline-label {
+        position: absolute;
+        color: #9ca3af;
+        font-size: 12px;
+        font-weight: 400;
+        white-space: nowrap;
+        transform: translateX(-50%);
+        top: 15px;
+    }
+
+    /* Date labels */
+    .timeline-label.date {
+        top: 65px;
+        font-size: 11px;
+        color: #6b7280;
+    }
+
+    /* Fixed center cursor - thin red line */
+    .timeline-cursor-fixed {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1000;
+    }
+
+    .timeline-cursor-line {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 100%;
+        background: #ef4444;
+    }
+
+    /* Time display badge - positioned like in the image */
+    .timeline-cursor-time {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(10px, -50%);
+        background: #ef4444;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Optional: Arrow pointing to the red line */
+    .timeline-cursor-time::before {
+        content: '';
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-right: 6px solid #ef4444;
+    }
+
+    /* Recording segments on timeline */
+    .timeline-recordings {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        height: 4px;
+        width: 100%;
+    }
+
+    .timeline-recording {
+        position: absolute;
+        height: 100%;
+        background: #ef4444;
+        opacity: 0.6;
+    }
+
+    .timeline-scrollbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: #1a1a1a;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .timeline-container:hover .timeline-scrollbar {
+        opacity: 1;
+    }
+
+    .timeline-scrollbar-thumb {
+        position: absolute;
+        height: 100%;
+        background: #3a3a3a;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .timeline-scrollbar-thumb:hover {
+        background: #4a4a4a;
+    }
+
+    .timeline-cursor-time {
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #3b82f6;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .date-display {
+        background-color: rgba(55, 65, 81, 0.8);
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #374151;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+    }
+
+    .date-display:hover {
+        background-color: rgba(55, 65, 81, 1);
+        border-color: #4B5563;
+    }
+
+    .calendar-dropdown {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 0;
+        background-color: #1F2937;
+        border: 1px solid #374151;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        display: none;
+        min-width: 280px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .calendar-nav {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 18px;
+    }
+
+    .calendar-nav:hover {
+        background-color: #374151;
+    }
+
+    .calendar-month {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .calendar-day-header {
+        text-align: center;
+        font-size: 12px;
+        color: #9CA3AF;
+        padding: 8px 4px;
+        font-weight: 500;
+    }
+
+    .calendar-day {
+        text-align: center;
+        padding: 8px 4px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-day:hover {
+        background-color: #374151;
+    }
+
+    .calendar-day.selected {
+        background-color: #EF4444;
+        color: white;
+    }
+
+    .calendar-day.other-month {
+        color: #6B7280;
+    }
+
+    .zoom-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .zoom-button {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: rgba(55, 65, 81, 0.8);
+        border: 1px solid #374151;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .zoom-button:hover {
+        background-color: rgba(55, 65, 81, 1);
+        border-color: #4B5563;
+    }
+
+    .speed-selector {
+        background-color: rgba(55, 65, 81, 0.8);
+        border: 1px solid #374151;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .speed-selector:hover {
+        background-color: rgba(55, 65, 81, 1);
+    }
+
+    .volume-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .volume-slider {
+        width: 80px;
+        height: 4px;
+        background: #374151;
+        border-radius: 2px;
+        outline: none;
+        -webkit-appearance: none;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        background: white;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .no-recording-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #9CA3AF;
+        background-color: #111827;
+    }
+
+    .no-recording-icon {
+        width: 80px;
+        height: 80px;
+        background-color: #374151;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .no-recording-icon svg {
+        width: 40px;
+        height: 40px;
+        color: #6B7280;
+    }
 </style>
 
 <div class="flex flex-wrap" style="height: calc(100vh - 120px); width:100%;">
@@ -466,17 +1197,116 @@
                     </div>
 
                     <!-- Recordings Tab Content -->
-                    <div id="recordings" class="tab-content">
-                        <div class="recordings-container">
-                            <div class="recordings-icon">
-                                <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z" />
-                                </svg>
+
+                </div>
+                <div id="recordings" class="tab-content">
+                    <div class="recordings-player-container">
+                        <!-- Video Player Area -->
+                        <div class="recordings-video-wrapper">
+                            <!-- Video Player -->
+                            <div class="recordings-video-container" id="videoContainer">
+                                <video class="recordings-video" id="recordingVideo" preload="metadata">
+                                    <source src="{{ asset('admin-theme/assets/videos/motion-detection-computer-room-door-1920x1080.mp4') }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+
+                                <!-- Video Info Overlay -->
+                                <div class="recordings-info-overlay" id="videoInfoOverlay">
+                                    BC1085.38.190
+                                </div>
                             </div>
-                            <h3 class="text-xl font-semibold mb-2">Recordings</h3>
-                            <p class="text-center">This section will display recorded videos.<br>Coming soon...</p>
+                        </div>
+
+                        <!-- Controls Bar -->
+                        <div class="recordings-controls-bar">
+                            <!-- Top Control Bar -->
+                            <div class="controls-top-bar">
+                                <div class="controls-left">
+                                    <button class="control-btn-icon" id="filterBtn" title="No filter">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                                        </svg>
+                                    </button>
+                                    <span class="filter-label">No filter</span>
+                                    <span class="divider">|</span>
+                                    <select class="speed-selector" id="speedSelector">
+                                        <option value="auto">Auto</option>
+                                        <option value="0.5">0.5x</option>
+                                        <option value="1" selected>1x</option>
+                                        <option value="2">2x</option>
+                                        <option value="4">4x</option>
+                                    </select>
+                                </div>
+
+                                <div class="controls-center">
+                                    <button class="control-btn-icon" id="prevBtn" title="Previous">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn-icon play-btn" id="playPauseBtn" title="Play">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" id="playIcon">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                        <svg viewBox="0 0 24 24" fill="currentColor" id="pauseIcon" style="display: none;">
+                                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn-icon" id="nextBtn" title="Next">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                                        </svg>
+                                    </button>
+                                    <select class="speed-selector" id="playbackSpeed">
+                                        <option value="1">1x</option>
+                                        <option value="2">2x</option>
+                                        <option value="4">4x</option>
+                                        <option value="8">8x</option>
+                                    </select>
+                                </div>
+
+                                <div class="controls-right">
+                                    <!-- Date Picker -->
+                                    <div class="date-picker-wrapper">
+                                        <input type="text" class="date-picker-input" id="datePickerInput" readonly>
+                                    </div>
+
+                                    <!-- Zoom Controls -->
+                                    <div class="zoom-controls">
+                                        <button class="zoom-btn" id="zoomOut" title="Zoom Out">−</button>
+                                        <div class="zoom-slider-wrapper">
+                                            <input type="range" class="zoom-slider" id="zoomSlider" min="1" max="10" value="5">
+                                        </div>
+                                        <button class="zoom-btn" id="zoomIn" title="Zoom In">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline -->
+                            <div class="timeline-wrapper">
+                                <div class="timeline-header">
+                                    <span class="timeline-camera">BC1085.38.190</span>
+                                </div>
+                                <div class="timeline-container" id="timelineContainer">
+                                    <!-- Moving timeline content -->
+                                    <div class="timeline-content" id="timelineContent">
+                                        <div class="timeline-scale" id="timelineScale">
+                                            <!-- Timeline hours will be generated here -->
+                                        </div>
+                                        <div class="timeline-recordings" id="timelineRecordings">
+                                            <!-- Recording segments will be shown here -->
+                                        </div>
+                                    </div>
+                                    <!-- Fixed center cursor with time badge -->
+                                    <div class="timeline-cursor-fixed" id="timelineCursor">
+                                        <div class="timeline-cursor-line"></div>
+                                        <div class="timeline-cursor-time" id="cursorTime">0:00:00</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -615,6 +1445,17 @@
             buttonElement.classList.add('active');
 
             console.log(`Switched to ${tabName} tab`);
+
+            // If switching to live view and all cam view is disabled, ensure single player is shown
+            if (tabName === 'live-view' && !isAllCamViewEnabled) {
+                document.getElementById('videoPlayerContainer').style.display = 'block';
+            }
+
+            if (tabName === 'recordings') {
+                setTimeout(() => {
+                    initializeRecordingsPlayer();
+                }, 100);
+            }
 
             // If switching to live view and all cam view is disabled, ensure single player is shown
             if (tabName === 'live-view' && !isAllCamViewEnabled) {
@@ -1829,5 +2670,589 @@
             updateCameraControlData,
             getCurrentCameraId
         };
+    </script>
+    <script>
+        class RecordingsPlayer {
+            constructor() {
+                this.video = document.getElementById('recordingVideo');
+                this.isPlaying = false;
+                this.currentDate = new Date();
+                this.datePicker = null;
+                this.timelinePosition = 0;
+                this.pixelsPerSecond = 10; // Base pixels per second for timeline
+                this.zoomLevel = 5;
+
+                this.init();
+            }
+
+            init() {
+                this.setupVideo();
+                this.setupDatePicker();
+                this.setupControls();
+                this.setupTimeline();
+                this.startTimelineAnimation();
+            }
+
+            setupVideo() {
+                if (this.video) {
+                    // Wait for video metadata to load
+                    this.video.addEventListener('loadedmetadata', () => {
+                        console.log('Video duration:', this.video.duration);
+                        // Re-render timeline with actual video duration
+                        this.renderTimeline();
+                    });
+
+                    // Update timeline as video plays
+                    this.video.addEventListener('timeupdate', () => {
+                        this.updateTimelinePosition();
+                    });
+
+                    // Handle video ended
+                    this.video.addEventListener('ended', () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+
+                    // Handle play/pause events
+                    this.video.addEventListener('play', () => {
+                        this.isPlaying = true;
+                        this.updatePlayButton();
+                    });
+
+                    this.video.addEventListener('pause', () => {
+                        this.isPlaying = false;
+                        this.updatePlayButton();
+                    });
+                }
+            }
+
+            setupDatePicker() {
+                const dateInput = document.getElementById('datePickerInput');
+                if (dateInput) {
+                    this.datePicker = flatpickr(dateInput, {
+                        dateFormat: "m/d/Y",
+                        defaultDate: new Date(),
+                        theme: "dark",
+                        onChange: (selectedDates) => {
+                            this.currentDate = selectedDates[0];
+                            this.loadRecordingsForDate(this.currentDate);
+                        }
+                    });
+
+                    // Set initial value
+                    const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
+                    const day = this.currentDate.getDate().toString().padStart(2, '0');
+                    const year = this.currentDate.getFullYear();
+                    dateInput.value = `${month}/${day}/${year}`;
+                }
+            }
+
+            setupControls() {
+                // Play/Pause button
+                const playPauseBtn = document.getElementById('playPauseBtn');
+                if (playPauseBtn) {
+                    playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+                }
+
+                // Previous/Next buttons
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => this.skipBackward());
+                }
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => this.skipForward());
+                }
+
+                // Speed controls
+                const speedSelector = document.getElementById('speedSelector');
+                const playbackSpeed = document.getElementById('playbackSpeed');
+                if (speedSelector) {
+                    speedSelector.addEventListener('change', (e) => this.setPlaybackSpeed(e.target.value));
+                }
+                if (playbackSpeed) {
+                    playbackSpeed.addEventListener('change', (e) => this.setPlaybackSpeed(e.target.value));
+                }
+
+                // Zoom controls
+                const zoomIn = document.getElementById('zoomIn');
+                const zoomOut = document.getElementById('zoomOut');
+                const zoomSlider = document.getElementById('zoomSlider');
+
+                if (zoomIn) {
+                    zoomIn.addEventListener('click', () => this.changeZoom(1));
+                }
+                if (zoomOut) {
+                    zoomOut.addEventListener('click', () => this.changeZoom(-1));
+                }
+                if (zoomSlider) {
+                    zoomSlider.addEventListener('input', (e) => {
+                        this.zoomLevel = parseInt(e.target.value);
+                        this.updateTimeline();
+                    });
+                }
+            }
+
+            setupTimeline() {
+                this.renderTimeline();
+                this.setupTimelineInteractions();
+            }
+
+            setupTimelineInteractions() {
+                const timelineContainer = document.getElementById('timelineContainer');
+                if (!timelineContainer) return;
+
+                let isDragging = false;
+                let startX = 0;
+                let startTransform = 0;
+
+                // Always update time display to show what's under the red line
+                this.updateRedLineTime();
+
+                // Click to seek - bring clicked time to center
+                timelineContainer.addEventListener('click', (e) => {
+                    if (!isDragging) {
+                        this.seekToClickPosition(e);
+                    }
+                });
+
+                // Drag to scroll timeline
+                timelineContainer.addEventListener('mousedown', (e) => {
+                    isDragging = false;
+                    startX = e.clientX;
+
+                    const timelineContent = document.getElementById('timelineContent');
+                    if (timelineContent) {
+                        const currentTransform = timelineContent.style.transform;
+                        startTransform = parseFloat(currentTransform.replace(/translateX\((-?\d+\.?\d*)px\)/, '$1')) || 0;
+                    }
+
+                    timelineContainer.style.cursor = 'grabbing';
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (e.buttons === 1 && startX !== 0) {
+                        isDragging = true;
+                        const deltaX = e.clientX - startX;
+                        const timelineContent = document.getElementById('timelineContent');
+
+                        if (timelineContent) {
+                            const newTransform = startTransform + deltaX;
+
+                            // Limit dragging to content bounds
+                            const containerWidth = timelineContainer.offsetWidth;
+                            const contentWidth = timelineContent.offsetWidth;
+                            const maxTransform = 0;
+                            const minTransform = -(contentWidth - containerWidth);
+
+                            const clampedTransform = Math.max(minTransform, Math.min(maxTransform, newTransform));
+                            timelineContent.style.transform = `translateX(${clampedTransform}px)`;
+
+                            // Update time display to show what's under the red line
+                            this.updateRedLineTime();
+                        }
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (startX !== 0) {
+                        startX = 0;
+                        timelineContainer.style.cursor = 'grab';
+
+                        // If we were dragging, sync video to the red line position
+                        if (isDragging) {
+                            this.syncVideoToRedLine();
+                        }
+
+                        // Small delay to distinguish between click and drag
+                        setTimeout(() => {
+                            isDragging = false;
+                        }, 100);
+                    }
+                });
+
+                // Touch events for mobile
+                let touchStartX = 0;
+                let touchStartTransform = 0;
+
+                timelineContainer.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+
+                    const timelineContent = document.getElementById('timelineContent');
+                    if (timelineContent) {
+                        const currentTransform = timelineContent.style.transform;
+                        touchStartTransform = parseFloat(currentTransform.replace(/translateX\((-?\d+\.?\d*)px\)/, '$1')) || 0;
+                    }
+                });
+
+                timelineContainer.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const deltaX = e.touches[0].clientX - touchStartX;
+                    const timelineContent = document.getElementById('timelineContent');
+
+                    if (timelineContent) {
+                        const newTransform = touchStartTransform + deltaX;
+                        const containerWidth = timelineContainer.offsetWidth;
+                        const contentWidth = timelineContent.offsetWidth;
+                        const maxTransform = 0;
+                        const minTransform = -(contentWidth - containerWidth);
+
+                        const clampedTransform = Math.max(minTransform, Math.min(maxTransform, newTransform));
+                        timelineContent.style.transform = `translateX(${clampedTransform}px)`;
+
+                        // Update red line time display
+                        this.updateRedLineTime();
+                    }
+                });
+
+                timelineContainer.addEventListener('touchend', () => {
+                    // Sync video to red line position when touch ends
+                    this.syncVideoToRedLine();
+                });
+            }
+
+            seekToClickPosition(e) {
+                const timelineContainer = document.getElementById('timelineContainer');
+                const timelineContent = document.getElementById('timelineContent');
+
+                if (!timelineContainer || !timelineContent || !this.video) return;
+
+                const rect = timelineContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+
+                // Get current transform
+                const currentTransform = timelineContent.style.transform;
+                const currentTranslateX = parseFloat(currentTransform.replace(/translateX\((-?\d+\.?\d*)px\)/, '$1')) || 0;
+
+                // Calculate the clicked position on the timeline
+                const clickedPosition = clickX - currentTranslateX;
+
+                // Calculate time at clicked position
+                const videoDuration = this.video.duration || 300;
+                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
+                const clickedTime = clickedPosition / pixelsPerSecond;
+
+                // Move timeline to bring clicked time to center (red line)
+                if (clickedTime >= 0 && clickedTime <= this.video.duration) {
+                    const containerWidth = timelineContainer.offsetWidth;
+                    const centerX = containerWidth / 2;
+                    const newPosition = clickedTime * pixelsPerSecond;
+                    const newTranslateX = centerX - newPosition;
+
+                    // Apply bounds
+                    const contentWidth = timelineContent.offsetWidth;
+                    const maxTransform = 0;
+                    const minTransform = -(contentWidth - containerWidth);
+                    const clampedTransform = Math.max(minTransform, Math.min(maxTransform, newTranslateX));
+
+                    // Move timeline
+                    timelineContent.style.transform = `translateX(${clampedTransform}px)`;
+
+                    // Update red line time display
+                    this.updateRedLineTime();
+
+                    // Sync video to the new position
+                    this.video.currentTime = clickedTime;
+                }
+            }
+
+            updateRedLineTime() {
+                // Calculate what time is under the red line (center of timeline)
+                const timelineContent = document.getElementById('timelineContent');
+                const timelineContainer = document.getElementById('timelineContainer');
+
+                if (!timelineContent || !timelineContainer || !this.video) return;
+
+                const containerWidth = timelineContainer.offsetWidth;
+                const centerX = containerWidth / 2;
+
+                // Get current transform
+                const currentTransform = timelineContent.style.transform;
+                const translateX = parseFloat(currentTransform.replace(/translateX\((-?\d+\.?\d*)px\)/, '$1')) || 0;
+
+                // Calculate position on timeline that's at the center
+                const positionAtCenter = -translateX + centerX;
+
+                // Convert position to time
+                const videoDuration = this.video.duration || 300;
+                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
+                const timeAtRedLine = positionAtCenter / pixelsPerSecond;
+
+                // Update the time display to show what's under the red line
+                if (timeAtRedLine >= 0 && timeAtRedLine <= videoDuration) {
+                    this.updateTimeDisplay(timeAtRedLine);
+                }
+
+                return timeAtRedLine;
+            }
+
+            syncVideoToRedLine() {
+                // Get the time that's under the red line
+                const timeAtRedLine = this.updateRedLineTime();
+
+                // Seek video to that time
+                if (this.video && timeAtRedLine >= 0 && timeAtRedLine <= this.video.duration) {
+                    this.video.currentTime = timeAtRedLine;
+                }
+            }
+
+            renderTimeline() {
+                const timelineScale = document.getElementById('timelineScale');
+                const timelineRecordings = document.getElementById('timelineRecordings');
+
+                if (!timelineScale || !this.video) return;
+
+                // Clear existing content
+                timelineScale.innerHTML = '';
+
+                // Get video duration and calculate timeline based on it
+                const videoDuration = this.video.duration || 300; // Default 5 minutes if no duration
+                const startTime = 0;
+                const endTime = videoDuration;
+
+                // Calculate pixels per second based on zoom
+                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel; // 800px base width
+                const totalWidth = videoDuration * pixelsPerSecond;
+
+                // Set timeline content width
+                const timelineContent = document.getElementById('timelineContent');
+                if (timelineContent) {
+                    timelineContent.style.width = `${totalWidth}px`;
+                }
+
+                // Add horizontal baseline
+                const baseline = document.createElement('div');
+                baseline.className = 'timeline-baseline';
+                baseline.style.width = `${totalWidth}px`;
+                timelineScale.appendChild(baseline);
+
+                // Calculate appropriate interval based on video duration
+                let interval = 1; // 1 second for short videos
+                if (videoDuration > 60) interval = 5; // 5 seconds
+                if (videoDuration > 300) interval = 10; // 10 seconds
+                if (videoDuration > 600) interval = 30; // 30 seconds
+                if (videoDuration > 1800) interval = 60; // 1 minute
+                if (videoDuration > 3600) interval = 300; // 5 minutes
+
+                // Generate time markers
+                for (let time = startTime; time <= endTime; time += interval) {
+                    const position = time * pixelsPerSecond;
+
+                    // Create vertical tick mark
+                    const tick = document.createElement('div');
+                    tick.className = time % 60 === 0 ? 'timeline-tick major' : 'timeline-tick';
+                    tick.style.left = `${position}px`;
+                    timelineScale.appendChild(tick);
+
+                    // Create time label
+                    const label = document.createElement('div');
+                    label.className = 'timeline-label';
+                    label.style.left = `${position}px`;
+
+                    // Format time based on video position
+                    const totalSeconds = Math.floor(time);
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = totalSeconds % 60;
+
+                    // Show appropriate format based on duration
+                    if (videoDuration < 3600) {
+                        // For videos less than 1 hour, show MM:SS
+                        label.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    } else {
+                        // For longer videos, show HH:MM:SS
+                        label.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+
+                    timelineScale.appendChild(label);
+
+                    // Add date label at major intervals
+                    if (time % (interval * 5) === 0) {
+                        const dateLabel = document.createElement('div');
+                        dateLabel.className = 'timeline-label date';
+                        dateLabel.style.left = `${position}px`;
+
+                        // Format date
+                        const now = new Date();
+                        const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+                        const day = dayNames[now.getDay()];
+                        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                        const date = now.getDate().toString().padStart(2, '0');
+                        dateLabel.textContent = `${day} ${month}/${date}`;
+
+                        timelineScale.appendChild(dateLabel);
+                    }
+                }
+
+                // Add recording segments if any
+                if (timelineRecordings) {
+                    timelineRecordings.innerHTML = '';
+                    timelineRecordings.style.width = `${totalWidth}px`;
+
+                    // For demo, add a recording segment for the full video
+                    const recDiv = document.createElement('div');
+                    recDiv.className = 'timeline-recording';
+                    recDiv.style.left = '0px';
+                    recDiv.style.width = `${totalWidth}px`;
+                    timelineRecordings.appendChild(recDiv);
+                }
+
+                // Initialize timeline position
+                this.updateTimelinePosition();
+            }
+
+            getTimeInterval() {
+                // Return interval in seconds based on zoom level
+                const baseInterval = 60; // 1 minute
+                if (this.zoomLevel >= 8) return baseInterval / 4; // 15 seconds
+                if (this.zoomLevel >= 6) return baseInterval / 2; // 30 seconds
+                if (this.zoomLevel >= 4) return baseInterval; // 1 minute
+                if (this.zoomLevel >= 2) return baseInterval * 2; // 2 minutes
+                return baseInterval * 5; // 5 minutes
+            }
+
+            formatTimeLabel(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const period = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+                return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+            }
+
+            updateTimelinePosition() {
+                if (!this.video) return;
+
+                const currentTime = this.video.currentTime;
+                const videoDuration = this.video.duration || 300;
+                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
+                const position = currentTime * pixelsPerSecond;
+
+                // Move timeline so current time is at center
+                const timelineContent = document.getElementById('timelineContent');
+                const timelineContainer = document.getElementById('timelineContainer');
+
+                if (timelineContent && timelineContainer) {
+                    const containerWidth = timelineContainer.offsetWidth;
+                    const centerOffset = containerWidth / 2;
+                    const translateX = centerOffset - position;
+
+                    // Ensure timeline doesn't scroll past bounds
+                    const maxTranslate = 0;
+                    const minTranslate = -(timelineContent.offsetWidth - containerWidth);
+                    const clampedTranslate = Math.max(minTranslate, Math.min(maxTranslate, translateX));
+
+                    timelineContent.style.transform = `translateX(${clampedTranslate}px)`;
+                }
+
+                // Update time display
+                this.updateTimeDisplay(currentTime);
+            }
+
+            updateTimeDisplay(seconds) {
+                const cursorTime = document.getElementById('cursorTime');
+                if (cursorTime) {
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    const secs = Math.floor(seconds % 60);
+                    const period = hours >= 12 ? 'PM' : 'AM';
+                    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+                    cursorTime.textContent = `${displayHours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} ${period}`;
+                }
+            }
+
+            startTimelineAnimation() {
+                // Continuously update timeline position when playing
+                const animate = () => {
+                    if (this.isPlaying && this.video) {
+                        this.updateTimelinePosition();
+                    }
+                    requestAnimationFrame(animate);
+                };
+                animate();
+            }
+
+            formatTime(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                const period = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+                return `${displayHours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} ${period}`;
+            }
+
+            togglePlayPause() {
+                if (this.video) {
+                    if (this.isPlaying) {
+                        this.video.pause();
+                    } else {
+                        this.video.play();
+                    }
+                    this.isPlaying = !this.isPlaying;
+                    this.updatePlayButton();
+                }
+            }
+
+            updatePlayButton() {
+                const playIcon = document.getElementById('playIcon');
+                const pauseIcon = document.getElementById('pauseIcon');
+                if (playIcon && pauseIcon) {
+                    playIcon.style.display = this.isPlaying ? 'none' : 'block';
+                    pauseIcon.style.display = this.isPlaying ? 'block' : 'none';
+                }
+            }
+
+            skipBackward() {
+                if (this.video) {
+                    this.video.currentTime = Math.max(0, this.video.currentTime - 10);
+                }
+            }
+
+            skipForward() {
+                if (this.video) {
+                    this.video.currentTime = Math.min(this.video.duration, this.video.currentTime + 10);
+                }
+            }
+
+            setPlaybackSpeed(speed) {
+                if (this.video) {
+                    this.video.playbackRate = parseFloat(speed);
+                }
+            }
+
+            changeZoom(direction) {
+                const previousZoom = this.zoomLevel;
+                this.zoomLevel = Math.max(1, Math.min(10, this.zoomLevel + direction));
+
+                const zoomSlider = document.getElementById('zoomSlider');
+                if (zoomSlider) {
+                    zoomSlider.value = this.zoomLevel;
+                }
+
+                // Re-render timeline with new zoom
+                this.renderTimeline();
+
+                // Maintain current position after zoom
+                this.updateTimelinePosition();
+            }
+
+            updateTimeline() {
+                // Re-render timeline with new zoom level
+                this.renderTimeline();
+                this.updateTimelinePosition();
+            }
+
+
+            loadRecordingsForDate(date) {
+                console.log('Loading recordings for', date);
+                // Here you would fetch recordings for the selected date
+                // For now, we're using the demo video
+            }
+        }
+
+        // Initialize player when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            new RecordingsPlayer();
+        });
     </script>
     @endpush
