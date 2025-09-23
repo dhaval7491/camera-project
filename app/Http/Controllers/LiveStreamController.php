@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Recording;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class LiveStreamController extends Controller
 {
@@ -98,6 +100,77 @@ class LiveStreamController extends Controller
                 'message' => 'Error fetching project cameras: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Get recording for a specific camera and date
+     */
+    public function getCameraRecording(Request $request, $cameraId)
+    {
+        try {
+            // Get date parameter or use current date
+            $date = $request->input('date', Carbon::now()->format('Y-m-d'));
+
+            // Get the latest recording for the camera on the specified date
+            $recording = Recording::where('camera_id', $cameraId)
+                ->whereDate('created_at', $date)
+                ->where('status', 'completed')
+                ->whereNotNull('s3_path')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($recording) {
+                // Generate S3 URL
+                $s3Url = $this->generateS3Url($recording);
+
+                return response()->json([
+                    'success' => true,
+                    'has_recording' => true,
+                    'recording' => [
+                        'id' => $recording->id,
+                        'camera_id' => $recording->camera_id,
+                        'recording_name' => $recording->recording_name,
+                        'url' => $s3Url,
+                        'duration' => $recording->duration,
+                        'created_at' => $recording->created_at->format('Y-m-d H:i:s'),
+                        'file_size' => $recording->file_size,
+                        'format' => $recording->format ?? 'video/mp4'
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'has_recording' => false,
+                    'message' => 'No recording available for this camera on ' . $date
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching recording: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate S3 URL for recording
+     */
+    private function generateS3Url($recording)
+    {
+        // Check if we have a full S3 URL already
+        if (filter_var($recording->s3_path, FILTER_VALIDATE_URL)) {
+            return $recording->s3_path;
+        }
+
+        // Otherwise, construct the URL
+        $bucket = $recording->s3_bucket ?? env('AWS_BUCKET');
+        $region = env('AWS_DEFAULT_REGION', 'us-east-1');
+
+        // Use the s3_path if available, otherwise construct from camera_id and recording_name
+        $path = $recording->s3_path ?? "recordings/{$recording->camera_id}/{$recording->recording_name}";
+
+        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
     }
 
 
