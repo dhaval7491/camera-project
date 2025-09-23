@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Recording;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class LiveStreamController extends Controller
@@ -160,17 +161,35 @@ class LiveStreamController extends Controller
     {
         // Check if we have a full S3 URL already
         if (filter_var($recording->s3_path, FILTER_VALIDATE_URL)) {
+            // If it's already a full URL but from S3, try to generate a presigned URL
+            if (strpos($recording->s3_path, 's3.amazonaws.com') !== false || strpos($recording->s3_path, 's3.') !== false) {
+                // Extract the path from the URL for presigned URL generation
+                $parsedUrl = parse_url($recording->s3_path);
+                $path = ltrim($parsedUrl['path'] ?? '', '/');
+
+                try {
+                    // Generate a presigned URL that expires in 1 hour
+                    return Storage::disk('s3')->temporaryUrl($path, now()->addHour());
+                } catch (\Exception $e) {
+                    // If presigned URL generation fails, return the original URL
+                    return $recording->s3_path;
+                }
+            }
             return $recording->s3_path;
         }
-
-        // Otherwise, construct the URL
-        $bucket = $recording->s3_bucket ?? env('AWS_BUCKET');
-        $region = env('AWS_DEFAULT_REGION', 'us-east-1');
 
         // Use the s3_path if available, otherwise construct from camera_id and recording_name
         $path = $recording->s3_path ?? "recordings/{$recording->camera_id}/{$recording->recording_name}";
 
-        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
+        try {
+            // Try to generate a presigned URL with 1 hour expiration
+            return Storage::disk('s3')->temporaryUrl($path, now()->addHour());
+        } catch (\Exception $e) {
+            // Fallback to constructing the public URL if presigned URL fails
+            $bucket = $recording->s3_bucket ?? env('AWS_BUCKET');
+            $region = env('AWS_DEFAULT_REGION', 'us-east-1');
+            return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
+        }
     }
 
 

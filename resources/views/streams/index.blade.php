@@ -3292,30 +3292,121 @@
 
             loadRecordingVideo(recording) {
                 const video = document.getElementById('recordingVideo');
-                const videoSource = video.querySelector('source');
 
-                if (videoSource && recording.url) {
-                    // Update video source
-                    videoSource.src = recording.url;
-                    videoSource.type = recording.format || 'video/mp4';
+                if (!video || !recording.url) {
+                    console.error('Video element or recording URL not found');
+                    return;
+                }
 
-                    // Reload video
-                    video.load();
+                console.log('Loading video from:', recording.url);
 
+                // Remove existing source elements
+                video.innerHTML = '';
+
+                // Create new source element
+                const newSource = document.createElement('source');
+                newSource.src = recording.url;
+                newSource.type = recording.format || 'video/mp4';
+                video.appendChild(newSource);
+
+                // Add crossorigin attribute for CORS
+                video.crossOrigin = 'anonymous';
+
+                // Remove any existing event listeners
+                video.onloadedmetadata = null;
+                video.onerror = null;
+                video.oncanplay = null;
+                video.onloadstart = null;
+
+                // Add event listeners for debugging
+                video.onloadstart = () => {
+                    console.log('Video load started');
+                };
+
+                video.onloadedmetadata = () => {
+                    console.log('Video metadata loaded, duration:', video.duration);
                     // Update duration if available
-                    if (recording.duration) {
-                        this.totalDuration = recording.duration;
+                    if (video.duration) {
+                        this.totalDuration = video.duration;
+                        this.updateTimeDisplay();
                     }
+                    // Hide any error messages
+                    this.hideNoRecordingMessage();
+                };
 
+                video.oncanplay = () => {
+                    console.log('Video can start playing');
                     // Update video info overlay with camera name
                     const infoOverlay = document.getElementById('videoInfoOverlay');
                     if (infoOverlay) {
                         infoOverlay.textContent = `Camera: ${recording.camera_id} - ${recording.created_at}`;
                     }
+                };
 
-                    // Hide any error messages
+                video.onerror = (e) => {
+                    console.error('Video loading error:', e);
+                    console.error('Video error code:', video.error?.code);
+                    console.error('Video error message:', video.error?.message);
+
+                    // Try alternative loading method
+                    console.log('Attempting alternative loading method...');
+                    this.tryAlternativeVideoLoad(recording);
+                };
+
+                // Load the video
+                video.load();
+
+                // Try to play after a short delay to ensure metadata is loaded
+                setTimeout(() => {
+                    video.play().catch(err => {
+                        console.log('Autoplay prevented:', err);
+                        // This is normal - user interaction may be required
+                    });
+                }, 500);
+            }
+
+            tryAlternativeVideoLoad(recording) {
+                const video = document.getElementById('recordingVideo');
+
+                if (!video) return;
+
+                // Try setting src directly on video element (alternative method)
+                console.log('Trying direct src assignment...');
+
+                // Remove crossorigin to test if that's the issue
+                video.removeAttribute('crossorigin');
+
+                // Clear innerHTML and set src directly
+                video.innerHTML = '';
+                video.src = recording.url;
+                video.type = recording.format || 'video/mp4';
+
+                // Add simplified error handler
+                video.onerror = () => {
+                    console.error('Alternative loading also failed');
+                    // Try one more time with signed URL message
+                    this.showNoRecordingMessage('Video loading failed. The S3 bucket may need CORS configuration or the URL may need to be a signed URL.');
+                };
+
+                video.onloadeddata = () => {
+                    console.log('Alternative method: Video loaded successfully');
                     this.hideNoRecordingMessage();
-                }
+
+                    // Update duration
+                    if (video.duration) {
+                        this.totalDuration = video.duration;
+                        this.updateTimeDisplay();
+                    }
+
+                    // Update info overlay
+                    const infoOverlay = document.getElementById('videoInfoOverlay');
+                    if (infoOverlay) {
+                        infoOverlay.textContent = `Camera: ${recording.camera_id} - ${recording.created_at}`;
+                    }
+                };
+
+                // Attempt to load
+                video.load();
             }
 
             showNoRecordingMessage(message) {
