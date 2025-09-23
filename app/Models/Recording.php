@@ -14,11 +14,24 @@ class Recording extends Model
         'camera_id',
         'recording_timestamp',
         'recording_name',
+        'file_path',
+        's3_path',
+        's3_bucket',
+        'file_size',
+        'duration',
+        'format',
+        'status',
+        'metadata',
+        'processed_at',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'processed_at' => 'datetime',
+        'metadata' => 'array',
+        'file_size' => 'integer',
+        'duration' => 'integer',
     ];
 
     /**

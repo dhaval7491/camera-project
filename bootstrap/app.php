@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\SuperAdminAuthMiddleware;
+use App\Http\Middleware\ApiTokenAuth;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,7 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'superadmin_auth'=> SuperAdminAuthMiddleware::class
+            'superadmin_auth'=> SuperAdminAuthMiddleware::class,
+            'api.token' => ApiTokenAuth::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
