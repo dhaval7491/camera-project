@@ -1,0 +1,973 @@
+# Janus Recordings to S3 - Complete Setup Guide
+
+## Overview
+This guide covers setting up a Node.js service that:
+1. Monitors Janus recording directory for new .mjr files
+2. Converts .mjr files to MP4 format
+3. Uploads converted files to AWS S3
+4. Notifies Laravel API about new recordings
+
+## Prerequisites
+- Node.js (v14 or higher)
+- FFmpeg installed on the system
+- Janus post-processing tools (janus-pp-rec)
+- AWS S3 bucket configured
+- Laravel API endpoint ready
+
+## Step 1: Install System Dependencies
+
+### Install FFmpeg
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install ffmpeg
+
+# CentOS/RHEL
+sudo yum install ffmpeg
+
+# macOS
+brew install ffmpeg
+```
+
+### Install Janus Post-Processing Tools
+
+#### For Ubuntu/Debian (Recommended - Easiest Method)
+```bash
+# Simply install janus-tools package
+sudo apt install janus-tools
+
+# Verify installation
+which janus-pp-rec
+# Output should be: /usr/bin/janus-pp-rec
+
+# Test that it works
+janus-pp-rec --help
+```
+
+#### For CentOS/RHEL or if package not available
+```bash
+# Clone Janus repository
+git clone https://github.com/meetecho/janus-gateway.git
+cd janus-gateway
+
+# Install dependencies
+sudo yum install jansson-devel libavutil-devel libavcodec-devel libavformat-devel libogg-devel
+
+# Build just the post-processing tools
+./autogen.sh
+./configure --disable-all-plugins --disable-all-handlers
+make
+
+# Install the tools
+sudo cp janus-pp-rec /usr/local/bin/
+sudo chmod +x /usr/local/bin/janus-pp-rec
+
+# Verify installation
+janus-pp-rec --help
+```
+
+## Step 2: Create Node.js Project
+
+```bash
+# Create project directory
+mkdir janus-recording-processor
+cd janus-recording-processor
+
+# Initialize Node.js project
+npm init -y
+
+# Install required packages
+npm install aws-sdk chokidar axios dotenv winston child_process path fs-extra
+npm install --save-dev @types/node nodemon
+```
+
+## Step 3: Project Structure
+
+Create the following directory structure:
+```
+janus-recording-processor/
+├── src/
+│   ├── index.js
+│   ├── config/
+│   │   └── config.js
+│   ├── services/
+│   │   ├── watcher.js
+│   │   ├── converter.js
+│   │   ├── s3Uploader.js
+│   │   └── apiNotifier.js
+│   └── utils/
+│       └── logger.js
+├── temp/               # Temporary directory for conversions
+├── processed/          # Processed files archive (optional)
+├── .env
+├── package.json
+└── README.md
+```
+
+## Step 4: Environment Configuration
+
+Create `.env` file:
+```env
+# Janus Configuration
+JANUS_RECORDINGS_PATH=/opt/janus/share/janus/recordings/
+JANUS_PP_REC_PATH=/usr/bin/janus-pp-rec
+
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=your-bucket-name
+S3_FOLDER_PREFIX=janus-recordings/
+
+# Laravel API Configuration
+LARAVEL_API_URL=https://your-domain.com/api/v1/recordings
+LARAVEL_API_TOKEN=your_api_token
+
+# Processing Configuration
+TEMP_DIR=./temp
+PROCESSED_DIR=./processed
+KEEP_PROCESSED_FILES=false
+CHECK_INTERVAL=5000  # milliseconds
+CONCURRENT_CONVERSIONS=2
+
+# Logging
+LOG_LEVEL=info
+LOG_FILE=./logs/processor.log
+```
+
+## Step 5: Implementation Code
+
+### src/config/config.js
+```javascript
+require('dotenv').config();
+
+module.exports = {
+    janus: {
+        recordingsPath: process.env.JANUS_RECORDINGS_PATH,
+        ppRecPath: process.env.JANUS_PP_REC_PATH || 'janus-pp-rec'
+    },
+    aws: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION,
+        s3BucketName: process.env.S3_BUCKET_NAME,
+        s3FolderPrefix: process.env.S3_FOLDER_PREFIX || ''
+    },
+    laravel: {
+        apiUrl: process.env.LARAVEL_API_URL,
+        apiToken: process.env.LARAVEL_API_TOKEN
+    },
+    processing: {
+        tempDir: process.env.TEMP_DIR || './temp',
+        processedDir: process.env.PROCESSED_DIR || './processed',
+        keepProcessedFiles: process.env.KEEP_PROCESSED_FILES === 'true',
+        checkInterval: parseInt(process.env.CHECK_INTERVAL) || 5000,
+        concurrentConversions: parseInt(process.env.CONCURRENT_CONVERSIONS) || 2
+    },
+    logging: {
+        level: process.env.LOG_LEVEL || 'info',
+        file: process.env.LOG_FILE || './logs/processor.log'
+    }
+};
+```
+
+### src/utils/logger.js
+```javascript
+const winston = require('winston');
+const path = require('path');
+const fs = require('fs-extra');
+const config = require('../config/config');
+
+// Ensure log directory exists
+const logDir = path.dirname(config.logging.file);
+fs.ensureDirSync(logDir);
+
+const logger = winston.createLogger({
+    level: config.logging.level,
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.File({ filename: config.logging.file }),
+        new winston.transports.Console({
+            format: winston.format.simple()
+        })
+    ]
+});
+
+module.exports = logger;
+```
+
+### src/services/converter.js
+```javascript
+const { exec } = require('child_process');
+const path = require('path');
+const fs = require('fs-extra');
+const logger = require('../utils/logger');
+const config = require('../config/config');
+
+class Converter {
+    constructor() {
+        this.queue = [];
+        this.processing = 0;
+        this.maxConcurrent = config.processing.concurrentConversions;
+    }
+
+    async convertMjrToMp4(audioFile, videoFile, outputFile) {
+        return new Promise((resolve, reject) => {
+            // First, convert .mjr to raw format using janus-pp-rec
+            const audioRaw = outputFile.replace('.mp4', '_audio.opus');
+            const videoRaw = outputFile.replace('.mp4', '_video.webm');
+
+            const promises = [];
+
+            // Convert audio .mjr to opus
+            if (audioFile && fs.existsSync(audioFile)) {
+                promises.push(this.convertMjrToRaw(audioFile, audioRaw, 'audio'));
+            }
+
+            // Convert video .mjr to webm
+            if (videoFile && fs.existsSync(videoFile)) {
+                promises.push(this.convertMjrToRaw(videoFile, videoRaw, 'video'));
+            }
+
+            Promise.all(promises)
+                .then(() => {
+                    // Combine audio and video into MP4 using ffmpeg
+                    return this.combineToMp4(audioRaw, videoRaw, outputFile);
+                })
+                .then(() => {
+                    // Clean up temporary files
+                    if (fs.existsSync(audioRaw)) fs.unlinkSync(audioRaw);
+                    if (fs.existsSync(videoRaw)) fs.unlinkSync(videoRaw);
+                    resolve(outputFile);
+                })
+                .catch(reject);
+        });
+    }
+
+    convertMjrToRaw(inputFile, outputFile, type) {
+        return new Promise((resolve, reject) => {
+            const command = `${config.janus.ppRecPath} ${inputFile} ${outputFile}`;
+
+            logger.info(`Converting ${type}: ${inputFile}`);
+
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    logger.error(`Conversion error for ${inputFile}: ${error.message}`);
+                    reject(error);
+                    return;
+                }
+                logger.info(`Successfully converted ${type}: ${outputFile}`);
+                resolve(outputFile);
+            });
+        });
+    }
+
+    combineToMp4(audioFile, videoFile, outputFile) {
+        return new Promise((resolve, reject) => {
+            let command;
+
+            if (fs.existsSync(audioFile) && fs.existsSync(videoFile)) {
+                // Both audio and video exist
+                command = `ffmpeg -i ${videoFile} -i ${audioFile} -c:v copy -c:a aac -strict experimental ${outputFile}`;
+            } else if (fs.existsSync(videoFile)) {
+                // Only video exists
+                command = `ffmpeg -i ${videoFile} -c:v copy ${outputFile}`;
+            } else if (fs.existsSync(audioFile)) {
+                // Only audio exists
+                command = `ffmpeg -i ${audioFile} -c:a aac -strict experimental ${outputFile}`;
+            } else {
+                reject(new Error('No audio or video file found'));
+                return;
+            }
+
+            logger.info(`Creating MP4: ${outputFile}`);
+
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    logger.error(`FFmpeg error: ${error.message}`);
+                    reject(error);
+                    return;
+                }
+                logger.info(`Successfully created MP4: ${outputFile}`);
+                resolve(outputFile);
+            });
+        });
+    }
+
+    async processRecordingPair(baseName, recordingPath) {
+        const audioFile = path.join(recordingPath, `${baseName}-audio.mjr`);
+        const videoFile = path.join(recordingPath, `${baseName}-video.mjr`);
+        const outputFile = path.join(config.processing.tempDir, `${baseName}.mp4`);
+
+        // Check if at least one file exists
+        if (!fs.existsSync(audioFile) && !fs.existsSync(videoFile)) {
+            logger.warn(`No recording files found for ${baseName}`);
+            return null;
+        }
+
+        try {
+            await this.convertMjrToMp4(
+                fs.existsSync(audioFile) ? audioFile : null,
+                fs.existsSync(videoFile) ? videoFile : null,
+                outputFile
+            );
+
+            return {
+                outputFile,
+                audioFile: fs.existsSync(audioFile) ? audioFile : null,
+                videoFile: fs.existsSync(videoFile) ? videoFile : null,
+                baseName
+            };
+        } catch (error) {
+            logger.error(`Failed to process ${baseName}: ${error.message}`);
+            throw error;
+        }
+    }
+}
+
+module.exports = new Converter();
+```
+
+### src/services/s3Uploader.js
+```javascript
+const AWS = require('aws-sdk');
+const fs = require('fs-extra');
+const path = require('path');
+const logger = require('../utils/logger');
+const config = require('../config/config');
+
+class S3Uploader {
+    constructor() {
+        this.s3 = new AWS.S3({
+            accessKeyId: config.aws.accessKeyId,
+            secretAccessKey: config.aws.secretAccessKey,
+            region: config.aws.region
+        });
+    }
+
+    async uploadToS3(filePath, s3Key) {
+        try {
+            const fileStream = fs.createReadStream(filePath);
+            const uploadParams = {
+                Bucket: config.aws.s3BucketName,
+                Key: s3Key,
+                Body: fileStream,
+                ContentType: 'video/mp4'
+            };
+
+            logger.info(`Uploading to S3: ${s3Key}`);
+
+            const result = await this.s3.upload(uploadParams).promise();
+
+            logger.info(`Successfully uploaded to S3: ${result.Location}`);
+
+            return {
+                location: result.Location,
+                bucket: result.Bucket,
+                key: result.Key
+            };
+        } catch (error) {
+            logger.error(`S3 upload error: ${error.message}`);
+            throw error;
+        }
+    }
+
+    generateS3Key(baseName) {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${config.aws.s3FolderPrefix}${year}/${month}/${day}/${baseName}.mp4`;
+    }
+}
+
+module.exports = new S3Uploader();
+```
+
+### src/services/apiNotifier.js
+```javascript
+const axios = require('axios');
+const logger = require('../utils/logger');
+const config = require('../config/config');
+
+class ApiNotifier {
+    constructor() {
+        this.apiClient = axios.create({
+            baseURL: config.laravel.apiUrl,
+            headers: {
+                'Authorization': `Bearer ${config.laravel.apiToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    extractMetadata(baseName) {
+        // Parse the base name to extract camera ID and timestamp
+        // Assuming format: camera_[cameraid]_[timestamp]
+        // Adjust this based on your actual naming convention
+
+        const parts = baseName.split('_');
+
+        return {
+            camera_id: parts[1] || 'unknown',
+            timestamp: parts[2] || Date.now(),
+            recording_name: baseName
+        };
+    }
+
+    async notifyLaravel(recordingInfo) {
+        try {
+            const metadata = this.extractMetadata(recordingInfo.baseName);
+
+            const payload = {
+                camera_id: metadata.camera_id,
+                timestamp: metadata.timestamp,
+                recording_name: metadata.recording_name,
+                s3_url: recordingInfo.s3Url,
+                s3_key: recordingInfo.s3Key,
+                file_size: recordingInfo.fileSize,
+                duration: recordingInfo.duration || null
+            };
+
+            logger.info(`Notifying Laravel API for ${recordingInfo.baseName}`);
+
+            const response = await this.apiClient.post('', payload);
+
+            logger.info(`Laravel API response: ${response.status} - ${JSON.stringify(response.data)}`);
+
+            return response.data;
+        } catch (error) {
+            logger.error(`Laravel API notification error: ${error.message}`);
+            if (error.response) {
+                logger.error(`API Response: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
+            }
+            throw error;
+        }
+    }
+}
+
+module.exports = new ApiNotifier();
+```
+
+### src/services/watcher.js
+```javascript
+const chokidar = require('chokidar');
+const path = require('path');
+const fs = require('fs-extra');
+const logger = require('../utils/logger');
+const config = require('../config/config');
+const converter = require('./converter');
+const s3Uploader = require('./s3Uploader');
+const apiNotifier = require('./apiNotifier');
+
+class RecordingWatcher {
+    constructor() {
+        this.processedFiles = new Set();
+        this.processingFiles = new Set();
+        this.pendingPairs = new Map();
+    }
+
+    start() {
+        // Ensure temp and processed directories exist
+        fs.ensureDirSync(config.processing.tempDir);
+        fs.ensureDirSync(config.processing.processedDir);
+
+        logger.info(`Starting watcher on ${config.janus.recordingsPath}`);
+
+        // Watch for new .mjr files
+        this.watcher = chokidar.watch(`${config.janus.recordingsPath}/*.mjr`, {
+            persistent: true,
+            ignoreInitial: false,
+            awaitWriteFinish: {
+                stabilityThreshold: 2000,
+                pollInterval: 100
+            }
+        });
+
+        this.watcher
+            .on('add', (filePath) => this.handleNewFile(filePath))
+            .on('error', (error) => logger.error(`Watcher error: ${error}`));
+
+        // Process pending pairs periodically
+        setInterval(() => this.processPendingPairs(), config.processing.checkInterval);
+    }
+
+    handleNewFile(filePath) {
+        const fileName = path.basename(filePath);
+
+        // Skip if already processed or processing
+        if (this.processedFiles.has(fileName) || this.processingFiles.has(fileName)) {
+            return;
+        }
+
+        logger.info(`New file detected: ${fileName}`);
+
+        // Extract base name (without -audio.mjr or -video.mjr)
+        const baseName = fileName.replace(/-audio\.mjr|-video\.mjr/, '');
+
+        if (!this.pendingPairs.has(baseName)) {
+            this.pendingPairs.set(baseName, {
+                audioFile: null,
+                videoFile: null,
+                firstSeen: Date.now()
+            });
+        }
+
+        const pair = this.pendingPairs.get(baseName);
+
+        if (fileName.includes('-audio.mjr')) {
+            pair.audioFile = filePath;
+        } else if (fileName.includes('-video.mjr')) {
+            pair.videoFile = filePath;
+        }
+    }
+
+    async processPendingPairs() {
+        for (const [baseName, pair] of this.pendingPairs) {
+            // Wait at least 5 seconds to ensure both files are ready
+            if (Date.now() - pair.firstSeen < 5000) {
+                continue;
+            }
+
+            // Process if we have at least one file
+            if (pair.audioFile || pair.videoFile) {
+                this.pendingPairs.delete(baseName);
+                await this.processRecording(baseName, pair);
+            }
+
+            // Remove old pending pairs (older than 1 minute)
+            if (Date.now() - pair.firstSeen > 60000) {
+                logger.warn(`Removing old pending pair: ${baseName}`);
+                this.pendingPairs.delete(baseName);
+            }
+        }
+    }
+
+    async processRecording(baseName, pair) {
+        try {
+            // Mark files as processing
+            if (pair.audioFile) {
+                this.processingFiles.add(path.basename(pair.audioFile));
+            }
+            if (pair.videoFile) {
+                this.processingFiles.add(path.basename(pair.videoFile));
+            }
+
+            logger.info(`Processing recording: ${baseName}`);
+
+            // Step 1: Convert to MP4
+            const result = await converter.processRecordingPair(
+                baseName,
+                config.janus.recordingsPath
+            );
+
+            if (!result) {
+                throw new Error('Conversion failed');
+            }
+
+            // Step 2: Upload to S3
+            const s3Key = s3Uploader.generateS3Key(baseName);
+            const s3Result = await s3Uploader.uploadToS3(result.outputFile, s3Key);
+
+            // Get file stats
+            const stats = fs.statSync(result.outputFile);
+
+            // Step 3: Notify Laravel API
+            await apiNotifier.notifyLaravel({
+                baseName: baseName,
+                s3Url: s3Result.location,
+                s3Key: s3Result.key,
+                fileSize: stats.size
+            });
+
+            // Step 4: Cleanup
+            await this.cleanup(result, pair);
+
+            // Mark as processed
+            if (pair.audioFile) {
+                this.processedFiles.add(path.basename(pair.audioFile));
+            }
+            if (pair.videoFile) {
+                this.processedFiles.add(path.basename(pair.videoFile));
+            }
+
+            logger.info(`Successfully processed: ${baseName}`);
+        } catch (error) {
+            logger.error(`Failed to process ${baseName}: ${error.message}`);
+
+            // Remove from processing
+            if (pair.audioFile) {
+                this.processingFiles.delete(path.basename(pair.audioFile));
+            }
+            if (pair.videoFile) {
+                this.processingFiles.delete(path.basename(pair.videoFile));
+            }
+        }
+    }
+
+    async cleanup(result, pair) {
+        try {
+            // Delete temporary MP4 file
+            if (fs.existsSync(result.outputFile)) {
+                fs.unlinkSync(result.outputFile);
+            }
+
+            // Move or delete original .mjr files
+            if (config.processing.keepProcessedFiles) {
+                // Move to processed directory
+                if (pair.audioFile && fs.existsSync(pair.audioFile)) {
+                    const destPath = path.join(config.processing.processedDir, path.basename(pair.audioFile));
+                    fs.moveSync(pair.audioFile, destPath);
+                }
+                if (pair.videoFile && fs.existsSync(pair.videoFile)) {
+                    const destPath = path.join(config.processing.processedDir, path.basename(pair.videoFile));
+                    fs.moveSync(pair.videoFile, destPath);
+                }
+            } else {
+                // Delete original files
+                if (pair.audioFile && fs.existsSync(pair.audioFile)) {
+                    fs.unlinkSync(pair.audioFile);
+                }
+                if (pair.videoFile && fs.existsSync(pair.videoFile)) {
+                    fs.unlinkSync(pair.videoFile);
+                }
+            }
+        } catch (error) {
+            logger.error(`Cleanup error: ${error.message}`);
+        }
+    }
+
+    stop() {
+        if (this.watcher) {
+            this.watcher.close();
+        }
+    }
+}
+
+module.exports = new RecordingWatcher();
+```
+
+### src/index.js
+```javascript
+const logger = require('./utils/logger');
+const watcher = require('./services/watcher');
+
+// Handle process termination
+process.on('SIGINT', () => {
+    logger.info('Shutting down...');
+    watcher.stop();
+    process.exit(0);
+});
+
+process.on('uncaughtException', (error) => {
+    logger.error(`Uncaught exception: ${error.message}`, error);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    logger.error(`Unhandled rejection at ${promise}: ${reason}`);
+});
+
+// Start the service
+logger.info('Starting Janus Recording Processor');
+watcher.start();
+```
+
+## Step 6: Laravel API Endpoint Setup
+
+Add this to your Laravel routes/api.php:
+```php
+Route::post('/v1/recordings', [RecordingController::class, 'store'])
+    ->middleware('api.token');
+```
+
+Create app/Http/Controllers/API/v1/RecordingController.php:
+```php
+<?php
+
+namespace App\Http\Controllers\API\v1;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Recording;
+use Illuminate\Support\Facades\Validator;
+
+class RecordingController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'camera_id' => 'required|string',
+            'timestamp' => 'required',
+            'recording_name' => 'required|string',
+            's3_url' => 'required|url',
+            's3_key' => 'required|string',
+            'file_size' => 'nullable|integer',
+            'duration' => 'nullable|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $recording = Recording::create([
+            'camera_id' => $request->camera_id,
+            'timestamp' => $request->timestamp,
+            'recording_name' => $request->recording_name,
+            's3_url' => $request->s3_url,
+            's3_key' => $request->s3_key,
+            'file_size' => $request->file_size,
+            'duration' => $request->duration
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $recording
+        ], 201);
+    }
+}
+```
+
+Create migration for recordings table:
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateRecordingsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('recordings', function (Blueprint $table) {
+            $table->id();
+            $table->string('camera_id');
+            $table->string('timestamp');
+            $table->string('recording_name');
+            $table->string('s3_url');
+            $table->string('s3_key');
+            $table->bigInteger('file_size')->nullable();
+            $table->integer('duration')->nullable();
+            $table->timestamps();
+
+            $table->index('camera_id');
+            $table->index('timestamp');
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('recordings');
+    }
+}
+```
+
+## Step 7: Running the Service
+
+### Development Mode
+```bash
+npm run dev
+# or
+node src/index.js
+```
+
+### Production Mode with PM2
+```bash
+# Install PM2 globally
+npm install -g pm2
+
+# Start the service
+pm2 start src/index.js --name janus-processor
+
+# View logs
+pm2 logs janus-processor
+
+# Monitor
+pm2 monit
+
+# Auto-start on system boot
+pm2 startup
+pm2 save
+```
+
+### Using systemd (Alternative to PM2)
+
+Create /etc/systemd/system/janus-processor.service:
+```ini
+[Unit]
+Description=Janus Recording Processor
+After=network.target
+
+[Service]
+Type=simple
+User=your-user
+WorkingDirectory=/path/to/janus-recording-processor
+ExecStart=/usr/bin/node /path/to/janus-recording-processor/src/index.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=janus-processor
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable janus-processor
+sudo systemctl start janus-processor
+sudo systemctl status janus-processor
+```
+
+## Step 8: Testing
+
+Create a test script test-processor.js:
+```javascript
+const fs = require('fs-extra');
+const path = require('path');
+
+// Create test .mjr files in the recordings directory
+const testDir = '/opt/janus/share/janus/recordings/';
+const testBaseName = `camera_123_${Date.now()}`;
+
+// Create dummy .mjr files (these won't be valid, just for testing the flow)
+fs.writeFileSync(path.join(testDir, `${testBaseName}-audio.mjr`), 'dummy audio content');
+fs.writeFileSync(path.join(testDir, `${testBaseName}-video.mjr`), 'dummy video content');
+
+console.log(`Created test files: ${testBaseName}-audio.mjr and ${testBaseName}-video.mjr`);
+```
+
+## Step 9: Monitoring & Debugging
+
+### Check logs
+```bash
+tail -f logs/processor.log
+```
+
+### Debug mode
+Add to .env:
+```env
+LOG_LEVEL=debug
+```
+
+### Health check endpoint (optional)
+Add a simple HTTP server for health checks:
+```javascript
+// Add to src/index.js
+const http = require('http');
+
+const healthServer = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'healthy', uptime: process.uptime() }));
+});
+
+healthServer.listen(3001, () => {
+    logger.info('Health check server running on port 3001');
+});
+```
+
+## Step 10: Performance Tuning
+
+### Optimize for high volume
+- Increase CONCURRENT_CONVERSIONS in .env
+- Use Redis queue for better job management
+- Implement retry mechanism for failed uploads
+- Add CloudWatch metrics for monitoring
+
+### Memory optimization
+- Process files in chunks
+- Implement file size limits
+- Clean up temp files aggressively
+
+## Troubleshooting
+
+### Common Issues
+
+1. **janus-pp-rec not found**
+   - Verify installation: `which janus-pp-rec`
+   - Update JANUS_PP_REC_PATH in .env
+
+2. **FFmpeg conversion fails**
+   - Check FFmpeg installation: `ffmpeg -version`
+   - Review FFmpeg logs in processor.log
+
+3. **S3 upload fails**
+   - Verify AWS credentials
+   - Check bucket permissions
+   - Test with AWS CLI: `aws s3 ls s3://your-bucket`
+
+4. **Laravel API not receiving data**
+   - Check API token
+   - Verify endpoint URL
+   - Review Laravel logs
+
+5. **Files not being detected**
+   - Check directory permissions
+   - Verify path in .env
+   - Check if files are being written completely
+
+## Security Considerations
+
+1. **Secure .env file**
+```bash
+chmod 600 .env
+```
+
+2. **Use IAM roles for EC2 instances** instead of hardcoding AWS credentials
+
+3. **Implement API rate limiting** in Laravel
+
+4. **Rotate API tokens** regularly
+
+5. **Use HTTPS** for Laravel API
+
+6. **Implement file validation** before processing
+
+## Maintenance
+
+### Daily Tasks
+- Monitor log files
+- Check disk space in temp directory
+- Verify S3 uploads
+
+### Weekly Tasks
+- Review error logs
+- Check for memory leaks
+- Update dependencies
+
+### Monthly Tasks
+- Rotate logs
+- Backup configuration
+- Performance analysis
+
+## Additional Features to Consider
+
+1. **Webhook notifications** for processing status
+2. **Dashboard** for monitoring conversions
+3. **Batch processing** for multiple files
+4. **Compression** before S3 upload
+5. **Thumbnail generation** for video previews
+6. **Metadata extraction** (duration, resolution, codec)
+7. **Multi-region S3 replication**
+8. **CDN integration** for video delivery
+
+## Support & Documentation
+
+- Janus Documentation: https://janus.conf.meetecho.com/docs/
+- AWS S3 SDK: https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/s3-examples.html
+- FFmpeg Documentation: https://ffmpeg.org/documentation.html
+- PM2 Documentation: https://pm2.keymetrics.io/docs/
+
+---
+
+End of Setup Guide

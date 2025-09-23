@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
+use App\Http\Controllers\API\v1\RecordingController;
 use App\Http\Controllers\LiveKitStreamController;
 use App\Http\Controllers\SignalingController;
 use App\Http\Controllers\WeatherDataController;
@@ -30,9 +31,22 @@ Route::prefix('v1')->group(function () {
             Route::post('/weather-data', [WeatherDataController::class, 'store']);
             Route::get('/weather-data/{equipment}', [WeatherDataController::class, 'getWeatherData']);
         });
+
+        // Recording routes
+        Route::prefix('recordings')->group(function () {
+            Route::post('/store', [RecordingController::class, 'store']);
+            Route::get('/camera/{cameraId}', [RecordingController::class, 'getByCameraId']);
+            Route::get('/{id}', [RecordingController::class, 'show']);
+            Route::delete('/{id}', [RecordingController::class, 'destroy']);
+        });
     });
     Route::prefix('livekit')->group(function () {
         Route::post('/token', [LiveKitStreamController::class, 'generateToken']);
+    });
+
+    // Janus Recording API - Uses API token authentication instead of Sanctum
+    Route::prefix('janus')->middleware('api.token')->group(function () {
+        Route::post('/recording/store', [RecordingController::class, 'store']);
     });
 });
 
