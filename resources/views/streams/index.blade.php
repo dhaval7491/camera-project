@@ -3261,25 +3261,33 @@
                 // Format date as YYYY-MM-DD
                 const formattedDate = date.toISOString().split('T')[0];
 
-                try {
-                    // Show loading state
-                    this.showLoadingState();
+                // Show loading state
+                this.showLoadingState();
 
-                    // Fetch recording from API
-                    const response = await fetch(`/streams/camera/${currentCameraId}/recording?date=${formattedDate}`);
-                    const data = await response.json();
-
-                    if (data.success && data.has_recording) {
-                        // Load the recording video
-                        this.loadRecordingVideo(data.recording);
-                    } else {
-                        // Show no recording available message
-                        this.showNoRecordingMessage(data.message || 'No recording available for this date');
+                // Use jQuery AJAX with Laravel route
+                $.ajax({
+                    url: "{{ route('streams.camera.recording', ':cameraId') }}".replace(':cameraId', currentCameraId),
+                    method: 'GET',
+                    data: { date: formattedDate },
+                    dataType: 'json',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (data) => {
+                        if (data.success && data.has_recording) {
+                            // Load the recording video
+                            this.loadRecordingVideo(data.recording);
+                        } else {
+                            // Show no recording available message
+                            this.showNoRecordingMessage(data.message || 'No recording available for this date');
+                        }
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('AJAX Error:', error);
+                        this.showNoRecordingMessage('Failed to load recording');
                     }
-                } catch (error) {
-                    console.error('Error loading recording:', error);
-                    this.showNoRecordingMessage('Failed to load recording');
-                }
+                });
             }
 
             loadRecordingVideo(recording) {
