@@ -78,6 +78,7 @@ Route::middleware(['superadmin_auth'])->group(function () {
     Route::get('/get-projects', [ProjectController::class, 'getProjects'])->name('get-projects');
     Route::post('/token', [LiveKitStreamController::class, 'generateToken'])->name('livekit.token');
     Route::get('/streams/project/{projectId}/cameras', [LiveStreamController::class, 'getProjectCameras'])->name('streams.project.cameras');
+    Route::get('/streams/camera/{cameraId}/recording', [LiveStreamController::class, 'getCameraRecording'])->name('streams.camera.recording');
 });
 
 Route::prefix('signaling')->group(function () {

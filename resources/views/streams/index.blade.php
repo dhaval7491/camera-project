@@ -1444,6 +1444,11 @@
             // Add active class to clicked button
             buttonElement.classList.add('active');
 
+            // If switching to recordings tab, load recordings for current date
+            if (tabName === 'recordings' && window.recordingsPlayer) {
+                window.recordingsPlayer.loadRecordingsForDate(window.recordingsPlayer.currentDate);
+            }
+
             console.log(`Switched to ${tabName} tab`);
 
             // If switching to live view and all cam view is disabled, ensure single player is shown
@@ -3243,16 +3248,168 @@
             }
 
 
-            loadRecordingsForDate(date) {
+            async loadRecordingsForDate(date) {
                 console.log('Loading recordings for', date);
-                // Here you would fetch recordings for the selected date
-                // For now, we're using the demo video
+
+                // Get current camera ID
+                const currentCameraId = getCurrentCameraId();
+                if (!currentCameraId) {
+                    this.showNoRecordingMessage('Please select a camera first');
+                    return;
+                }
+
+                // Format date as YYYY-MM-DD
+                const formattedDate = date.toISOString().split('T')[0];
+
+                try {
+                    // Show loading state
+                    this.showLoadingState();
+
+                    // Fetch recording from API
+                    const response = await fetch(`/streams/camera/${currentCameraId}/recording?date=${formattedDate}`);
+                    const data = await response.json();
+
+                    if (data.success && data.has_recording) {
+                        // Load the recording video
+                        this.loadRecordingVideo(data.recording);
+                    } else {
+                        // Show no recording available message
+                        this.showNoRecordingMessage(data.message || 'No recording available for this date');
+                    }
+                } catch (error) {
+                    console.error('Error loading recording:', error);
+                    this.showNoRecordingMessage('Failed to load recording');
+                }
+            }
+
+            loadRecordingVideo(recording) {
+                const video = document.getElementById('recordingVideo');
+                const videoSource = video.querySelector('source');
+
+                if (videoSource && recording.url) {
+                    // Update video source
+                    videoSource.src = recording.url;
+                    videoSource.type = recording.format || 'video/mp4';
+
+                    // Reload video
+                    video.load();
+
+                    // Update duration if available
+                    if (recording.duration) {
+                        this.totalDuration = recording.duration;
+                    }
+
+                    // Update video info overlay with camera name
+                    const infoOverlay = document.getElementById('videoInfoOverlay');
+                    if (infoOverlay) {
+                        infoOverlay.textContent = `Camera: ${recording.camera_id} - ${recording.created_at}`;
+                    }
+
+                    // Hide any error messages
+                    this.hideNoRecordingMessage();
+                }
+            }
+
+            showNoRecordingMessage(message) {
+                const videoContainer = document.getElementById('videoContainer');
+                const video = document.getElementById('recordingVideo');
+
+                // Hide video
+                if (video) {
+                    video.style.display = 'none';
+                }
+
+                // Remove existing message if any
+                const existingMessage = videoContainer.querySelector('.no-recording-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                // Create and show message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'no-recording-message';
+                messageDiv.style.cssText = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: #fff;
+                    font-size: 18px;
+                    text-align: center;
+                    padding: 20px;
+                    background: rgba(0,0,0,0.7);
+                    border-radius: 8px;
+                `;
+                messageDiv.textContent = message;
+                videoContainer.appendChild(messageDiv);
+            }
+
+            hideNoRecordingMessage() {
+                const videoContainer = document.getElementById('videoContainer');
+                const video = document.getElementById('recordingVideo');
+                const message = videoContainer.querySelector('.no-recording-message');
+
+                if (message) {
+                    message.remove();
+                }
+
+                if (video) {
+                    video.style.display = 'block';
+                }
+            }
+
+            showLoadingState() {
+                const videoContainer = document.getElementById('videoContainer');
+
+                // Remove existing loader if any
+                const existingLoader = videoContainer.querySelector('.loading-spinner');
+                if (existingLoader) {
+                    existingLoader.remove();
+                }
+
+                // Create and show loader
+                const loaderDiv = document.createElement('div');
+                loaderDiv.className = 'loading-spinner';
+                loaderDiv.style.cssText = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 50px;
+                    height: 50px;
+                    border: 3px solid #f3f3f3;
+                    border-top: 3px solid #3b82f6;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                `;
+                videoContainer.appendChild(loaderDiv);
+
+                // Add spinner animation if not exists
+                if (!document.getElementById('spinner-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'spinner-style';
+                    style.textContent = `
+                        @keyframes spin {
+                            0% { transform: translate(-50%, -50%) rotate(0deg); }
+                            100% { transform: translate(-50%, -50%) rotate(360deg); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                // Remove loader after a moment
+                setTimeout(() => {
+                    const loader = videoContainer.querySelector('.loading-spinner');
+                    if (loader) {
+                        loader.remove();
+                    }
+                }, 500);
             }
         }
 
         // Initialize player when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            new RecordingsPlayer();
+            window.recordingsPlayer = new RecordingsPlayer();
         });
     </script>
     @endpush
