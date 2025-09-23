@@ -3306,7 +3306,7 @@
                 // Create new source element
                 const newSource = document.createElement('source');
                 newSource.src = recording.url;
-                newSource.type = recording.format || 'video/mp4';
+                newSource.type = 'video/mp4';
                 video.appendChild(newSource);
 
                 // Add crossorigin attribute for CORS
