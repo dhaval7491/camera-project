@@ -98,8 +98,19 @@ class Recording extends Model
      */
     public function getS3UrlAttribute()
     {
-        // Construct S3 URL based on your bucket structure
-        return "https://your-bucket-name.s3.amazonaws.com/recordings/{$this->camera_id}/{$this->recording_name}";
+        // Get bucket and region from environment
+        $bucket = env('AWS_BUCKET', 'your-camera-recordings-bucket');
+        $region = env('AWS_DEFAULT_REGION', 'us-east-1');
+
+        // If we have a full S3 path, use it, otherwise construct the path
+        if (filter_var($this->s3_path, FILTER_VALIDATE_URL)) {
+            return $this->s3_path;
+        }
+
+        $path = $this->s3_path ?? "recordings/{$this->camera_id}/{$this->recording_name}";
+
+        // Return direct public S3 URL
+        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
     }
 
     /**

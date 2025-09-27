@@ -3300,16 +3300,14 @@
 
                 console.log('Loading video from:', recording.url);
 
-                // Remove existing source elements
+                // Clear existing content
                 video.innerHTML = '';
 
-                // Create new source element
-                const newSource = document.createElement('source');
-                newSource.src = recording.url;
-                newSource.type = 'video/mp4';
-                video.appendChild(newSource);
+                // Set video source directly (works better with direct S3 URLs)
+                video.src = recording.url;
+                video.type = recording.format || 'video/mp4';
 
-                // Add crossorigin attribute for CORS
+                // Set crossorigin for CORS support
                 video.crossOrigin = 'anonymous';
 
                 // Remove any existing event listeners
@@ -3348,9 +3346,30 @@
                     console.error('Video error code:', video.error?.code);
                     console.error('Video error message:', video.error?.message);
 
+                    // Map error codes to user-friendly messages
+                    let errorMsg = 'Failed to load video. ';
+                    if (video.error) {
+                        switch(video.error.code) {
+                            case 1: // MEDIA_ERR_ABORTED
+                                errorMsg += 'Video loading was aborted.';
+                                break;
+                            case 2: // MEDIA_ERR_NETWORK
+                                errorMsg += 'Network error. Check CORS configuration on S3 bucket.';
+                                break;
+                            case 3: // MEDIA_ERR_DECODE
+                                errorMsg += 'Video decoding error. The file may be corrupted.';
+                                break;
+                            case 4: // MEDIA_ERR_SRC_NOT_SUPPORTED
+                                errorMsg += 'Video format not supported or CORS blocking access.';
+                                break;
+                            default:
+                                errorMsg += 'Unknown error occurred.';
+                        }
+                    }
+
                     // Try alternative loading method
                     console.log('Attempting alternative loading method...');
-                    this.tryAlternativeVideoLoad(recording);
+                    this.tryAlternativeVideoLoad(recording, errorMsg);
                 };
 
                 // Load the video
@@ -3365,27 +3384,34 @@
                 }, 500);
             }
 
-            tryAlternativeVideoLoad(recording) {
+            tryAlternativeVideoLoad(recording, previousError) {
                 const video = document.getElementById('recordingVideo');
 
                 if (!video) return;
 
-                // Try setting src directly on video element (alternative method)
-                console.log('Trying direct src assignment...');
+                // Try without crossorigin attribute
+                console.log('Trying without crossorigin attribute...');
 
-                // Remove crossorigin to test if that's the issue
+                // Remove crossorigin attribute
                 video.removeAttribute('crossorigin');
 
-                // Clear innerHTML and set src directly
+                // Clear and set src directly
                 video.innerHTML = '';
                 video.src = recording.url;
                 video.type = recording.format || 'video/mp4';
 
-                // Add simplified error handler
+                // Add error handler
                 video.onerror = () => {
                     console.error('Alternative loading also failed');
-                    // Try one more time with signed URL message
-                    this.showNoRecordingMessage('Video loading failed. The S3 bucket may need CORS configuration or the URL may need to be a signed URL.');
+                    // Show detailed error message with instructions
+                    this.showNoRecordingMessage(
+                        previousError + '\n\n' +
+                        'Troubleshooting steps:\n' +
+                        '1. Verify S3 bucket has public read access for recordings\n' +
+                        '2. Check CORS configuration is applied (see S3_BUCKET_SETUP.md)\n' +
+                        '3. Ensure video files have correct Content-Type (video/mp4)\n' +
+                        '4. Test the URL directly in a new browser tab: ' + recording.url
+                    );
                 };
 
                 video.onloadeddata = () => {

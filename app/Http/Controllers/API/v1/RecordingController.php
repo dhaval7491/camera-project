@@ -275,7 +275,7 @@ class RecordingController extends Controller
     }
 
     /**
-     * Generate S3 presigned URL for secure access
+     * Generate direct S3 URL for public access
      *
      * @param string $s3Path
      * @return string|null
@@ -283,31 +283,12 @@ class RecordingController extends Controller
     private function generateS3Url($s3Path)
     {
         try {
-            // If you're using AWS SDK for PHP
-            if (class_exists('\Aws\S3\S3Client')) {
-                $s3Client = new \Aws\S3\S3Client([
-                    'version' => 'latest',
-                    'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-                    'credentials' => [
-                        'key' => env('AWS_ACCESS_KEY_ID'),
-                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-                    ]
-                ]);
-
-                $bucket = env('AWS_BUCKET', 'your-camera-recordings-bucket');
-
-                $cmd = $s3Client->getCommand('GetObject', [
-                    'Bucket' => $bucket,
-                    'Key' => $s3Path
-                ]);
-
-                $request = $s3Client->createPresignedRequest($cmd, '+60 minutes');
-                return (string) $request->getUri();
-            }
-
-            // Fallback to public URL
+            // Get bucket and region from environment
             $bucket = env('AWS_BUCKET', 'your-camera-recordings-bucket');
-            return "https://{$bucket}.s3.amazonaws.com/{$s3Path}";
+            $region = env('AWS_DEFAULT_REGION', 'us-east-1');
+
+            // Return direct public S3 URL - no signed URLs
+            return "https://{$bucket}.s3.{$region}.amazonaws.com/{$s3Path}";
 
         } catch (Exception $e) {
             Log::error('Failed to generate S3 URL', [
