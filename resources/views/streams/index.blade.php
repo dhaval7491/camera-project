@@ -747,21 +747,24 @@
         border-right: 6px solid #ef4444;
     }
 
-    /* Recording segments on timeline */
+    /* Recording segments on timeline with borders */
     .timeline-recordings {
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+        top: 35%;
         left: 0;
-        height: 4px;
+        height: 30%;
         width: 100%;
+        border-top: 2px solid #555;
+        border-bottom: 2px solid #555;
+        background: #1a1a1a;
+        pointer-events: none;
     }
 
     .timeline-recording {
         position: absolute;
         height: 100%;
-        background: #ef4444;
-        opacity: 0.6;
+        background: #3a3a3a;
+        opacity: 1;
     }
 
     .timeline-scrollbar {
@@ -2686,6 +2689,7 @@
                 this.timelinePosition = 0;
                 this.pixelsPerSecond = 10; // Base pixels per second for timeline
                 this.zoomLevel = 5;
+                this.recordingSegments = []; // Store recording segments
 
                 this.init();
             }
@@ -3095,12 +3099,30 @@
                     timelineRecordings.innerHTML = '';
                     timelineRecordings.style.width = `${totalWidth}px`;
 
-                    // For demo, add a recording segment for the full video
-                    const recDiv = document.createElement('div');
-                    recDiv.className = 'timeline-recording';
-                    recDiv.style.left = '0px';
-                    recDiv.style.width = `${totalWidth}px`;
-                    timelineRecordings.appendChild(recDiv);
+                    // Check if we have actual recording data
+                    if (this.recordingSegments && this.recordingSegments.length > 0) {
+                        // Add actual recording segments
+                        this.recordingSegments.forEach(segment => {
+                            const segmentDiv = document.createElement('div');
+                            segmentDiv.className = 'timeline-recording';
+
+                            // Calculate position based on segment time
+                            const segmentStartPos = (segment.startTime / videoDuration) * totalWidth;
+                            const segmentWidth = ((segment.endTime - segment.startTime) / videoDuration) * totalWidth;
+
+                            segmentDiv.style.left = `${segmentStartPos}px`;
+                            segmentDiv.style.width = `${segmentWidth}px`;
+                            timelineRecordings.appendChild(segmentDiv);
+                        });
+                    } else if (this.video.src && videoDuration > 0) {
+                        // If video is loaded but no segments defined, show full recording
+                        const recDiv = document.createElement('div');
+                        recDiv.className = 'timeline-recording';
+                        recDiv.style.left = '0px';
+                        recDiv.style.width = `${totalWidth}px`;
+                        timelineRecordings.appendChild(recDiv);
+                    }
+                    // If no video or segments, the timeline will show empty (just borders)
                 }
 
                 // Initialize timeline position
@@ -3247,6 +3269,22 @@
                 this.updateTimelinePosition();
             }
 
+            setDemoRecordingSegments() {
+                // Set demo segments for testing the timeline visualization
+                // This creates multiple recording segments throughout the video
+                const duration = this.video.duration || 300;
+
+                // Create 3-4 recording segments with gaps
+                this.recordingSegments = [
+                    { startTime: 10, endTime: 60 },      // First minute after 10 seconds
+                    { startTime: 90, endTime: 150 },     // 1:30 to 2:30
+                    { startTime: 180, endTime: 240 },    // 3:00 to 4:00
+                    { startTime: 270, endTime: duration } // 4:30 to end
+                ];
+
+                this.renderTimeline();
+            }
+
 
             async loadRecordingsForDate(date) {
                 console.log('Loading recordings for', date);
@@ -3299,6 +3337,17 @@
                 }
 
                 console.log('Loading video from:', recording.url);
+
+                // Parse recording segments if available
+                if (recording.segments) {
+                    this.recordingSegments = recording.segments;
+                } else {
+                    // Create a single segment for the entire recording if no segments provided
+                    this.recordingSegments = [{
+                        startTime: 0,
+                        endTime: recording.duration || 300 // Use recording duration or default 5 minutes
+                    }];
+                }
 
                 // Clear existing content
                 video.innerHTML = '';
@@ -3438,6 +3487,10 @@
             showNoRecordingMessage(message) {
                 const videoContainer = document.getElementById('videoContainer');
                 const video = document.getElementById('recordingVideo');
+
+                // Clear recording segments when no recording
+                this.recordingSegments = [];
+                this.renderTimeline(); // Re-render timeline to show empty state
 
                 // Hide video
                 if (video) {
