@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\v1\EquipmentController;
 use App\Http\Controllers\API\v1\LoginController;
 use App\Http\Controllers\API\v1\RecordingController;
+use App\Http\Controllers\API\v1\RecordingTriggerController;
 use App\Http\Controllers\LiveKitStreamController;
 use App\Http\Controllers\SignalingController;
 use App\Http\Controllers\WeatherDataController;
@@ -38,6 +39,11 @@ Route::prefix('v1')->group(function () {
             Route::get('/camera/{cameraId}', [RecordingController::class, 'getByCameraId']);
             Route::get('/{id}', [RecordingController::class, 'show']);
             Route::delete('/{id}', [RecordingController::class, 'destroy']);
+
+            // Mobile app: Start and stop streaming
+            Route::post('/start-streaming', [RecordingTriggerController::class, 'startStreaming']);
+            Route::post('/stop-streaming', [RecordingTriggerController::class, 'stopStreaming']);
+            Route::get('/node-server-status', [RecordingTriggerController::class, 'checkNodeServerStatus']);
         });
     });
     Route::prefix('livekit')->group(function () {
