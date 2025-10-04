@@ -108,7 +108,7 @@ class RecordingTriggerController extends Controller
             }
 
             $nodeServerUrl = env('NODE_SERVER_URL', 'http://localhost:3000');
-            $endpoint = $nodeServerUrl . '/api/trigger-scan';
+            $endpoint = $nodeServerUrl . '/api/stop-recording';
 
             Log::info('Mobile app triggered stop streaming', [
                 'timestamp' => now(),
@@ -116,10 +116,8 @@ class RecordingTriggerController extends Controller
                 'recording_name' => $request->recording_name
             ]);
 
-            // Make HTTP request to Node server with recording name
+            // Make HTTP request to Node server with camera_id and recording_name
             $response = Http::timeout(10)->post($endpoint, [
-                'source' => 'mobile_app',
-                'timestamp' => now()->toIso8601String(),
                 'camera_id' => $request->camera_id,
                 'recording_name' => $request->recording_name
             ]);
