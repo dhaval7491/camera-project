@@ -107,6 +107,19 @@ class RecordingTriggerController extends Controller
                 ], 422);
             }
 
+            // Find the recording and update status to processing
+            $recording = Recording::where('camera_id', $request->camera_id)
+                ->where('recording_name', $request->recording_name)
+                ->first();
+
+            if ($recording) {
+                $recording->update(['status' => 'processing']);
+                Log::info('Recording status updated to processing', [
+                    'recording_id' => $recording->id,
+                    'recording_name' => $request->recording_name
+                ]);
+            }
+
             $nodeServerUrl = config('services.node_server.url');
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
@@ -133,10 +146,17 @@ class RecordingTriggerController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Recording stopped successfully',
+                    'message' => 'Recording stopped successfully. Processing in background.',
+                    'recording_id' => $recording ? $recording->id : null,
+                    'status' => 'processing',
                     'node_response' => $data
                 ], 200);
             } else {
+                // Update status to failed if Node server doesn't respond
+                if ($recording) {
+                    $recording->update(['status' => 'failed']);
+                }
+
                 Log::error('Node server request failed', [
                     'status' => $response->status(),
                     'body' => $response->body()
