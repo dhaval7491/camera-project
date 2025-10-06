@@ -107,7 +107,7 @@ class RecordingTriggerController extends Controller
                 ], 422);
             }
 
-            $nodeServerUrl = env('NODE_SERVER_URL', 'http://localhost:3000');
+            $nodeServerUrl = env('NODE_SERVER_URL');
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
             Log::info('Mobile app triggered stop streaming', [
