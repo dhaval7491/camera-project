@@ -44,18 +44,17 @@ class RecordingController extends Controller
                 ], 422);
             }
 
-            // Check if recording already exists
+            // Check if recording already exists by camera_id and recording_name
             $existingRecording = Recording::where('camera_id', $request->camera_id)
-                ->where('recording_timestamp', $request->recording_timestamp)
+                ->where('recording_name', $request->recording_name)
                 ->first();
 
             if ($existingRecording) {
                 // Update existing recording
-                $updateData = [
-                    'recording_name' => $request->recording_name
-                ];
+                $updateData = [];
 
                 // Add optional fields if present
+                if ($request->has('recording_timestamp')) $updateData['recording_timestamp'] = $request->recording_timestamp;
                 if ($request->has('file_path')) $updateData['file_path'] = $request->file_path;
                 if ($request->has('s3_path')) $updateData['s3_path'] = $request->s3_path;
                 if ($request->has('s3_bucket')) $updateData['s3_bucket'] = $request->s3_bucket;
@@ -64,7 +63,11 @@ class RecordingController extends Controller
                 if ($request->has('format')) $updateData['format'] = $request->format;
                 if ($request->has('status')) $updateData['status'] = $request->status;
                 if ($request->has('metadata')) $updateData['metadata'] = json_decode($request->metadata, true);
-                if ($request->status === 'completed') $updateData['processed_at'] = now();
+
+                // Set processed_at when status is completed
+                if ($request->has('status') && $request->status === 'completed') {
+                    $updateData['processed_at'] = now();
+                }
 
                 $existingRecording->update($updateData);
 
