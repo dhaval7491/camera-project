@@ -123,33 +123,31 @@ class RecordingTriggerController extends Controller
             $nodeServerUrl = config('services.node_server.url');
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
-            Log::info('Mobile app triggered stop streaming', [
-                'node_url' => $nodeServerUrl,
-                'endpoint' => $endpoint,
-                'timestamp' => now(),
+            Log::info('Triggering stop recording on Node server', [
                 'camera_id' => $request->camera_id,
-                'recording_name' => $request->recording_name
+                'recording_name' => $request->recording_name,
+                'endpoint' => $endpoint
             ]);
 
-            // Make HTTP request to Node server with camera_id and recording_name
-            $response = Http::timeout(10)->post($endpoint, [
-                'camera_id' => $request->camera_id,
-                'recording_name' => $request->recording_name
-            ]);
+            // Make HTTP request to Node server with optimized settings
+            $response = Http::timeout(30)
+                ->connectTimeout(5)
+                ->retry(2, 100) // Retry twice with 100ms delay
+                ->post($endpoint, [
+                    'camera_id' => $request->camera_id,
+                    'recording_name' => $request->recording_name
+                ]);
 
             if ($response->successful()) {
-                $data = $response->json();
-
-                Log::info('Node server responded successfully', [
-                    'response' => $data
+                Log::info('Node server acknowledged stop recording', [
+                    'recording_name' => $request->recording_name
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Recording stopped successfully. Processing in background.',
                     'recording_id' => $recording ? $recording->id : null,
-                    'status' => 'processing',
-                    'node_response' => $data
+                    'status' => 'processing'
                 ], 200);
             } else {
                 // Update status to failed if Node server doesn't respond
