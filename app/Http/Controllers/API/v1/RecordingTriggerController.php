@@ -107,11 +107,11 @@ class RecordingTriggerController extends Controller
                 ], 422);
             }
 
-            $nodeServerUrl = env('NODE_SERVER_URL');
+            $nodeServerUrl = config('services.node_server.url');
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
             Log::info('Mobile app triggered stop streaming', [
-                'node_url' => env('NODE_SERVER_URL'),
+                'node_url' => $nodeServerUrl,
                 'endpoint' => $endpoint,
                 'timestamp' => now(),
                 'camera_id' => $request->camera_id,
@@ -172,7 +172,7 @@ class RecordingTriggerController extends Controller
     public function checkNodeServerStatus()
     {
         try {
-            $nodeServerUrl = env('NODE_SERVER_URL', 'http://localhost:3000');
+            $nodeServerUrl = config('services.node_server.url');
             $endpoint = $nodeServerUrl . '/health';
 
             $response = Http::timeout(5)->get($endpoint);
