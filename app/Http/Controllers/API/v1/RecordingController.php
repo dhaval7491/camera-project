@@ -341,4 +341,114 @@ class RecordingController extends Controller
             return false;
         }
     }
+
+    /**
+     * Update recording status from Node server callback
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateStatus(Request $request)
+    {
+        try {
+            // Validate the request
+            $validator = Validator::make($request->all(), [
+                'recording_name' => 'required|string',
+                'status' => 'required|string|in:processing,completed,failed',
+                's3_path' => 'nullable|string',
+                's3_bucket' => 'nullable|string',
+                'file_size' => 'nullable|integer',
+                'duration' => 'nullable|integer',
+                'format' => 'nullable|string',
+                'metadata' => 'nullable|array',
+                'error_message' => 'nullable|string'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Find the recording by recording_name
+            $recording = Recording::where('recording_name', $request->recording_name)->first();
+
+            if (!$recording) {
+                Log::warning('Recording not found for status update', [
+                    'recording_name' => $request->recording_name
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Recording not found'
+                ], 404);
+            }
+
+            // Prepare update data
+            $updateData = ['status' => $request->status];
+
+            if ($request->status === 'completed') {
+                $updateData['processed_at'] = now();
+
+                if ($request->s3_path) {
+                    $updateData['s3_path'] = $request->s3_path;
+                }
+
+                if ($request->s3_bucket) {
+                    $updateData['s3_bucket'] = $request->s3_bucket;
+                }
+
+                if ($request->file_size) {
+                    $updateData['file_size'] = $request->file_size;
+                }
+
+                if ($request->duration) {
+                    $updateData['duration'] = $request->duration;
+                }
+
+                if ($request->format) {
+                    $updateData['format'] = $request->format;
+                }
+
+                if ($request->metadata) {
+                    $updateData['metadata'] = $request->metadata;
+                }
+            } elseif ($request->status === 'failed' && $request->error_message) {
+                $updateData['metadata'] = [
+                    'error' => $request->error_message,
+                    'failed_at' => now()->toISOString()
+                ];
+            }
+
+            // Update the recording
+            $recording->update($updateData);
+
+            Log::info('Recording status updated', [
+                'recording_id' => $recording->id,
+                'recording_name' => $request->recording_name,
+                'status' => $request->status
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Recording status updated successfully',
+                'recording' => $recording
+            ], 200);
+
+        } catch (Exception $e) {
+            Log::error('Failed to update recording status', [
+                'recording_name' => $request->recording_name ?? 'N/A',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update recording status',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
