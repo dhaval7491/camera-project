@@ -111,6 +111,8 @@ class RecordingTriggerController extends Controller
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
             Log::info('Mobile app triggered stop streaming', [
+                'node_url' => env('NODE_SERVER_URL'),
+                'endpoint' => $endpoint,
                 'timestamp' => now(),
                 'camera_id' => $request->camera_id,
                 'recording_name' => $request->recording_name
