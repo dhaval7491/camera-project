@@ -41,4 +41,8 @@ return [
         'server_url' => env('LIVEKIT_SERVER_URL'),
     ],
 
+    'node_server' => [
+        'url' => env('NODE_SERVER_URL', 'http://localhost:3000'),
+    ],
+
 ];
