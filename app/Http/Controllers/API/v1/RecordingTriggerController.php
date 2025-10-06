@@ -114,57 +114,53 @@ class RecordingTriggerController extends Controller
 
             if ($recording) {
                 $recording->update(['status' => 'processing']);
-                Log::info('Recording status updated to processing', [
-                    'recording_id' => $recording->id,
-                    'recording_name' => $request->recording_name
-                ]);
             }
 
             $nodeServerUrl = config('services.node_server.url');
             $endpoint = $nodeServerUrl . '/api/stop-recording';
 
-            Log::info('Triggering stop recording on Node server', [
-                'camera_id' => $request->camera_id,
-                'recording_name' => $request->recording_name,
-                'endpoint' => $endpoint
-            ]);
-
-            // Make HTTP request to Node server with optimized settings
-            $response = Http::timeout(30)
-                ->connectTimeout(5)
-                ->retry(2, 100) // Retry twice with 100ms delay
-                ->post($endpoint, [
+            try {
+                // Make HTTP request to Node server - quick timeout since it responds immediately
+                $response = Http::timeout(5)->post($endpoint, [
                     'camera_id' => $request->camera_id,
                     'recording_name' => $request->recording_name
                 ]);
 
-            if ($response->successful()) {
-                Log::info('Node server acknowledged stop recording', [
-                    'recording_name' => $request->recording_name
-                ]);
+                if ($response->successful()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Recording stopped. Processing in background.',
+                        'recording_id' => $recording ? $recording->id : null,
+                        'status' => 'processing'
+                    ], 200);
+                }
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Recording stopped successfully. Processing in background.',
-                    'recording_id' => $recording ? $recording->id : null,
-                    'status' => 'processing'
-                ], 200);
-            } else {
-                // Update status to failed if Node server doesn't respond
+                // If Node server fails, update status to failed
                 if ($recording) {
                     $recording->update(['status' => 'failed']);
                 }
 
-                Log::error('Node server request failed', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Node server error',
+                    'status_code' => $response->status()
+                ], 500);
+
+            } catch (\Exception $e) {
+                // If can't reach Node server, mark as failed
+                if ($recording) {
+                    $recording->update(['status' => 'failed']);
+                }
+
+                Log::error('Cannot reach Node server', [
+                    'error' => $e->getMessage(),
+                    'endpoint' => $endpoint
                 ]);
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to notify Node server',
-                    'error' => 'Node server returned error',
-                    'status_code' => $response->status()
+                    'message' => 'Cannot reach Node server. Check if it is running.',
+                    'error' => $e->getMessage()
                 ], 500);
             }
 
