@@ -121,7 +121,7 @@ class RecordingTriggerController extends Controller
 
             try {
                 // Make HTTP request to Node server - quick timeout since it responds immediately
-                $response = Http::timeout(5)->post($endpoint, [
+                $response = Http::timeout(50)->post($endpoint, [
                     'camera_id' => $request->camera_id,
                     'recording_name' => $request->recording_name
                 ]);
