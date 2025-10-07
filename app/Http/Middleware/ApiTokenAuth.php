@@ -19,8 +19,8 @@ class ApiTokenAuth
         // Get token from header or query parameter
         $token = $request->bearerToken() ?? $request->query('api_token');
 
-        // Get the configured API token from environment
-        $validToken = env('JANUS_API_TOKEN', 'your-secure-api-token-here');
+        // Get the configured API token from config
+        $validToken = config('services.janus.api_token');
 
         // Validate token
         if (!$token || $token !== $validToken) {

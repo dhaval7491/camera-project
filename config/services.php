@@ -45,4 +45,8 @@ return [
         'url' => env('NODE_SERVER_URL', 'http://localhost:3000'),
     ],
 
+    'janus' => [
+        'api_token' => env('JANUS_API_TOKEN', 'your-secure-api-token-here'),
+    ],
+
 ];
