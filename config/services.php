@@ -46,7 +46,7 @@ return [
     ],
 
     'janus' => [
-        'api_token' => env('JANUS_API_TOKEN', 'your-secure-api-token-here'),
+        'api_token' => env('JANUS_API_TOKEN', 'janusrecord'),
     ],
 
 ];
