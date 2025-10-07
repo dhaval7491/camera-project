@@ -54,11 +54,6 @@ Route::prefix('v1')->group(function () {
     Route::prefix('janus')->middleware('api.token')->group(function () {
         Route::post('/recording/store', [RecordingController::class, 'store']);
     });
-
-    // Node Server Callback - Uses API token authentication
-    Route::prefix('callback')->middleware('api.token')->group(function () {
-        Route::post('/recording/update-status', [RecordingController::class, 'updateStatus']);
-    });
 });
 
 Route::post('/create-room', [WebRTCController::class, 'createRoom']);
