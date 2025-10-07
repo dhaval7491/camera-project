@@ -13,7 +13,7 @@ use Exception;
 class RecordingController extends Controller
 {
     /**
-     * Store a new recording from Janus server
+     * Store/Update recording from Janus server (called when video is uploaded to S3)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -23,16 +23,13 @@ class RecordingController extends Controller
         try {
             // Validate the request
             $validator = Validator::make($request->all(), [
-                'camera_id' => 'required|integer|exists:equipments,id',
-                'recording_timestamp' => 'required|string',
+                'camera_id' => 'required|integer',
                 'recording_name' => 'required|string',
-                'file_path' => 'nullable|string',
-                's3_path' => 'nullable|string',
-                's3_bucket' => 'nullable|string',
-                'file_size' => 'nullable|integer',
+                's3_path' => 'required|string',
+                's3_bucket' => 'required|string',
+                'file_size' => 'required|integer',
                 'duration' => 'nullable|integer',
-                'format' => 'nullable|string',
-                'status' => 'nullable|string|in:pending,processing,completed,failed',
+                'format' => 'required|string',
                 'metadata' => 'nullable|json',
             ]);
 
@@ -44,87 +41,56 @@ class RecordingController extends Controller
                 ], 422);
             }
 
-            // Check if recording already exists by camera_id and recording_name
-            $existingRecording = Recording::where('camera_id', $request->camera_id)
+            // Find existing recording by camera_id and recording_name
+            $recording = Recording::where('camera_id', $request->camera_id)
                 ->where('recording_name', $request->recording_name)
                 ->first();
 
-            if ($existingRecording) {
-                // Update existing recording
-                $updateData = [];
-
-                // Add optional fields if present
-                if ($request->has('recording_timestamp')) $updateData['recording_timestamp'] = $request->recording_timestamp;
-                if ($request->has('file_path')) $updateData['file_path'] = $request->file_path;
-                if ($request->has('s3_path')) $updateData['s3_path'] = $request->s3_path;
-                if ($request->has('s3_bucket')) $updateData['s3_bucket'] = $request->s3_bucket;
-                if ($request->has('file_size')) $updateData['file_size'] = $request->file_size;
-                if ($request->has('duration')) $updateData['duration'] = $request->duration;
-                if ($request->has('format')) $updateData['format'] = $request->format;
-                if ($request->has('status')) $updateData['status'] = $request->status;
-                if ($request->has('metadata')) $updateData['metadata'] = json_decode($request->metadata, true);
-
-                // Set processed_at when status is completed
-                if ($request->has('status') && $request->status === 'completed') {
-                    $updateData['processed_at'] = now();
-                }
-
-                $existingRecording->update($updateData);
-
-                Log::info('Recording updated', [
-                    'recording_id' => $existingRecording->id,
+            if (!$recording) {
+                Log::warning('Recording not found for S3 upload update', [
                     'camera_id' => $request->camera_id,
-                    's3_path' => $request->recording_name
+                    'recording_name' => $request->recording_name
                 ]);
 
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Recording updated successfully',
-                    'recording' => $existingRecording
-                ], 200);
+                    'success' => false,
+                    'message' => 'Recording not found. Please create recording first via start-streaming.'
+                ], 404);
             }
 
-            // Create new recording
-            $createData = [
-                'camera_id' => $request->camera_id,
-                'recording_timestamp' => $request->recording_timestamp,
-                'recording_name' => $request->recording_name
-            ];
+            // Update recording with completed status and S3 details
+            $recording->update([
+                'status' => 'completed',
+                's3_path' => $request->s3_path,
+                's3_bucket' => $request->s3_bucket,
+                'file_size' => $request->file_size,
+                'duration' => $request->duration,
+                'format' => $request->format,
+                'metadata' => $request->metadata ? json_decode($request->metadata, true) : null,
+                'processed_at' => now()
+            ]);
 
-            // Add optional fields if present
-            if ($request->has('file_path')) $createData['file_path'] = $request->file_path;
-            if ($request->has('s3_path')) $createData['s3_path'] = $request->s3_path;
-            if ($request->has('s3_bucket')) $createData['s3_bucket'] = $request->s3_bucket;
-            if ($request->has('file_size')) $createData['file_size'] = $request->file_size;
-            if ($request->has('duration')) $createData['duration'] = $request->duration;
-            if ($request->has('format')) $createData['format'] = $request->format;
-            if ($request->has('status')) $createData['status'] = $request->status;
-            if ($request->has('metadata')) $createData['metadata'] = json_decode($request->metadata, true);
-            if ($request->status === 'completed') $createData['processed_at'] = now();
-
-            $recording = Recording::create($createData);
-
-            Log::info('Recording created', [
+            Log::info('Recording completed and updated via S3 upload', [
                 'recording_id' => $recording->id,
                 'camera_id' => $request->camera_id,
-                's3_path' => $request->recording_name
+                's3_path' => $request->s3_path
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Recording stored successfully',
+                'message' => 'Recording completed successfully',
                 'recording' => $recording
-            ], 201);
+            ], 200);
 
         } catch (Exception $e) {
-            Log::error('Failed to store recording', [
+            Log::error('Failed to update recording', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to store recording',
+                'message' => 'Failed to update recording',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -354,14 +320,13 @@ class RecordingController extends Controller
             // Validate the request
             $validator = Validator::make($request->all(), [
                 'recording_name' => 'required|string',
-                'status' => 'required|string|in:processing,completed,failed',
-                's3_path' => 'nullable|string',
-                's3_bucket' => 'nullable|string',
-                'file_size' => 'nullable|integer',
+                'status' => 'required|string|in:completed',
+                's3_path' => 'required|string',
+                's3_bucket' => 'required|string',
+                'file_size' => 'required|integer',
                 'duration' => 'nullable|integer',
-                'format' => 'nullable|string',
-                'metadata' => 'nullable|array',
-                'error_message' => 'nullable|string'
+                'format' => 'required|string',
+                'metadata' => 'nullable|array'
             ]);
 
             if ($validator->fails()) {
@@ -386,54 +351,27 @@ class RecordingController extends Controller
                 ], 404);
             }
 
-            // Prepare update data
-            $updateData = ['status' => $request->status];
+            // Update recording with completed status and all details
+            $recording->update([
+                'status' => 'completed',
+                's3_path' => $request->s3_path,
+                's3_bucket' => $request->s3_bucket,
+                'file_size' => $request->file_size,
+                'duration' => $request->duration,
+                'format' => $request->format,
+                'metadata' => $request->metadata,
+                'processed_at' => now()
+            ]);
 
-            if ($request->status === 'completed') {
-                $updateData['processed_at'] = now();
-
-                if ($request->s3_path) {
-                    $updateData['s3_path'] = $request->s3_path;
-                }
-
-                if ($request->s3_bucket) {
-                    $updateData['s3_bucket'] = $request->s3_bucket;
-                }
-
-                if ($request->file_size) {
-                    $updateData['file_size'] = $request->file_size;
-                }
-
-                if ($request->duration) {
-                    $updateData['duration'] = $request->duration;
-                }
-
-                if ($request->format) {
-                    $updateData['format'] = $request->format;
-                }
-
-                if ($request->metadata) {
-                    $updateData['metadata'] = $request->metadata;
-                }
-            } elseif ($request->status === 'failed' && $request->error_message) {
-                $updateData['metadata'] = [
-                    'error' => $request->error_message,
-                    'failed_at' => now()->toISOString()
-                ];
-            }
-
-            // Update the recording
-            $recording->update($updateData);
-
-            Log::info('Recording status updated', [
+            Log::info('Recording completed and updated', [
                 'recording_id' => $recording->id,
                 'recording_name' => $request->recording_name,
-                'status' => $request->status
+                's3_path' => $request->s3_path
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Recording status updated successfully',
+                'message' => 'Recording completed successfully',
                 'recording' => $recording
             ], 200);
 
