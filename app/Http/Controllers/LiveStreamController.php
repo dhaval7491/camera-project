@@ -166,12 +166,11 @@ class LiveStreamController extends Controller
         // Use the s3_path if available, otherwise construct from camera_id and recording_name
         $path = $recording->s3_path ?? "recordings/{$recording->camera_id}/{$recording->recording_name}";
 
-        // Get bucket and region from config/environment
-        $bucket = $recording->s3_bucket ?? env('AWS_BUCKET');
-        $region = env('AWS_DEFAULT_REGION', 'us-east-1');
+        // Use CloudFront URL for better performance and CDN distribution
+        $cloudfrontDomain = env('CLOUDFRONT_DOMAIN', 'd4vkhtbfgqaq5.cloudfront.net');
 
-        // Return direct public S3 URL - no signed URLs
-        return "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
+        // Return CloudFront URL with the S3 path
+        return "https://{$cloudfrontDomain}/{$path}";
     }
 
 
