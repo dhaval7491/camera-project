@@ -648,6 +648,8 @@
     .timeline-scale {
         position: relative;
         height: 100%;
+        z-index: 2;
+        pointer-events: none;
     }
 
     /* Horizontal baseline */
@@ -659,6 +661,7 @@
         height: 1px;
         background: #333;
         z-index: 1;
+        pointer-events: none;
     }
 
     /* Vertical tick marks */
@@ -670,12 +673,14 @@
         height: 20px;
         background: #333;
         border-left: 1px dotted #444;
+        pointer-events: none;
     }
 
     .timeline-tick.major {
         height: 30px;
         background: #444;
         border-left: 1px solid #555;
+        pointer-events: none;
     }
 
     /* Time labels */
@@ -687,6 +692,7 @@
         white-space: nowrap;
         transform: translateX(-50%);
         top: 15px;
+        pointer-events: none;
     }
 
     /* Date labels */
@@ -758,6 +764,7 @@
         border-bottom: 2px solid #555;
         background: transparent;
         pointer-events: none;
+        z-index: 1;
     }
 
     .timeline-recording {
@@ -773,6 +780,8 @@
         height: 150%;
         top: -25%;
         opacity: 0.6;
+        pointer-events: none;
+        z-index: 2;
     }
 
     .timeline-scrollbar {
@@ -2741,10 +2750,26 @@
                         this.updateTimelinePosition();
                     });
 
-                    // Handle video ended
+                    // Handle video ended - try to play next segment if available
                     this.video.addEventListener('ended', () => {
                         this.isPlaying = false;
                         this.updatePlayButton();
+
+                        // Check if there's a next recording segment
+                        if (this.currentRecordingIndex < this.recordings.length - 1) {
+                            console.log('Current recording ended, loading next segment...');
+                            this.currentRecordingIndex++;
+                            this.loadRecordingVideo(this.recordings[this.currentRecordingIndex]);
+                            // Auto-play the next segment
+                            this.video.addEventListener('loadedmetadata', () => {
+                                this.video.play().then(() => {
+                                    this.isPlaying = true;
+                                    this.updatePlayButton();
+                                }).catch(err => {
+                                    console.log('Autoplay prevented for next segment:', err);
+                                });
+                            }, { once: true });
+                        }
                     });
 
                     // Handle play/pause events
@@ -3329,15 +3354,103 @@
                 return `${displayHours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} ${period}`;
             }
 
-            togglePlayPause() {
-                if (this.video) {
-                    if (this.isPlaying) {
-                        this.video.pause();
-                    } else {
-                        this.video.play();
+            getSegmentAtRedLine() {
+                // Calculate what time is under the red line (center of timeline)
+                const timelineContent = document.getElementById('timelineContent');
+                const timelineContainer = document.getElementById('timelineContainer');
+
+                if (!timelineContent || !timelineContainer) return null;
+
+                const containerWidth = timelineContainer.offsetWidth;
+                const centerX = containerWidth / 2;
+
+                // Get current transform
+                const currentTransform = timelineContent.style.transform;
+                const translateX = parseFloat(currentTransform.replace(/translateX\((-?\d+\.?\d*)px\)/, '$1')) || 0;
+
+                // Calculate position on timeline that's at the center
+                const positionAtCenter = -translateX + centerX;
+
+                // Convert position to time of day (seconds from midnight)
+                const totalSecondsInDay = 86400;
+                const basePixelsPerDay = 2400;
+                const zoomFactor = Math.pow(1.5, this.zoomLevel);
+                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
+                const secondsFromMidnight = positionAtCenter / pixelsPerSecond;
+
+                // Find which recording segment this time falls into
+                for (let i = 0; i < this.recordingSegments.length; i++) {
+                    const segment = this.recordingSegments[i];
+                    if (secondsFromMidnight >= segment.startTime && secondsFromMidnight <= segment.endTime) {
+                        const videoTime = secondsFromMidnight - segment.startTime;
+                        return {
+                            segmentIndex: i,
+                            recording: this.recordings[i],
+                            secondsFromMidnight: secondsFromMidnight,
+                            videoTime: videoTime
+                        };
                     }
-                    this.isPlaying = !this.isPlaying;
+                }
+
+                return null;
+            }
+
+            togglePlayPause() {
+                if (!this.video) return;
+
+                if (this.isPlaying) {
+                    // Pause the video
+                    this.video.pause();
+                    this.isPlaying = false;
                     this.updatePlayButton();
+                } else {
+                    // Play - but first check if we need to load a different recording
+                    const segmentAtRedLine = this.getSegmentAtRedLine();
+
+                    if (segmentAtRedLine) {
+                        // Check if we need to switch recordings
+                        if (this.currentRecordingIndex !== segmentAtRedLine.segmentIndex) {
+                            console.log(`Switching to recording ${segmentAtRedLine.segmentIndex} at time ${segmentAtRedLine.videoTime}s`);
+
+                            // Load the correct recording
+                            this.currentRecordingIndex = segmentAtRedLine.segmentIndex;
+                            this.loadRecordingVideo(segmentAtRedLine.recording);
+
+                            // Seek to the correct position after metadata loads
+                            this.video.addEventListener('loadedmetadata', () => {
+                                this.video.currentTime = segmentAtRedLine.videoTime;
+                                this.video.play().then(() => {
+                                    this.isPlaying = true;
+                                    this.updatePlayButton();
+                                }).catch(err => {
+                                    console.error('Autoplay prevented:', err);
+                                    this.isPlaying = false;
+                                    this.updatePlayButton();
+                                });
+                            }, { once: true });
+                        } else {
+                            // Same recording, just seek and play
+                            this.video.currentTime = segmentAtRedLine.videoTime;
+                            this.video.play().then(() => {
+                                this.isPlaying = true;
+                                this.updatePlayButton();
+                            }).catch(err => {
+                                console.error('Autoplay prevented:', err);
+                                this.isPlaying = false;
+                                this.updatePlayButton();
+                            });
+                        }
+                    } else {
+                        // No segment at red line, just play current video
+                        this.video.play().then(() => {
+                            this.isPlaying = true;
+                            this.updatePlayButton();
+                        }).catch(err => {
+                            console.error('Autoplay prevented:', err);
+                            this.isPlaying = false;
+                            this.updatePlayButton();
+                        });
+                    }
                 }
             }
 
