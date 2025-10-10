@@ -126,8 +126,19 @@ class LiveStreamController extends Controller
                     $timestamp = Carbon::createFromFormat('Y:m:d H:i:s', $recording->recording_timestamp);
 
                     // Calculate end time by adding duration (in seconds)
+                    // If duration is null, estimate from file size (rough: 1MB = ~8 seconds for typical video)
+                    $duration = $recording->duration;
+                    if ($duration === null && $recording->file_size) {
+                        // Rough estimate: 1MB = 8 seconds (125KB/s bitrate)
+                        $duration = intval(($recording->file_size / 1024 / 1024) * 8);
+                        // Cap estimate at reasonable values
+                        $duration = max(10, min($duration, 3600)); // Between 10 seconds and 1 hour
+                    } elseif ($duration === null) {
+                        $duration = 60; // Default 1 minute if we can't estimate
+                    }
+
                     $startTime = $timestamp->copy();
-                    $endTime = $timestamp->copy()->addSeconds($recording->duration ?? 0);
+                    $endTime = $timestamp->copy()->addSeconds($duration);
 
                     // Calculate seconds from midnight
                     $start_seconds = $startTime->hour * 3600 + $startTime->minute * 60 + $startTime->second;
@@ -144,7 +155,8 @@ class LiveStreamController extends Controller
                         'camera_id' => $recording->camera_id,
                         'recording_name' => $recording->recording_name,
                         'url' => $this->generateS3Url($recording),
-                        'duration' => $recording->duration,
+                        'duration' => $duration, // Use estimated duration if original was null
+                        'duration_estimated' => $recording->duration === null, // Flag to indicate if duration is estimated
                         'recording_timestamp' => $recording->recording_timestamp,
                         'start_time' => $startTime->format('Y-m-d H:i:s'),
                         'end_time' => $endTime->format('Y-m-d H:i:s'),
