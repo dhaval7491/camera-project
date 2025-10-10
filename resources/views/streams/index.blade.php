@@ -756,7 +756,7 @@
         width: 100%;
         border-top: 2px solid #555;
         border-bottom: 2px solid #555;
-        background: #1a1a1a;
+        background: transparent;
         pointer-events: none;
     }
 
@@ -3171,8 +3171,12 @@
                     timelineRecordings.innerHTML = '';
                     timelineRecordings.style.width = `${totalWidth}px`;
 
+                    console.log('Rendering timeline with segments:', this.recordingSegments);
+
                     // Check if we have actual recording data
                     if (this.recordingSegments && this.recordingSegments.length > 0) {
+                        console.log(`Rendering ${this.recordingSegments.length} recording segments`);
+
                         // Add actual recording segments (grey bars showing when recordings exist)
                         this.recordingSegments.forEach((segment, index) => {
                             const segmentDiv = document.createElement('div');
@@ -3183,8 +3187,17 @@
                             const segmentStartPos = segment.startTime * pixelsPerSecond;
                             const segmentWidth = (segment.endTime - segment.startTime) * pixelsPerSecond;
 
+                            console.log(`Segment ${index}:`, {
+                                startTime: segment.startTime,
+                                endTime: segment.endTime,
+                                startPos: segmentStartPos,
+                                width: segmentWidth,
+                                pixelsPerSecond: pixelsPerSecond
+                            });
+
                             segmentDiv.style.left = `${segmentStartPos}px`;
                             segmentDiv.style.width = `${segmentWidth}px`;
+                            segmentDiv.style.backgroundColor = '#606670'; // Ensure color is set
 
                             // Add click handler to play this recording
                             segmentDiv.style.cursor = 'pointer';
@@ -3193,7 +3206,10 @@
                             });
 
                             timelineRecordings.appendChild(segmentDiv);
+                            console.log('Segment div added:', segmentDiv);
                         });
+                    } else {
+                        console.log('No recording segments to render');
                     }
                     // If no recordings, the timeline will show empty (no grey bars)
                 }
@@ -3440,6 +3456,7 @@
                             // Store all recordings
                             this.recordings = data.recordings;
                             console.log(`Loaded ${data.total_recordings} recordings for ${data.date}`);
+                            console.log('Recording segments:', this.recordings);
 
                             // Build recording segments for timeline
                             this.recordingSegments = this.recordings.map(rec => ({
@@ -3448,12 +3465,21 @@
                                 recording: rec
                             }));
 
+                            console.log('Timeline segments:', this.recordingSegments);
+
+                            // Render timeline with segments
+                            this.renderTimeline();
+
                             // Load the first recording
                             if (this.recordings.length > 0) {
                                 this.currentRecordingIndex = 0;
                                 this.loadRecordingVideo(this.recordings[0]);
                             }
                         } else {
+                            // Clear segments and re-render timeline
+                            this.recordings = [];
+                            this.recordingSegments = [];
+                            this.renderTimeline();
                             // Show no recording available message
                             this.showNoRecordingMessage(data.message || 'No recording available for this date');
                         }

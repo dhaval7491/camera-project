@@ -129,6 +129,16 @@ class LiveStreamController extends Controller
                     $startTime = $timestamp->copy();
                     $endTime = $timestamp->copy()->addSeconds($recording->duration ?? 0);
 
+                    // Calculate seconds from midnight
+                    $start_seconds = $startTime->hour * 3600 + $startTime->minute * 60 + $startTime->second;
+                    $end_seconds = $endTime->hour * 3600 + $endTime->minute * 60 + $endTime->second;
+
+                    // Handle case where recording crosses midnight (end_seconds would be less than start_seconds)
+                    // In this case, cap it at end of day (86399 seconds)
+                    if ($end_seconds < $start_seconds) {
+                        $end_seconds = 86399; // 23:59:59
+                    }
+
                     return [
                         'id' => $recording->id,
                         'camera_id' => $recording->camera_id,
@@ -138,8 +148,8 @@ class LiveStreamController extends Controller
                         'recording_timestamp' => $recording->recording_timestamp,
                         'start_time' => $startTime->format('Y-m-d H:i:s'),
                         'end_time' => $endTime->format('Y-m-d H:i:s'),
-                        'start_seconds' => $startTime->hour * 3600 + $startTime->minute * 60 + $startTime->second,
-                        'end_seconds' => $endTime->hour * 3600 + $endTime->minute * 60 + $endTime->second,
+                        'start_seconds' => $start_seconds,
+                        'end_seconds' => $end_seconds,
                         'file_size' => $recording->file_size,
                         'format' => $recording->format ?? 'video/mp4'
                     ];
