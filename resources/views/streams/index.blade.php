@@ -2689,7 +2689,10 @@
                 this.timelinePosition = 0;
                 this.pixelsPerSecond = 10; // Base pixels per second for timeline
                 this.zoomLevel = 5;
-                this.recordingSegments = []; // Store recording segments
+                this.recordingSegments = []; // Store recording segments (start/end in seconds from midnight)
+                this.recordings = []; // Store all recordings data
+                this.currentRecording = null; // Currently playing recording
+                this.currentRecordingIndex = 0; // Index of current recording
 
                 this.init();
             }
@@ -2925,7 +2928,7 @@
                 const timelineContainer = document.getElementById('timelineContainer');
                 const timelineContent = document.getElementById('timelineContent');
 
-                if (!timelineContainer || !timelineContent || !this.video) return;
+                if (!timelineContainer || !timelineContent) return;
 
                 const rect = timelineContainer.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
@@ -2937,17 +2940,45 @@
                 // Calculate the clicked position on the timeline
                 const clickedPosition = clickX - currentTranslateX;
 
-                // Calculate time at clicked position
-                const videoDuration = this.video.duration || 300;
-                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
-                const clickedTime = clickedPosition / pixelsPerSecond;
+                // Calculate time of day at clicked position (seconds from midnight)
+                const totalSecondsInDay = 86400;
+                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const clickedSecondsFromMidnight = clickedPosition / pixelsPerSecond;
 
-                // Move timeline to bring clicked time to center (red line)
-                if (clickedTime >= 0 && clickedTime <= this.video.duration) {
+                // Find which recording segment this time falls into
+                let targetRecording = null;
+                let targetRecordingIndex = -1;
+                let videoSeekTime = 0;
+
+                for (let i = 0; i < this.recordingSegments.length; i++) {
+                    const segment = this.recordingSegments[i];
+                    if (clickedSecondsFromMidnight >= segment.startTime && clickedSecondsFromMidnight <= segment.endTime) {
+                        targetRecording = this.recordings[i];
+                        targetRecordingIndex = i;
+                        // Calculate the seek time within this recording
+                        videoSeekTime = clickedSecondsFromMidnight - segment.startTime;
+                        break;
+                    }
+                }
+
+                if (targetRecording) {
+                    // Load the recording if it's not already loaded
+                    if (this.currentRecordingIndex !== targetRecordingIndex) {
+                        this.currentRecordingIndex = targetRecordingIndex;
+                        this.loadRecordingVideo(targetRecording);
+                        // Seek after video loads
+                        this.video.addEventListener('loadedmetadata', () => {
+                            this.video.currentTime = videoSeekTime;
+                        }, { once: true });
+                    } else {
+                        // Same recording, just seek
+                        this.video.currentTime = videoSeekTime;
+                    }
+
+                    // Move timeline to center on clicked position
                     const containerWidth = timelineContainer.offsetWidth;
                     const centerX = containerWidth / 2;
-                    const newPosition = clickedTime * pixelsPerSecond;
-                    const newTranslateX = centerX - newPosition;
+                    const newTranslateX = centerX - clickedPosition;
 
                     // Apply bounds
                     const contentWidth = timelineContent.offsetWidth;
@@ -2957,12 +2988,6 @@
 
                     // Move timeline
                     timelineContent.style.transform = `translateX(${clampedTransform}px)`;
-
-                    // Update red line time display
-                    this.updateRedLineTime();
-
-                    // Sync video to the new position
-                    this.video.currentTime = clickedTime;
                 }
             }
 
@@ -2971,7 +2996,7 @@
                 const timelineContent = document.getElementById('timelineContent');
                 const timelineContainer = document.getElementById('timelineContainer');
 
-                if (!timelineContent || !timelineContainer || !this.video) return;
+                if (!timelineContent || !timelineContainer) return;
 
                 const containerWidth = timelineContainer.offsetWidth;
                 const centerX = containerWidth / 2;
@@ -2983,26 +3008,61 @@
                 // Calculate position on timeline that's at the center
                 const positionAtCenter = -translateX + centerX;
 
-                // Convert position to time
-                const videoDuration = this.video.duration || 300;
-                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
-                const timeAtRedLine = positionAtCenter / pixelsPerSecond;
+                // Convert position to time of day (seconds from midnight)
+                const totalSecondsInDay = 86400;
+                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const secondsFromMidnight = positionAtCenter / pixelsPerSecond;
 
-                // Update the time display to show what's under the red line
-                if (timeAtRedLine >= 0 && timeAtRedLine <= videoDuration) {
-                    this.updateTimeDisplay(timeAtRedLine);
+                // Find which recording this time falls into
+                let videoTime = 0;
+                for (let i = 0; i < this.recordingSegments.length; i++) {
+                    const segment = this.recordingSegments[i];
+                    if (secondsFromMidnight >= segment.startTime && secondsFromMidnight <= segment.endTime) {
+                        videoTime = secondsFromMidnight - segment.startTime;
+                        break;
+                    }
                 }
 
-                return timeAtRedLine;
+                // Update the time display
+                if (this.video && videoTime >= 0) {
+                    this.updateTimeDisplay(videoTime);
+                }
+
+                return { secondsFromMidnight, videoTime };
             }
 
             syncVideoToRedLine() {
                 // Get the time that's under the red line
-                const timeAtRedLine = this.updateRedLineTime();
+                const timeInfo = this.updateRedLineTime();
+                if (!timeInfo) return;
 
-                // Seek video to that time
-                if (this.video && timeAtRedLine >= 0 && timeAtRedLine <= this.video.duration) {
-                    this.video.currentTime = timeAtRedLine;
+                const { secondsFromMidnight, videoTime } = timeInfo;
+
+                // Find which recording segment this time falls into
+                let targetRecordingIndex = -1;
+                for (let i = 0; i < this.recordingSegments.length; i++) {
+                    const segment = this.recordingSegments[i];
+                    if (secondsFromMidnight >= segment.startTime && secondsFromMidnight <= segment.endTime) {
+                        targetRecordingIndex = i;
+                        break;
+                    }
+                }
+
+                if (targetRecordingIndex >= 0) {
+                    // Load recording if different
+                    if (this.currentRecordingIndex !== targetRecordingIndex) {
+                        this.currentRecordingIndex = targetRecordingIndex;
+                        this.loadRecordingVideo(this.recordings[targetRecordingIndex]);
+                        // Seek after video loads
+                        this.video.addEventListener('loadedmetadata', () => {
+                            this.video.currentTime = videoTime;
+                        }, { once: true });
+                    } else {
+                        // Same recording, just seek
+                        if (this.video && videoTime >= 0 && videoTime <= this.video.duration) {
+                            this.video.currentTime = videoTime;
+                        }
+                    }
                 }
             }
 
@@ -3010,19 +3070,20 @@
                 const timelineScale = document.getElementById('timelineScale');
                 const timelineRecordings = document.getElementById('timelineRecordings');
 
-                if (!timelineScale || !this.video) return;
+                if (!timelineScale) return;
 
                 // Clear existing content
                 timelineScale.innerHTML = '';
 
-                // Get video duration and calculate timeline based on it
-                const videoDuration = this.video.duration || 300; // Default 5 minutes if no duration
-                const startTime = 0;
-                const endTime = videoDuration;
+                // 24-hour timeline (86400 seconds in a day)
+                const totalSecondsInDay = 86400; // 24 hours * 60 minutes * 60 seconds
+                const startTime = 0; // Midnight
+                const endTime = totalSecondsInDay;
 
                 // Calculate pixels per second based on zoom
-                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel; // 800px base width
-                const totalWidth = videoDuration * pixelsPerSecond;
+                // Base width: make timeline wide enough for 24 hours
+                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel; // 3600px base for 24 hours
+                const totalWidth = totalSecondsInDay * pixelsPerSecond;
 
                 // Set timeline content width
                 const timelineContent = document.getElementById('timelineContent');
@@ -3036,21 +3097,16 @@
                 baseline.style.width = `${totalWidth}px`;
                 timelineScale.appendChild(baseline);
 
-                // Calculate appropriate interval based on video duration
-                let interval = 1; // 1 second for short videos
-                if (videoDuration > 60) interval = 5; // 5 seconds
-                if (videoDuration > 300) interval = 10; // 10 seconds
-                if (videoDuration > 600) interval = 30; // 30 seconds
-                if (videoDuration > 1800) interval = 60; // 1 minute
-                if (videoDuration > 3600) interval = 300; // 5 minutes
+                // For 24-hour timeline, use hourly intervals
+                const interval = 3600; // 1 hour intervals
 
-                // Generate time markers
+                // Generate time markers for each hour
                 for (let time = startTime; time <= endTime; time += interval) {
                     const position = time * pixelsPerSecond;
 
                     // Create vertical tick mark
                     const tick = document.createElement('div');
-                    tick.className = time % 60 === 0 ? 'timeline-tick major' : 'timeline-tick';
+                    tick.className = 'timeline-tick major';
                     tick.style.left = `${position}px`;
                     timelineScale.appendChild(tick);
 
@@ -3059,38 +3115,28 @@
                     label.className = 'timeline-label';
                     label.style.left = `${position}px`;
 
-                    // Format time based on video position
+                    // Format time as 12-hour format with AM/PM
                     const totalSeconds = Math.floor(time);
-                    const hours = Math.floor(totalSeconds / 3600);
+                    const hours24 = Math.floor(totalSeconds / 3600);
                     const minutes = Math.floor((totalSeconds % 3600) / 60);
-                    const seconds = totalSeconds % 60;
 
-                    // Show appropriate format based on duration
-                    if (videoDuration < 3600) {
-                        // For videos less than 1 hour, show MM:SS
-                        label.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    } else {
-                        // For longer videos, show HH:MM:SS
-                        label.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    }
+                    // Convert to 12-hour format
+                    const period = hours24 >= 12 ? 'PM' : 'AM';
+                    const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
+
+                    label.textContent = `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
 
                     timelineScale.appendChild(label);
 
-                    // Add date label at major intervals
-                    if (time % (interval * 5) === 0) {
-                        const dateLabel = document.createElement('div');
-                        dateLabel.className = 'timeline-label date';
-                        dateLabel.style.left = `${position}px`;
-
-                        // Format date
-                        const now = new Date();
-                        const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-                        const day = dayNames[now.getDay()];
-                        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-                        const date = now.getDate().toString().padStart(2, '0');
-                        dateLabel.textContent = `${day} ${month}/${date}`;
-
-                        timelineScale.appendChild(dateLabel);
+                    // Add minor tick marks every 15 minutes
+                    if (time + 900 <= endTime) {
+                        for (let minorTime = time + 900; minorTime < time + interval && minorTime <= endTime; minorTime += 900) {
+                            const minorPosition = minorTime * pixelsPerSecond;
+                            const minorTick = document.createElement('div');
+                            minorTick.className = 'timeline-tick';
+                            minorTick.style.left = `${minorPosition}px`;
+                            timelineScale.appendChild(minorTick);
+                        }
                     }
                 }
 
@@ -3101,28 +3147,29 @@
 
                     // Check if we have actual recording data
                     if (this.recordingSegments && this.recordingSegments.length > 0) {
-                        // Add actual recording segments
-                        this.recordingSegments.forEach(segment => {
+                        // Add actual recording segments (grey bars showing when recordings exist)
+                        this.recordingSegments.forEach((segment, index) => {
                             const segmentDiv = document.createElement('div');
                             segmentDiv.className = 'timeline-recording';
+                            segmentDiv.dataset.recordingIndex = index;
 
-                            // Calculate position based on segment time
-                            const segmentStartPos = (segment.startTime / videoDuration) * totalWidth;
-                            const segmentWidth = ((segment.endTime - segment.startTime) / videoDuration) * totalWidth;
+                            // Calculate position based on time of day (seconds from midnight)
+                            const segmentStartPos = segment.startTime * pixelsPerSecond;
+                            const segmentWidth = (segment.endTime - segment.startTime) * pixelsPerSecond;
 
                             segmentDiv.style.left = `${segmentStartPos}px`;
                             segmentDiv.style.width = `${segmentWidth}px`;
+
+                            // Add click handler to play this recording
+                            segmentDiv.style.cursor = 'pointer';
+                            segmentDiv.addEventListener('click', () => {
+                                this.playRecordingAtIndex(index);
+                            });
+
                             timelineRecordings.appendChild(segmentDiv);
                         });
-                    } else if (this.video.src && videoDuration > 0) {
-                        // If video is loaded but no segments defined, show full recording
-                        const recDiv = document.createElement('div');
-                        recDiv.className = 'timeline-recording';
-                        recDiv.style.left = '0px';
-                        recDiv.style.width = `${totalWidth}px`;
-                        timelineRecordings.appendChild(recDiv);
                     }
-                    // If no video or segments, the timeline will show empty (just borders)
+                    // If no recordings, the timeline will show empty (no grey bars)
                 }
 
                 // Initialize timeline position
@@ -3148,12 +3195,18 @@
             }
 
             updateTimelinePosition() {
-                if (!this.video) return;
+                if (!this.video || !this.currentRecording) return;
 
-                const currentTime = this.video.currentTime;
-                const videoDuration = this.video.duration || 300;
-                const pixelsPerSecond = (800 / videoDuration) * this.zoomLevel;
-                const position = currentTime * pixelsPerSecond;
+                const videoCurrentTime = this.video.currentTime;
+
+                // Calculate the actual time of day for current playback position
+                // Start with recording's start_seconds (seconds from midnight) + video current time
+                const currentSecondsFromMidnight = this.currentRecording.start_seconds + videoCurrentTime;
+
+                // Calculate position on 24-hour timeline
+                const totalSecondsInDay = 86400;
+                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const position = currentSecondsFromMidnight * pixelsPerSecond;
 
                 // Move timeline so current time is at center
                 const timelineContent = document.getElementById('timelineContent');
@@ -3173,15 +3226,39 @@
                 }
 
                 // Update time display
-                this.updateTimeDisplay(currentTime);
+                this.updateTimeDisplay(videoCurrentTime);
             }
 
-            updateTimeDisplay(seconds) {
+            updateTimeDisplay(videoCurrentTime) {
                 const cursorTime = document.getElementById('cursorTime');
-                if (cursorTime) {
-                    const hours = Math.floor(seconds / 3600);
-                    const minutes = Math.floor((seconds % 3600) / 60);
-                    const secs = Math.floor(seconds % 60);
+                if (cursorTime && this.currentRecording) {
+                    // Parse the recording timestamp (format: 2025:10:09 13:58:04)
+                    const timestampParts = this.currentRecording.recording_timestamp.split(/[: ]/);
+                    const recordingStart = new Date(
+                        parseInt(timestampParts[0]), // year
+                        parseInt(timestampParts[1]) - 1, // month (0-indexed)
+                        parseInt(timestampParts[2]), // day
+                        parseInt(timestampParts[3]), // hour
+                        parseInt(timestampParts[4]), // minute
+                        parseInt(timestampParts[5])  // second
+                    );
+
+                    // Add the current video playback position to the recording start time
+                    const currentTimestamp = new Date(recordingStart.getTime() + (videoCurrentTime * 1000));
+
+                    // Format to 12-hour time with AM/PM
+                    const hours24 = currentTimestamp.getHours();
+                    const minutes = currentTimestamp.getMinutes();
+                    const seconds = currentTimestamp.getSeconds();
+                    const period = hours24 >= 12 ? 'PM' : 'AM';
+                    const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
+
+                    cursorTime.textContent = `${hours12}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
+                } else if (cursorTime) {
+                    // Fallback if no current recording
+                    const hours = Math.floor(videoCurrentTime / 3600);
+                    const minutes = Math.floor((videoCurrentTime % 3600) / 60);
+                    const secs = Math.floor(videoCurrentTime % 60);
                     const period = hours >= 12 ? 'PM' : 'AM';
                     const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
                     cursorTime.textContent = `${displayHours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} ${period}`;
@@ -3269,6 +3346,13 @@
                 this.updateTimelinePosition();
             }
 
+            playRecordingAtIndex(index) {
+                if (index >= 0 && index < this.recordings.length) {
+                    this.currentRecordingIndex = index;
+                    this.loadRecordingVideo(this.recordings[index]);
+                }
+            }
+
             setDemoRecordingSegments() {
                 // Set demo segments for testing the timeline visualization
                 // This creates multiple recording segments throughout the video
@@ -3314,8 +3398,22 @@
                     },
                     success: (data) => {
                         if (data.success && data.has_recording) {
-                            // Load the recording video
-                            this.loadRecordingVideo(data.recording);
+                            // Store all recordings
+                            this.recordings = data.recordings;
+                            console.log(`Loaded ${data.total_recordings} recordings for ${data.date}`);
+
+                            // Build recording segments for timeline
+                            this.recordingSegments = this.recordings.map(rec => ({
+                                startTime: rec.start_seconds,
+                                endTime: rec.end_seconds,
+                                recording: rec
+                            }));
+
+                            // Load the first recording
+                            if (this.recordings.length > 0) {
+                                this.currentRecordingIndex = 0;
+                                this.loadRecordingVideo(this.recordings[0]);
+                            }
                         } else {
                             // Show no recording available message
                             this.showNoRecordingMessage(data.message || 'No recording available for this date');
@@ -3338,16 +3436,8 @@
 
                 console.log('Loading video from:', recording.url);
 
-                // Parse recording segments if available
-                if (recording.segments) {
-                    this.recordingSegments = recording.segments;
-                } else {
-                    // Create a single segment for the entire recording if no segments provided
-                    this.recordingSegments = [{
-                        startTime: 0,
-                        endTime: recording.duration || 300 // Use recording duration or default 5 minutes
-                    }];
-                }
+                // Store current recording
+                this.currentRecording = recording;
 
                 // Clear existing content
                 video.innerHTML = '';

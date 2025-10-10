@@ -110,31 +110,47 @@ class LiveStreamController extends Controller
             // Get date parameter or use current date
             $date = $request->input('date', Carbon::now()->format('Y-m-d'));
 
-            // Get the latest recording for the camera on the specified date
-            $recording = Recording::where('camera_id', $cameraId)
+            // Get ALL recordings for the camera on the specified date, ordered by recording_timestamp
+            $recordings = Recording::where('camera_id', $cameraId)
                 ->whereDate('created_at', $date)
                 ->where('status', 'completed')
                 ->whereNotNull('s3_path')
-                ->orderBy('created_at', 'desc')
-                ->first();
+                ->whereNotNull('recording_timestamp')
+                ->orderBy('recording_timestamp', 'asc')
+                ->get();
 
-            if ($recording) {
-                // Generate S3 URL
-                $s3Url = $this->generateS3Url($recording);
+            if ($recordings->count() > 0) {
+                // Process all recordings with their time segments
+                $recordingData = $recordings->map(function($recording) {
+                    // Parse recording_timestamp (format: 2025:10:09 13:58:04)
+                    $timestamp = Carbon::createFromFormat('Y:m:d H:i:s', $recording->recording_timestamp);
+
+                    // Calculate end time by adding duration (in seconds)
+                    $startTime = $timestamp->copy();
+                    $endTime = $timestamp->copy()->addSeconds($recording->duration ?? 0);
+
+                    return [
+                        'id' => $recording->id,
+                        'camera_id' => $recording->camera_id,
+                        'recording_name' => $recording->recording_name,
+                        'url' => $this->generateS3Url($recording),
+                        'duration' => $recording->duration,
+                        'recording_timestamp' => $recording->recording_timestamp,
+                        'start_time' => $startTime->format('Y-m-d H:i:s'),
+                        'end_time' => $endTime->format('Y-m-d H:i:s'),
+                        'start_seconds' => $startTime->hour * 3600 + $startTime->minute * 60 + $startTime->second,
+                        'end_seconds' => $endTime->hour * 3600 + $endTime->minute * 60 + $endTime->second,
+                        'file_size' => $recording->file_size,
+                        'format' => $recording->format ?? 'video/mp4'
+                    ];
+                });
 
                 return response()->json([
                     'success' => true,
                     'has_recording' => true,
-                    'recording' => [
-                        'id' => $recording->id,
-                        'camera_id' => $recording->camera_id,
-                        'recording_name' => $recording->recording_name,
-                        'url' => $s3Url,
-                        'duration' => $recording->duration,
-                        'created_at' => $recording->created_at->format('Y-m-d H:i:s'),
-                        'file_size' => $recording->file_size,
-                        'format' => $recording->format ?? 'video/mp4'
-                    ]
+                    'recordings' => $recordingData,
+                    'total_recordings' => $recordings->count(),
+                    'date' => $date
                 ]);
             } else {
                 return response()->json([
