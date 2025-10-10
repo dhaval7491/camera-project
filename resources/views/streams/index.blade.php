@@ -3521,6 +3521,36 @@
                 }
             }
 
+            loadAllVideoDurations() {
+                // Load video metadata for all recordings to get their durations
+                this.recordings.forEach((recording, index) => {
+                    const tempVideo = document.createElement('video');
+                    tempVideo.src = recording.url;
+                    tempVideo.preload = 'metadata';
+
+                    tempVideo.addEventListener('loadedmetadata', () => {
+                        const duration = Math.floor(tempVideo.duration);
+                        console.log(`Recording ${index} duration: ${duration}s`);
+
+                        // Update recording duration
+                        this.recordings[index].duration = duration;
+
+                        // Update segment end time
+                        this.recordingSegments[index].duration = duration;
+                        this.recordingSegments[index].endTime = this.recordingSegments[index].startTime + duration;
+
+                        console.log(`Updated segment ${index}:`, this.recordingSegments[index]);
+
+                        // Re-render timeline with updated segment
+                        this.renderTimeline();
+                    });
+
+                    tempVideo.addEventListener('error', (e) => {
+                        console.error(`Failed to load metadata for recording ${index}:`, e);
+                    });
+                });
+            }
+
             setDemoRecordingSegments() {
                 // Set demo segments for testing the timeline visualization
                 // This creates multiple recording segments throughout the video
@@ -3572,13 +3602,18 @@
                             console.log('Recording segments:', this.recordings);
 
                             // Build recording segments for timeline
+                            // Note: If duration is null, we'll update it when video metadata loads
                             this.recordingSegments = this.recordings.map(rec => ({
                                 startTime: rec.start_seconds,
-                                endTime: rec.end_seconds,
+                                endTime: rec.end_seconds, // Will be updated when video loads
+                                duration: rec.duration, // Store duration for reference
                                 recording: rec
                             }));
 
-                            console.log('Timeline segments:', this.recordingSegments);
+                            console.log('Timeline segments (initial):', this.recordingSegments);
+
+                            // Load all videos in background to get their durations
+                            this.loadAllVideoDurations();
 
                             // Render timeline with segments
                             this.renderTimeline();
