@@ -763,8 +763,16 @@
     .timeline-recording {
         position: absolute;
         height: 100%;
-        background: #3a3a3a;
+        background: #606670;
         opacity: 1;
+        pointer-events: auto;
+    }
+
+    .timeline-tick.dotted {
+        border-left: 1px dashed #888;
+        height: 150%;
+        top: -25%;
+        opacity: 0.6;
     }
 
     .timeline-scrollbar {
@@ -2688,11 +2696,25 @@
                 this.datePicker = null;
                 this.timelinePosition = 0;
                 this.pixelsPerSecond = 10; // Base pixels per second for timeline
-                this.zoomLevel = 5;
+                this.zoomLevel = 0; // Start at level 0
                 this.recordingSegments = []; // Store recording segments (start/end in seconds from midnight)
                 this.recordings = []; // Store all recordings data
                 this.currentRecording = null; // Currently playing recording
                 this.currentRecordingIndex = 0; // Index of current recording
+
+                // Zoom levels with time intervals in seconds
+                // Level 0: 12 hours (43200 seconds) - shows 12am, 12pm, 12am
+                // Level 1: 6 hours (21600 seconds) - shows 12am, 6am, 12pm, 6pm, 12am
+                // Level 2: 2 hours (7200 seconds)
+                // Level 3: 1 hour (3600 seconds)
+                // Level 4: 30 minutes (1800 seconds)
+                // Level 5: 20 minutes (1200 seconds)
+                // Level 6: 15 minutes (900 seconds)
+                // Level 7: 10 minutes (600 seconds)
+                // Level 8: 5 minutes (300 seconds)
+                // Level 9: 1 minute (60 seconds)
+                this.zoomLevels = [43200, 21600, 7200, 3600, 1800, 1200, 900, 600, 300, 60];
+                this.maxZoomLevel = this.zoomLevels.length - 1;
 
                 this.init();
             }
@@ -2798,6 +2820,8 @@
                     zoomOut.addEventListener('click', () => this.changeZoom(-1));
                 }
                 if (zoomSlider) {
+                    zoomSlider.max = this.maxZoomLevel;
+                    zoomSlider.value = this.zoomLevel;
                     zoomSlider.addEventListener('input', (e) => {
                         this.zoomLevel = parseInt(e.target.value);
                         this.updateTimeline();
@@ -2942,7 +2966,9 @@
 
                 // Calculate time of day at clicked position (seconds from midnight)
                 const totalSecondsInDay = 86400;
-                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const basePixelsPerDay = 2400;
+                const zoomFactor = Math.pow(1.5, this.zoomLevel);
+                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
                 const clickedSecondsFromMidnight = clickedPosition / pixelsPerSecond;
 
                 // Find which recording segment this time falls into
@@ -3010,7 +3036,9 @@
 
                 // Convert position to time of day (seconds from midnight)
                 const totalSecondsInDay = 86400;
-                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const basePixelsPerDay = 2400;
+                const zoomFactor = Math.pow(1.5, this.zoomLevel);
+                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
                 const secondsFromMidnight = positionAtCenter / pixelsPerSecond;
 
                 // Find which recording this time falls into
@@ -3080,9 +3108,14 @@
                 const startTime = 0; // Midnight
                 const endTime = totalSecondsInDay;
 
+                // Get current zoom interval
+                const interval = this.zoomLevels[this.zoomLevel];
+
                 // Calculate pixels per second based on zoom
-                // Base width: make timeline wide enough for 24 hours
-                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel; // 3600px base for 24 hours
+                // Scale timeline width based on zoom level - more zoom = wider timeline
+                const basePixelsPerDay = 2400; // Base width for entire day
+                const zoomFactor = Math.pow(1.5, this.zoomLevel); // Exponential zoom
+                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
                 const totalWidth = totalSecondsInDay * pixelsPerSecond;
 
                 // Set timeline content width
@@ -3097,16 +3130,13 @@
                 baseline.style.width = `${totalWidth}px`;
                 timelineScale.appendChild(baseline);
 
-                // For 24-hour timeline, use hourly intervals
-                const interval = 3600; // 1 hour intervals
-
-                // Generate time markers for each hour
+                // Generate time markers based on current zoom interval
                 for (let time = startTime; time <= endTime; time += interval) {
                     const position = time * pixelsPerSecond;
 
-                    // Create vertical tick mark
+                    // Create vertical dotted line
                     const tick = document.createElement('div');
-                    tick.className = 'timeline-tick major';
+                    tick.className = 'timeline-tick dotted major';
                     tick.style.left = `${position}px`;
                     timelineScale.appendChild(tick);
 
@@ -3124,20 +3154,16 @@
                     const period = hours24 >= 12 ? 'PM' : 'AM';
                     const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
 
-                    label.textContent = `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+                    // Format label based on interval
+                    if (interval >= 3600) {
+                        // For hour+ intervals, show just hour
+                        label.textContent = `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+                    } else {
+                        // For sub-hour intervals, show hour:minute
+                        label.textContent = `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+                    }
 
                     timelineScale.appendChild(label);
-
-                    // Add minor tick marks every 15 minutes
-                    if (time + 900 <= endTime) {
-                        for (let minorTime = time + 900; minorTime < time + interval && minorTime <= endTime; minorTime += 900) {
-                            const minorPosition = minorTime * pixelsPerSecond;
-                            const minorTick = document.createElement('div');
-                            minorTick.className = 'timeline-tick';
-                            minorTick.style.left = `${minorPosition}px`;
-                            timelineScale.appendChild(minorTick);
-                        }
-                    }
                 }
 
                 // Add recording segments if any
@@ -3203,9 +3229,11 @@
                 // Start with recording's start_seconds (seconds from midnight) + video current time
                 const currentSecondsFromMidnight = this.currentRecording.start_seconds + videoCurrentTime;
 
-                // Calculate position on 24-hour timeline
+                // Calculate position on 24-hour timeline using same formula as renderTimeline
                 const totalSecondsInDay = 86400;
-                const pixelsPerSecond = (3600 / totalSecondsInDay) * this.zoomLevel;
+                const basePixelsPerDay = 2400;
+                const zoomFactor = Math.pow(1.5, this.zoomLevel);
+                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
                 const position = currentSecondsFromMidnight * pixelsPerSecond;
 
                 // Move timeline so current time is at center
@@ -3326,11 +3354,22 @@
 
             changeZoom(direction) {
                 const previousZoom = this.zoomLevel;
-                this.zoomLevel = Math.max(1, Math.min(10, this.zoomLevel + direction));
+
+                // Update zoom level with bounds checking
+                if (direction > 0) {
+                    // Zoom in (increase detail)
+                    this.zoomLevel = Math.min(this.maxZoomLevel, this.zoomLevel + 1);
+                } else {
+                    // Zoom out (decrease detail)
+                    this.zoomLevel = Math.max(0, this.zoomLevel - 1);
+                }
+
+                console.log(`Zoom level changed from ${previousZoom} to ${this.zoomLevel}, interval: ${this.zoomLevels[this.zoomLevel]}s`);
 
                 const zoomSlider = document.getElementById('zoomSlider');
                 if (zoomSlider) {
                     zoomSlider.value = this.zoomLevel;
+                    zoomSlider.max = this.maxZoomLevel;
                 }
 
                 // Re-render timeline with new zoom
