@@ -54,7 +54,7 @@
         position: relative;
         overflow: hidden;
         background-color: #000;
-        border-radius: 8px;
+        border-radius: 0px;
     }
 
     .main-video-container video {
@@ -145,7 +145,7 @@
 
     .tab-content {
         display: none;
-        background-color: #1F2937;
+        /* background-color: #1F2937; */
         border-radius: 0 8px 8px 8px;
         min-height: 600px;
     }
@@ -1078,11 +1078,11 @@
             </div>
 
             <!-- Tab content containers -->
-            <div class="tab-contents">
+            <div class="tab-contents px-[10px]">
                 <!-- Live View Tab Content -->
                 <div id="live-view" class="tab-content active">
                     <!-- Single video player container -->
-                    <div class="video-player px-[10px] relative w-full" id="videoPlayerContainer" x-data="{ open: false }">
+                    <div class="video-player relative w-full" id="videoPlayerContainer" x-data="{ open: false }">
                         <div class="video-container relative w-full h-full" style="aspect-ratio: 16/9;">
                             <div class="main-video-container w-full h-full" id="mainVideoContainer" style="background-color: #000;">
                                 <!-- Main video stream will be inserted here -->
