@@ -583,14 +583,36 @@
         position: relative;
     }
 
+    /* Dotted track for zoom slider */
+    .zoom-slider-wrapper::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-image: repeating-linear-gradient(
+            to right,
+            #6b7280 0px,
+            #6b7280 4px,
+            transparent 4px,
+            transparent 8px
+        );
+        transform: translateY(-50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
     .zoom-slider {
         width: 100%;
         height: 4px;
         -webkit-appearance: none;
         appearance: none;
-        background: #2a2a2a;
+        background: transparent;
         border-radius: 2px;
         outline: none;
+        position: relative;
+        z-index: 1;
     }
 
     .zoom-slider::-webkit-slider-thumb {
@@ -693,6 +715,43 @@
         transform: translateX(-50%);
         top: 15px;
         pointer-events: none;
+    }
+
+    /* First label - align to left edge */
+    .timeline-label.first {
+        transform: translateX(0);
+    }
+
+    /* Last label - align to right edge */
+    .timeline-label.last {
+        transform: translateX(-100%);
+    }
+
+    /* Video loader overlay */
+    .video-loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+
+    .video-loader .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 
     /* Date labels */
@@ -1320,7 +1379,18 @@
                                     <!-- Fixed center cursor with time badge -->
                                     <div class="timeline-cursor-fixed" id="timelineCursor">
                                         <div class="timeline-cursor-line"></div>
-                                        <div class="timeline-cursor-time" id="cursorTime">0:00:00</div>
+                                        <div class="timeline-cursor-time" id="cursorTime">
+                                            <script>
+                                                // Display current time initially
+                                                const now = new Date();
+                                                const hours24 = now.getHours();
+                                                const minutes = now.getMinutes();
+                                                const seconds = now.getSeconds();
+                                                const period = hours24 >= 12 ? 'PM' : 'AM';
+                                                const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
+                                                document.write(`${hours12}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`);
+                                            </script>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1467,6 +1537,8 @@
             // If switching to recordings tab, load recordings for current date
             if (tabName === 'recordings' && window.recordingsPlayer) {
                 window.recordingsPlayer.loadRecordingsForDate(window.recordingsPlayer.currentDate);
+                // Update cursor time to current time when switching to recordings tab
+                window.recordingsPlayer.initializeCursorTime();
             }
 
             console.log(`Switched to ${tabName} tab`);
@@ -2710,6 +2782,8 @@
                 this.recordings = []; // Store all recordings data
                 this.currentRecording = null; // Currently playing recording
                 this.currentRecordingIndex = 0; // Index of current recording
+                this.isUserDragging = false; // Track if user is manually dragging timeline
+                this.isPlayingSegmentFromClick = false; // Track if playing segment from user click (prevents timeline re-render)
 
                 // Zoom levels with time intervals in seconds
                 // Level 0: 12 hours (43200 seconds) - shows 12am, 12pm, 12am
@@ -2734,6 +2808,21 @@
                 this.setupControls();
                 this.setupTimeline();
                 this.startTimelineAnimation();
+                this.setupResizeHandler();
+            }
+
+            setupResizeHandler() {
+                // Re-render timeline on window resize to recalculate fitted width for zoom levels 0 and 1
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (this.zoomLevel === 0 || this.zoomLevel === 1) {
+                            this.renderTimeline();
+                            this.updateTimelinePosition();
+                        }
+                    }, 250); // Debounce resize events
+                });
             }
 
             setupVideo() {
@@ -2742,7 +2831,10 @@
                     this.video.addEventListener('loadedmetadata', () => {
                         console.log('Video duration:', this.video.duration);
                         // Re-render timeline with actual video duration
-                        this.renderTimeline();
+                        // Skip re-rendering if playing segment from click (to preserve transform)
+                        if (!this.isPlayingSegmentFromClick) {
+                            this.renderTimeline();
+                        }
                     });
 
                     // Update timeline as video plays
@@ -2879,8 +2971,14 @@
 
                 // Drag to scroll timeline
                 timelineContainer.addEventListener('mousedown', (e) => {
+                    // Disable dragging for zoom levels 0 and 1 (timeline fits container)
+                    if (this.zoomLevel === 0 || this.zoomLevel === 1) {
+                        return;
+                    }
+
                     isDragging = false;
                     startX = e.clientX;
+                    this.isUserDragging = true; // Set flag to prevent auto-positioning
 
                     const timelineContent = document.getElementById('timelineContent');
                     if (timelineContent) {
@@ -2929,6 +3027,7 @@
                         // Small delay to distinguish between click and drag
                         setTimeout(() => {
                             isDragging = false;
+                            this.isUserDragging = false; // Re-enable auto-positioning
                         }, 100);
                     }
                 });
@@ -2989,11 +3088,9 @@
                 // Calculate the clicked position on the timeline
                 const clickedPosition = clickX - currentTranslateX;
 
-                // Calculate time of day at clicked position (seconds from midnight)
-                const totalSecondsInDay = 86400;
-                const basePixelsPerDay = 2400;
-                const zoomFactor = Math.pow(1.5, this.zoomLevel);
-                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
+                // Calculate time of day at clicked position (seconds from midnight) using same calculation as renderTimeline
+                const containerWidth = timelineContainer.offsetWidth;
+                const pixelsPerSecond = this.calculatePixelsPerSecond(containerWidth);
                 const clickedSecondsFromMidnight = clickedPosition / pixelsPerSecond;
 
                 // Find which recording segment this time falls into
@@ -3026,19 +3123,25 @@
                         this.video.currentTime = videoSeekTime;
                     }
 
-                    // Move timeline to center on clicked position
-                    const containerWidth = timelineContainer.offsetWidth;
-                    const centerX = containerWidth / 2;
-                    const newTranslateX = centerX - clickedPosition;
+                    // Move timeline to center on clicked position (only for scrollable zoom levels)
+                    if (this.zoomLevel === 0 || this.zoomLevel === 1) {
+                        // Timeline fits perfectly, no need to move it
+                        timelineContent.style.transform = 'translateX(0px)';
+                    } else {
+                        // For higher zoom levels, center on clicked position
+                        const containerWidth = timelineContainer.offsetWidth;
+                        const centerX = containerWidth / 2;
+                        const newTranslateX = centerX - clickedPosition;
 
-                    // Apply bounds
-                    const contentWidth = timelineContent.offsetWidth;
-                    const maxTransform = 0;
-                    const minTransform = -(contentWidth - containerWidth);
-                    const clampedTransform = Math.max(minTransform, Math.min(maxTransform, newTranslateX));
+                        // Apply bounds
+                        const contentWidth = timelineContent.offsetWidth;
+                        const maxTransform = 0;
+                        const minTransform = -(contentWidth - containerWidth);
+                        const clampedTransform = Math.max(minTransform, Math.min(maxTransform, newTranslateX));
 
-                    // Move timeline
-                    timelineContent.style.transform = `translateX(${clampedTransform}px)`;
+                        // Move timeline
+                        timelineContent.style.transform = `translateX(${clampedTransform}px)`;
+                    }
                 }
             }
 
@@ -3059,11 +3162,8 @@
                 // Calculate position on timeline that's at the center
                 const positionAtCenter = -translateX + centerX;
 
-                // Convert position to time of day (seconds from midnight)
-                const totalSecondsInDay = 86400;
-                const basePixelsPerDay = 2400;
-                const zoomFactor = Math.pow(1.5, this.zoomLevel);
-                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
+                // Convert position to time of day (seconds from midnight) using same calculation as renderTimeline
+                const pixelsPerSecond = this.calculatePixelsPerSecond(containerWidth);
                 const secondsFromMidnight = positionAtCenter / pixelsPerSecond;
 
                 // Find which recording this time falls into
@@ -3087,7 +3187,10 @@
             syncVideoToRedLine() {
                 // Get the time that's under the red line
                 const timeInfo = this.updateRedLineTime();
-                if (!timeInfo) return;
+                if (!timeInfo) {
+                    this.showVideoLoader();
+                    return;
+                }
 
                 const { secondsFromMidnight, videoTime } = timeInfo;
 
@@ -3101,7 +3204,13 @@
                     }
                 }
 
+                // Store if video was playing before scroll
+                const wasPlaying = this.isPlaying;
+
                 if (targetRecordingIndex >= 0) {
+                    // Hide loader since we found a video segment
+                    this.hideVideoLoader();
+
                     // Load recording if different
                     if (this.currentRecordingIndex !== targetRecordingIndex) {
                         this.currentRecordingIndex = targetRecordingIndex;
@@ -3109,13 +3218,81 @@
                         // Seek after video loads
                         this.video.addEventListener('loadedmetadata', () => {
                             this.video.currentTime = videoTime;
+                            // Resume playback if it was playing before
+                            if (wasPlaying) {
+                                this.video.play().catch(err => console.error('Play error:', err));
+                            }
                         }, { once: true });
                     } else {
                         // Same recording, just seek
                         if (this.video && videoTime >= 0 && videoTime <= this.video.duration) {
                             this.video.currentTime = videoTime;
+                            // Resume playback if it was playing before
+                            if (wasPlaying && !this.isPlaying) {
+                                this.video.play().catch(err => console.error('Play error:', err));
+                            }
                         }
                     }
+                } else {
+                    // No video segment at this position - show loader
+                    this.showVideoLoader();
+                    // Pause video if playing
+                    if (this.video && this.isPlaying) {
+                        this.video.pause();
+                        this.isPlaying = false;
+                    }
+                }
+            }
+
+            showVideoLoader() {
+                const videoContainer = document.getElementById('videoContainer');
+                if (videoContainer) {
+                    let loader = videoContainer.querySelector('.video-loader');
+                    if (!loader) {
+                        loader = document.createElement('div');
+                        loader.className = 'video-loader';
+                        loader.innerHTML = '<div class="spinner"></div>';
+                        videoContainer.appendChild(loader);
+                    }
+                    loader.style.display = 'flex';
+                }
+            }
+
+            hideVideoLoader() {
+                const videoContainer = document.getElementById('videoContainer');
+                if (videoContainer) {
+                    const loader = videoContainer.querySelector('.video-loader');
+                    if (loader) {
+                        loader.style.display = 'none';
+                    }
+                }
+            }
+
+            calculatePixelsPerSecond(containerWidth) {
+                const totalSecondsInDay = 86400;
+
+                if (this.zoomLevel === 0 || this.zoomLevel === 1) {
+                    // Fit timeline to container width for 12-hour and 24-hour views
+                    return containerWidth / totalSecondsInDay;
+                } else {
+                    // Use progressive zoom scaling for higher zoom levels
+                    const basePixelsPerDay = 2400;
+                    let zoomFactor;
+
+                    if (this.zoomLevel <= 7) {
+                        // Levels 2-7: Use moderate zoom (1.3x multiplier)
+                        zoomFactor = Math.pow(1.3, this.zoomLevel - 1);
+                    } else if (this.zoomLevel === 8) {
+                        // Level 8 (5min): Use aggressive zoom for better spacing
+                        const baseZoom = Math.pow(1.3, 6); // Zoom at level 7
+                        zoomFactor = baseZoom * 2.5; // 2.5x multiplier for 5min level
+                    } else {
+                        // Level 9 (1min): Use very aggressive zoom for maximum spacing
+                        const baseZoom = Math.pow(1.3, 6); // Zoom at level 7
+                        zoomFactor = baseZoom * 2.5 * 3.5; // 2.5 * 3.5 = 8.75x multiplier for 1min level
+                    }
+
+                    return (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
                 }
             }
 
@@ -3137,11 +3314,11 @@
                 const interval = this.zoomLevels[this.zoomLevel];
 
                 // Calculate pixels per second based on zoom
-                // Scale timeline width based on zoom level - more zoom = wider timeline
-                const basePixelsPerDay = 2400; // Base width for entire day
-                const zoomFactor = Math.pow(1.5, this.zoomLevel); // Exponential zoom
-                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
-                const totalWidth = totalSecondsInDay * pixelsPerSecond;
+                const timelineContainer = document.getElementById('timelineContainer');
+                const containerWidth = timelineContainer ? timelineContainer.offsetWidth : 1200;
+
+                const pixelsPerSecond = this.calculatePixelsPerSecond(containerWidth);
+                const totalWidth = (this.zoomLevel === 0 || this.zoomLevel === 1) ? containerWidth : totalSecondsInDay * pixelsPerSecond;
 
                 // Set timeline content width
                 const timelineContent = document.getElementById('timelineContent');
@@ -3156,7 +3333,16 @@
                 timelineScale.appendChild(baseline);
 
                 // Generate time markers based on current zoom interval
+                let labelIndex = 0;
+                const labels = [];
+
+                // First pass: collect all time markers
                 for (let time = startTime; time <= endTime; time += interval) {
+                    labels.push(time);
+                }
+
+                // Second pass: render markers with proper styling
+                labels.forEach((time, index) => {
                     const position = time * pixelsPerSecond;
 
                     // Create vertical dotted line
@@ -3168,6 +3354,14 @@
                     // Create time label
                     const label = document.createElement('div');
                     label.className = 'timeline-label';
+
+                    // Add special class for first and last labels to prevent cutoff
+                    if (index === 0) {
+                        label.classList.add('first');
+                    } else if (index === labels.length - 1) {
+                        label.classList.add('last');
+                    }
+
                     label.style.left = `${position}px`;
 
                     // Format time as 12-hour format with AM/PM
@@ -3189,7 +3383,7 @@
                     }
 
                     timelineScale.appendChild(label);
-                }
+                });
 
                 // Add recording segments if any
                 if (timelineRecordings) {
@@ -3224,10 +3418,26 @@
                             segmentDiv.style.width = `${segmentWidth}px`;
                             segmentDiv.style.backgroundColor = '#606670'; // Ensure color is set
 
-                            // Add click handler to play this recording
+                            // Add click handler to play from clicked position
                             segmentDiv.style.cursor = 'pointer';
-                            segmentDiv.addEventListener('click', () => {
-                                this.playRecordingAtIndex(index);
+                            segmentDiv.addEventListener('click', (e) => {
+                                e.stopPropagation(); // Prevent timeline click event
+
+                                // Calculate the time position that was clicked
+                                const rect = segmentDiv.getBoundingClientRect();
+                                const clickX = e.clientX - rect.left;
+                                const segmentWidth = rect.width;
+                                const segment = this.recordingSegments[index];
+                                const segmentDuration = segment.endTime - segment.startTime;
+
+                                // Calculate video time based on click position within segment
+                                const clickRatio = clickX / segmentWidth;
+                                const videoTime = clickRatio * segmentDuration;
+
+                                console.log('Clicked position:', { clickX, segmentWidth, clickRatio, videoTime });
+
+                                // Play from clicked position
+                                this.playSegmentAtTime(index, videoTime);
                             });
 
                             timelineRecordings.appendChild(segmentDiv);
@@ -3264,6 +3474,9 @@
             updateTimelinePosition() {
                 if (!this.video || !this.currentRecording) return;
 
+                // Don't auto-position timeline if user is manually dragging
+                if (this.isUserDragging) return;
+
                 const videoCurrentTime = this.video.currentTime;
 
                 // Calculate the actual time of day for current playback position
@@ -3272,26 +3485,29 @@
 
                 // Calculate position on 24-hour timeline using same formula as renderTimeline
                 const totalSecondsInDay = 86400;
-                const basePixelsPerDay = 2400;
-                const zoomFactor = Math.pow(1.5, this.zoomLevel);
-                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
+                const timelineContainer = document.getElementById('timelineContainer');
+                const timelineContent = document.getElementById('timelineContent');
+                const containerWidth = timelineContainer ? timelineContainer.offsetWidth : 1200;
+
+                const pixelsPerSecond = this.calculatePixelsPerSecond(containerWidth);
                 const position = currentSecondsFromMidnight * pixelsPerSecond;
 
                 // Move timeline so current time is at center
-                const timelineContent = document.getElementById('timelineContent');
-                const timelineContainer = document.getElementById('timelineContainer');
-
                 if (timelineContent && timelineContainer) {
-                    const containerWidth = timelineContainer.offsetWidth;
                     const centerOffset = containerWidth / 2;
                     const translateX = centerOffset - position;
 
-                    // Ensure timeline doesn't scroll past bounds
-                    const maxTranslate = 0;
-                    const minTranslate = -(timelineContent.offsetWidth - containerWidth);
-                    const clampedTranslate = Math.max(minTranslate, Math.min(maxTranslate, translateX));
-
-                    timelineContent.style.transform = `translateX(${clampedTranslate}px)`;
+                    // For zoom levels 0 and 1, don't translate if timeline fits in container
+                    if (this.zoomLevel === 0 || this.zoomLevel === 1) {
+                        // Timeline fits perfectly, no translation needed
+                        timelineContent.style.transform = 'translateX(0px)';
+                    } else {
+                        // Ensure timeline doesn't scroll past bounds for higher zoom levels
+                        const maxTranslate = 0;
+                        const minTranslate = -(timelineContent.offsetWidth - containerWidth);
+                        const clampedTranslate = Math.max(minTranslate, Math.min(maxTranslate, translateX));
+                        timelineContent.style.transform = `translateX(${clampedTranslate}px)`;
+                    }
                 }
 
                 // Update time display
@@ -3300,7 +3516,10 @@
 
             updateTimeDisplay(videoCurrentTime) {
                 const cursorTime = document.getElementById('cursorTime');
-                if (cursorTime && this.currentRecording) {
+                if (!cursorTime) return;
+
+                // If video is playing and we have a recording, show recording timestamp
+                if (this.isPlaying && this.currentRecording && this.currentRecording.recording_timestamp) {
                     // Parse the recording timestamp (format: 2025:10:09 13:58:04)
                     const timestampParts = this.currentRecording.recording_timestamp.split(/[: ]/);
                     const recordingStart = new Date(
@@ -3323,14 +3542,29 @@
                     const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
 
                     cursorTime.textContent = `${hours12}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
-                } else if (cursorTime) {
-                    // Fallback if no current recording
-                    const hours = Math.floor(videoCurrentTime / 3600);
-                    const minutes = Math.floor((videoCurrentTime % 3600) / 60);
-                    const secs = Math.floor(videoCurrentTime % 60);
-                    const period = hours >= 12 ? 'PM' : 'AM';
-                    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-                    cursorTime.textContent = `${displayHours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} ${period}`;
+                } else {
+                    // If not playing or no recording, show current system time
+                    const now = new Date();
+                    const hours24 = now.getHours();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    const period = hours24 >= 12 ? 'PM' : 'AM';
+                    const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
+                    cursorTime.textContent = `${hours12}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
+                }
+            }
+
+            initializeCursorTime() {
+                // Set cursor time to current actual time when loading recording
+                const cursorTime = document.getElementById('cursorTime');
+                if (cursorTime) {
+                    const now = new Date();
+                    const hours24 = now.getHours();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    const period = hours24 >= 12 ? 'PM' : 'AM';
+                    const hours12 = hours24 === 0 ? 12 : hours24 > 12 ? hours24 - 12 : hours24;
+                    cursorTime.textContent = `${hours12}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${period}`;
                 }
             }
 
@@ -3371,11 +3605,8 @@
                 // Calculate position on timeline that's at the center
                 const positionAtCenter = -translateX + centerX;
 
-                // Convert position to time of day (seconds from midnight)
-                const totalSecondsInDay = 86400;
-                const basePixelsPerDay = 2400;
-                const zoomFactor = Math.pow(1.5, this.zoomLevel);
-                const pixelsPerSecond = (basePixelsPerDay * zoomFactor) / totalSecondsInDay;
+                // Convert position to time of day (seconds from midnight) using same calculation as renderTimeline
+                const pixelsPerSecond = this.calculatePixelsPerSecond(containerWidth);
                 const secondsFromMidnight = positionAtCenter / pixelsPerSecond;
 
                 // Find which recording segment this time falls into
@@ -3611,6 +3842,7 @@
                             }));
 
                             console.log('Timeline segments (initial):', this.recordingSegments);
+                            console.log('First recording details:', this.recordings[0]);
 
                             // Load all videos in background to get their durations
                             this.loadAllVideoDurations();
@@ -3618,11 +3850,8 @@
                             // Render timeline with segments
                             this.renderTimeline();
 
-                            // Load the first recording
-                            if (this.recordings.length > 0) {
-                                this.currentRecordingIndex = 0;
-                                this.loadRecordingVideo(this.recordings[0]);
-                            }
+                            // Check if there's a recording at current time
+                            this.checkRecordingAtCurrentTime();
                         } else {
                             // Clear segments and re-render timeline
                             this.recordings = [];
@@ -3639,6 +3868,78 @@
                 });
             }
 
+            playSegmentAtTime(index, videoTime = 0) {
+                if (index < 0 || index >= this.recordings.length) return;
+
+                const recording = this.recordings[index];
+                const segment = this.recordingSegments[index];
+
+                console.log('Playing segment at time:', { index, videoTime, segment });
+
+                // Set flag to prevent timeline re-render on video metadata load
+                this.isPlayingSegmentFromClick = true;
+
+                // Load and play recording from specified time
+                this.currentRecordingIndex = index;
+                this.loadRecordingVideo(recording);
+
+                // Start from specified time
+                this.video.addEventListener('loadedmetadata', () => {
+                    this.video.currentTime = videoTime;
+                    this.video.play();
+                    this.isPlaying = true;
+                    // Reset flag after video starts playing
+                    setTimeout(() => {
+                        this.isPlayingSegmentFromClick = false;
+                    }, 100);
+                }, { once: true });
+            }
+
+            playSegmentFromStart(index) {
+                // Helper function to play segment from the beginning
+                this.playSegmentAtTime(index, 0);
+            }
+
+            checkRecordingAtCurrentTime() {
+                // Get current time in seconds from midnight
+                const now = new Date();
+                const currentSecondsFromMidnight = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+                console.log('Current time (seconds from midnight):', currentSecondsFromMidnight);
+
+                // Check if any recording exists at current time
+                let recordingAtCurrentTime = null;
+                let recordingIndex = -1;
+
+                for (let i = 0; i < this.recordingSegments.length; i++) {
+                    const segment = this.recordingSegments[i];
+                    if (currentSecondsFromMidnight >= segment.startTime && currentSecondsFromMidnight <= segment.endTime) {
+                        recordingAtCurrentTime = this.recordings[i];
+                        recordingIndex = i;
+                        break;
+                    }
+                }
+
+                if (recordingAtCurrentTime) {
+                    // Load and play recording at current time
+                    console.log('Found recording at current time:', recordingAtCurrentTime);
+                    this.currentRecordingIndex = recordingIndex;
+                    this.loadRecordingVideo(recordingAtCurrentTime);
+
+                    // Seek to the correct position within the recording
+                    const segment = this.recordingSegments[recordingIndex];
+                    const videoSeekTime = currentSecondsFromMidnight - segment.startTime;
+
+                    this.video.addEventListener('loadedmetadata', () => {
+                        this.video.currentTime = videoSeekTime;
+                    }, { once: true });
+                } else {
+                    // No recording at current time - show message but keep segments visible
+                    console.log('No recording at current time');
+                    this.showNoRecordingMessage('The recording is not available.', false);
+                }
+            }
+
             loadRecordingVideo(recording) {
                 const video = document.getElementById('recordingVideo');
 
@@ -3651,6 +3952,9 @@
 
                 // Store current recording
                 this.currentRecording = recording;
+
+                // Initialize cursor time with current time
+                this.initializeCursorTime();
 
                 // Clear existing content
                 video.innerHTML = '';
@@ -3787,13 +4091,15 @@
                 video.load();
             }
 
-            showNoRecordingMessage(message) {
+            showNoRecordingMessage(message, clearSegments = true) {
                 const videoContainer = document.getElementById('videoContainer');
                 const video = document.getElementById('recordingVideo');
 
-                // Clear recording segments when no recording
-                this.recordingSegments = [];
-                this.renderTimeline(); // Re-render timeline to show empty state
+                // Only clear segments if explicitly requested (for date with no recordings)
+                if (clearSegments) {
+                    this.recordingSegments = [];
+                    this.renderTimeline(); // Re-render timeline to show empty state
+                }
 
                 // Hide video
                 if (video) {
