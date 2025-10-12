@@ -1285,13 +1285,11 @@
                             <!-- Video Player -->
                             <div class="recordings-video-container" id="videoContainer">
                                 <video class="recordings-video" id="recordingVideo" preload="metadata">
-                                    <source src="{{ asset('admin-theme/assets/videos/motion-detection-computer-room-door-1920x1080.mp4') }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
 
                                 <!-- Video Info Overlay -->
                                 <div class="recordings-info-overlay" id="videoInfoOverlay">
-                                    BC1085.38.190
                                 </div>
                             </div>
                         </div>
@@ -3188,7 +3186,8 @@
                 // Get the time that's under the red line
                 const timeInfo = this.updateRedLineTime();
                 if (!timeInfo) {
-                    this.showVideoLoader();
+                    this.hideVideoLoader();
+                    this.showNoRecordingMessage('No recording available', false);
                     return;
                 }
 
@@ -3208,15 +3207,19 @@
                 const wasPlaying = this.isPlaying;
 
                 if (targetRecordingIndex >= 0) {
-                    // Hide loader since we found a video segment
+                    // Hide loader and no-recording message since we found a video segment
                     this.hideVideoLoader();
+                    this.hideNoRecordingMessage();
 
                     // Load recording if different
                     if (this.currentRecordingIndex !== targetRecordingIndex) {
+                        // Show loader while video is loading
+                        this.showVideoLoader();
                         this.currentRecordingIndex = targetRecordingIndex;
                         this.loadRecordingVideo(this.recordings[targetRecordingIndex]);
                         // Seek after video loads
                         this.video.addEventListener('loadedmetadata', () => {
+                            this.hideVideoLoader();
                             this.video.currentTime = videoTime;
                             // Resume playback if it was playing before
                             if (wasPlaying) {
@@ -3234,8 +3237,9 @@
                         }
                     }
                 } else {
-                    // No video segment at this position - show loader
-                    this.showVideoLoader();
+                    // No video segment at this position - show "No recording available" message
+                    this.hideVideoLoader();
+                    this.showNoRecordingMessage('No recording available for this time', false);
                     // Pause video if playing
                     if (this.video && this.isPlaying) {
                         this.video.pause();
@@ -3879,8 +3883,9 @@
 
                 console.log('Playing segment at time:', { index, videoTime, segment });
 
-                // Hide loader since we're loading a valid video segment
-                this.hideVideoLoader();
+                // Hide no-recording message and show loader while video loads
+                this.hideNoRecordingMessage();
+                this.showVideoLoader();
 
                 // Set flag to prevent timeline re-render on video metadata load
                 this.isPlayingSegmentFromClick = true;
@@ -3891,6 +3896,7 @@
 
                 // Start from specified time
                 this.video.addEventListener('loadedmetadata', () => {
+                    this.hideVideoLoader();
                     this.video.currentTime = videoTime;
                     this.video.play();
                     this.isPlaying = true;
