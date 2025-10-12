@@ -3809,8 +3809,11 @@
                     return;
                 }
 
-                // Format date as YYYY-MM-DD
-                const formattedDate = date.toISOString().split('T')[0];
+                // Format date as YYYY-MM-DD using local timezone
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
 
                 // Show loading state
                 this.showLoadingState();
@@ -3875,6 +3878,9 @@
                 const segment = this.recordingSegments[index];
 
                 console.log('Playing segment at time:', { index, videoTime, segment });
+
+                // Hide loader since we're loading a valid video segment
+                this.hideVideoLoader();
 
                 // Set flag to prevent timeline re-render on video metadata load
                 this.isPlayingSegmentFromClick = true;
