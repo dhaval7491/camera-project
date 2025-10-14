@@ -1088,10 +1088,10 @@
                 </div>
             </div>
             @foreach($projects as $index => $project)
-            <button class="w-full tab-button tab-shadow py-[10px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer hover:bg-green-500 hover:text-white 
+            <button class="w-full tab-button tab-shadow py-[10px] px-[10px] rounded-[10px] mb-[10px] cursor-pointer hover:bg-green-500 hover:text-white
                 {{ $index == 0 ? 'bg-green-500 text-white active' : 'bg-white text-black' }}"
                 style="height:42px;"
-                onclick="selectProject({{ $project->project_id }}, this, '{{ $project->project_name }}')">
+                onclick="selectProject({{ $project->project_id }}, this, {!! json_encode($project->project_name) !!})">
                 <div class="flex">
                     <p class="w-[100%] text-left manrope-medium text-[13px] font-medium mb-[5px]">
                         {{ $project->project_name }}
@@ -1510,7 +1510,7 @@
         }
 
         // Main tab switching function
-        function switchMainTab(tabName, buttonElement) {
+        async function switchMainTab(tabName, buttonElement) {
             // Hide all tab contents
             const tabContents = document.querySelectorAll('.tab-content');
             tabContents.forEach(content => {
@@ -1544,17 +1544,34 @@
             // If switching to live view and all cam view is disabled, ensure single player is shown
             if (tabName === 'live-view' && !isAllCamViewEnabled) {
                 document.getElementById('videoPlayerContainer').style.display = 'block';
+
+                // Reinitialize camera connection when switching to live view (same as clicking on grid cam view)
+                if (currentCameras && currentCameras.length > 0 && currentProject) {
+                    console.log('Reinitializing camera connection for live view...');
+
+                    // Disconnect existing connection if any
+                    if (projectConnection) {
+                        console.log('Disconnecting existing project connection...');
+                        await projectConnection.disconnect();
+                        projectConnection = null;
+                    }
+
+                    // Create thumbnails for camera selection
+                    createCameraThumbnails(currentCameras);
+
+                    // Create new connection and initialize all cameras
+                    console.log('Creating new ProjectConnection...');
+                    projectConnection = new ProjectConnection(currentProject);
+                    console.log('Initializing all cameras...');
+                    await projectConnection.initializeAllCameras();
+                    console.log('Camera initialization complete');
+                }
             }
 
             if (tabName === 'recordings') {
                 setTimeout(() => {
                     initializeRecordingsPlayer();
                 }, 100);
-            }
-
-            // If switching to live view and all cam view is disabled, ensure single player is shown
-            if (tabName === 'live-view' && !isAllCamViewEnabled) {
-                document.getElementById('videoPlayerContainer').style.display = 'block';
             }
         }
 
