@@ -18,15 +18,17 @@ class AdminRegisteredMail extends Mailable
     public $admin;
     public $password;
     public $companyName;
+    public $resetUrl;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $admin, $password, $companyName)
+    public function __construct(User $admin, $password, $companyName, $resetUrl)
     {
         $this->admin = $admin;
         $this->password = $password;
         $this->companyName = $companyName;
+        $this->resetUrl = $resetUrl;
     }
 
     /**
