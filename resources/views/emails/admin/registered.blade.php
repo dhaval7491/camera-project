@@ -1,19 +1,26 @@
 <x-mail::message>
 # Welcome to {{ $companyName }}
 
-Hello {{ $admin->name }},  
-You have been successfully registered as the admin for **{{ $companyName }}**.
+Hello {{ $admin->name }},
+You have been successfully registered as a user for **{{ $companyName }}**.
+
+## Your Login Credentials
+
+**Username (Email):** {{ $admin->email }}
+**Temporary Password:** {{ $password }}
 
 ---
 
-<x-mail::button :url="url('/login')">
-Go to Admin Panel
+**Important:** For security reasons, we recommend that you reset your password immediately after your first login.
+
+<x-mail::button :url="$resetUrl">
+Reset Password
 </x-mail::button>
 
-If you'd like to change your password, click the button below:
+Or you can login with the temporary password:
 
-<x-mail::button :url="url('/password/reset')">
-Reset Password
+<x-mail::button :url="url('/superadmin/login')">
+Go to Login
 </x-mail::button>
 
 Thanks,<br>

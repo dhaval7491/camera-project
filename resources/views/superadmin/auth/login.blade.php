@@ -75,7 +75,7 @@
                                 manrope-medium text-[13px]">Remember me?</label>
                     </div>
                     <p class="text-right">
-                        <a href="#" class="text-[#344563] manrope-medium text-[13px]">
+                        <a href="{{ route('password.request') }}" class="text-[#344563] manrope-medium text-[13px]">
                             Forgot Password?
                         </a>
                     </p>

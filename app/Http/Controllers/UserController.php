@@ -16,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -94,11 +95,19 @@ class UserController extends Controller
 
         $user->projects()->sync($request->projects);
         $user->companies()->sync($request->companies);
-         Mail::to($user->email)->send(new AdminRegisteredMail(
+
+        // Generate password reset token
+        $token = Password::createToken($user);
+        $resetUrl = url(route('password.reset', ['token' => $token, 'email' => $user->email], false));
+
+        // Send email with credentials and reset password link
+        Mail::to($user->email)->send(new AdminRegisteredMail(
             $user,
             $password,
-            $user->companies->pluck('company_name')->join(', ')
+            $user->companies->pluck('company_name')->join(', '),
+            $resetUrl
         ));
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
